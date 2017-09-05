@@ -49,6 +49,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
         FuncaoCampo.mascaraNumero(cdAjuste);       
         dtAjuste.setText(Data.AmericaToBrasilSemHora(Data.getAgora()));
         TrataCombo.setValueComboTpAjustEstoq(tpAjuste, null);
+        FuncaoCampo.mascaraTexto(dsObs, 150);
     }
 
     public void iniciaTela() {
