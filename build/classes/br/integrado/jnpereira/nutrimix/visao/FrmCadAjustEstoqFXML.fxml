@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="722.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmCadAjustEstoqFXML">
+   <children>
+      <Button fx:id="btnSalvar" layoutX="30.0" layoutY="431.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="82.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
+         <font>
+            <Font size="12.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/salvar.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="btnSalvar1" layoutX="127.0" layoutY="431.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="88.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Limpar">
+         <font>
+            <Font size="12.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/limpar.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <AnchorPane layoutX="25.0" layoutY="107.0" prefHeight="229.0" prefWidth="679.0" styleClass="anchor">
+         <children>
+            <ScrollPane layoutX="4.0" layoutY="26.0" prefHeight="199.0" prefWidth="668.0" styleClass="transparente">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="42.0" prefWidth="661.0">
+                     <children>
+                        <TextField fx:id="qtAjuste" alignment="CENTER_RIGHT" layoutX="355.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="btnAdd" layoutX="592.0" layoutY="3.0" maxHeight="30.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0" style="-fx-padding: 0px;">
+                           <graphic>
+                              <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="btnRem" accessibleHelp="Excluir Endereço" layoutX="625.0" layoutY="3.0" maxHeight="30.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0" style="-fx-padding: 0px;">
+                           <graphic>
+                              <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/excluir.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <TextField fx:id="cdProduto" alignment="CENTER" layoutX="14.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="52.0" styleClass="codigo">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="dsProduto" editable="false" layoutX="108.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="243.0">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="btnPesqProd" layoutX="72.0" layoutY="3.0" maxHeight="30.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0">
+                           <graphic>
+                              <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/lista.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <TextField fx:id="vlItem" alignment="CENTER_RIGHT" layoutX="434.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="vlTotalItem" alignment="CENTER_RIGHT" layoutX="512.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+            <Label layoutX="366.0" layoutY="12.0" text="Quantidade" />
+            <Label layoutX="18.0" layoutY="12.0" text="Cód. Prod." />
+            <Label layoutX="114.0" layoutY="12.0" text="Descrição do Produto" />
+            <Label layoutX="455.0" layoutY="12.0" text="Vl. Item" />
+            <Label layoutX="528.0" layoutY="12.0" text="Vl. Total" />
+         </children>
+      </AnchorPane>
+      <Label layoutX="26.0" layoutY="90.0" styleClass="label_titulo" text="Produtos">
+         <font>
+            <Font name="System Bold" size="11.0" />
+         </font>
+      </Label>
+      <Label layoutX="33.0" layoutY="28.0" text="Cód. Ajuste" />
+      <TextField fx:id="dtAjuste" alignment="CENTER" editable="false" layoutX="155.0" layoutY="41.0" prefHeight="30.0" prefWidth="110.0">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="155.0" layoutY="27.0" text="Data Ajuste" />
+      <Label layoutX="27.0" layoutY="351.0" text="Observação" />
+      <TextArea fx:id="dsObs" layoutX="26.0" layoutY="367.0" prefHeight="47.0" prefWidth="679.0" wrapText="true" />
+      <TextField fx:id="cdAjuste" alignment="CENTER" cache="true" layoutX="33.0" layoutY="42.0" prefHeight="28.0" prefWidth="66.0" styleClass="codigo">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Button layoutX="102.0" layoutY="42.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0">
+         <graphic>
+            <ImageView fitHeight="17.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/lista.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <ChoiceBox fx:id="tpAjuste" layoutX="289.0" layoutY="41.0" prefHeight="30.0" prefWidth="243.0" />
+      <Label layoutX="290.0" layoutY="27.0" text="Tipo de Ajuste" />
+   </children>
+</AnchorPane>

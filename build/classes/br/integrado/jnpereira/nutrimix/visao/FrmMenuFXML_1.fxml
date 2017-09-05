@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.CustomMenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="AnchorPane" prefHeight="366.0" prefWidth="546.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML">
+   <children>
+      <GridPane prefHeight="366.0" prefWidth="546.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="22.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="67.0" minHeight="67.0" prefHeight="67.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <MenuBar>
+              <menus>
+                  <Menu mnemonicParsing="false" text="Cadastros Gerais">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#abrirCadEstado" text="Estado" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirCadCidade" text="Cidade" />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Produto">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#abrirCadProduto" text="Produto" />
+                    <MenuItem mnemonicParsing="false" onAction="#abrirCadGrupoProd" text="Grupo" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirCadUnidPadrao" text="Unidade Padrão" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirCadPrecoProd" text="Preço Produto" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Cliente">
+                    <items>
+                      <MenuItem fx:id="Cliente" mnemonicParsing="false" onAction="#abrirCadCliente" text="Cliente" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Funcionário">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#abrirCadFunc" text="Funcionário" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Fornecedor">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#abrirCadForne" text="Fornecedor" />
+                    <MenuItem mnemonicParsing="false" onAction="#abrirCadBanco" text="Banco" />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Caixa">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#abrirCadTipoDespesa" text="Tipo de Despesa" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirCadFormaPagto" text="Forma de Pagamento" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="140.0" prefWidth="546.0" GridPane.rowIndex="1">
+               <children>
+                  <AnchorPane layoutY="14.0" prefHeight="62.0" prefWidth="546.0" styleClass="anchor_welcome" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fitHeight="47.0" fitWidth="42.0" layoutX="21.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icon/logo_welcome.png" />
+                           </image>
+                        </ImageView>
+                        <Label layoutX="86.0" layoutY="14.0" styleClass="label_welcome" text="Seja bem Vindo, Jose Vinicius Nunes Pereira!" />
+                        <Label fx:id="lblRelogio" layoutX="86.0" layoutY="38.0" text="loading..." textFill="WHITE" />
+                        <MenuButton fx:id="btnUser" layoutX="408.0" layoutY="18.0" mnemonicParsing="false" text="Jose Vinicius">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Trocar senha" />
+                            <MenuItem mnemonicParsing="false" text="Fazer Logoff" />
+                              <CustomMenuItem mnemonicParsing="false" text="Unspecified Action">
+                                <content>
+                                  <CheckBox text="Click Me" />
+                                </content>
+                              </CustomMenuItem>
+                          </items>
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/user.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </MenuButton>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <TabPane fx:id="tabInicio" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="391.0" prefWidth="546.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="2">
+              <tabs>
+                <Tab fx:id="tabDashboard" text="Dashboard ">
+                     <content>
+                        <ScrollPane fx:id="scrollChart" prefHeight="200.0" prefWidth="200.0">
+                           <content>
+                              <AnchorPane fx:id="paneChart" prefHeight="170.0" prefWidth="446.0">
+                                 <children>
+                                    <Button layoutX="8.0" layoutY="8.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="92.0" styleClass="button_refresh" text="Atualizar">
+                                       <graphic>
+                                          <ImageView fitHeight="22.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icon/refresh.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                     </content>
+                     <graphic>
+                        <ImageView fitHeight="22.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icon/dashboard.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                </Tab>
+                <Tab text="Atendimento">
+                     <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                     <graphic>
+                        <ImageView fitHeight="22.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icon/atend.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
