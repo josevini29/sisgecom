@@ -1092,7 +1092,7 @@ public class FrmCadFornecedorFXML implements Initializable {
     }
 
     public void addValidacaoConta(ContasHit conta, int posicao, int total) {
-        FuncaoCampo.mascaraNumero(conta.codBanco);
+        FuncaoCampo.mascaraNumeroInteiro(conta.codBanco);
         FuncaoCampo.mascaraTexto(conta.nrAgencia, 20);
         FuncaoCampo.mascaraTexto(conta.nrConta, 20);
 

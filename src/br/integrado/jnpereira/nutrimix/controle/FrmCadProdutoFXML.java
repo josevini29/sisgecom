@@ -70,8 +70,8 @@ public class FrmCadProdutoFXML implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         FuncaoCampo.mascaraNumeroInteiro(cdProduto);
         FuncaoCampo.mascaraNumeroInteiro(cdGrupoProd);
-        FuncaoCampo.mascaraNumero(qtEstoqMin);
-        FuncaoCampo.mascaraNumero(qtConversao);
+        FuncaoCampo.mascaraNumeroDecimal(qtEstoqMin);
+        FuncaoCampo.mascaraNumeroDecimal(qtConversao);
         FuncaoCampo.mascaraTexto(dsProduto, 250);
         FuncaoCampo.mascaraTexto(cdUnidPad, 10);
         FuncaoCampo.mascaraTexto(cdUnidPadComp, 10);

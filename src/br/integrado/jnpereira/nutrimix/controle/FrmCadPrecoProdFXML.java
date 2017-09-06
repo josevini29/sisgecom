@@ -42,7 +42,7 @@ public class FrmCadPrecoProdFXML implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FuncaoCampo.mascaraNumeroInteiro(codProduto);
-        FuncaoCampo.mascaraNumero(vlPreco);
+        FuncaoCampo.mascaraNumeroDecimal(vlPreco);
         codProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 validaCodigo();

@@ -28,7 +28,7 @@ public class FuncaoCampo {
 
     }
 
-    public static void mascaraNumero(TextField textField) {
+    public static void mascaraNumeroDecimal(TextField textField) {
 
         textField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             newValue = newValue.replaceAll(",", ".");
