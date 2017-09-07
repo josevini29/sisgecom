@@ -10,7 +10,9 @@ import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.IconButtonHit;
+import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -27,7 +29,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
 public class FrmCadAjustEstoqFXML implements Initializable {
-
+    
     @FXML
     TextField cdAjuste;
     @FXML
@@ -38,7 +40,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
     TextArea dsObs;
     @FXML
     Label lblCadastro;
-
+    
     @FXML
     TextField cdProduto;
     @FXML
@@ -62,11 +64,11 @@ public class FrmCadAjustEstoqFXML implements Initializable {
     @FXML
     AnchorPane painelAjustes;
     double LayoutYAjustes;
-
+    
     Dao dao = new Dao();
     AjusteEstoque ajuste;
     ArrayList<AjusteMovtoHit> listMovto = new ArrayList<>();
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         FuncaoCampo.mascaraNumeroInteiro(cdAjuste);
@@ -79,11 +81,11 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             }
         });
     }
-
+    
     public void iniciaTela() {
         atualizaMovtoHit();
     }
-
+    
     private void validaCodigoAjuste() {
         if (!cdAjuste.getText().equals("") & ajuste == null) {
             try {
@@ -102,6 +104,58 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 cdAjuste.requestFocus();
                 return;
             }
+        }
+    }
+    
+    private void validaCodigoProduto(AjusteMovtoHit movto) {
+        if (!movto.cdProduto.getText().equals("")) {
+            try {
+                Produto prod = new Produto();
+                prod.setCdProduto(Integer.parseInt(movto.cdProduto.getText()));
+                dao.get(prod);
+                
+                for (AjusteMovtoHit movtoHit : listMovto) {
+                    if (movtoHit.cdProduto.getText().equals(movto.cdProduto.getText())
+                            && !movtoHit.equals(movto)) {
+                        Alerta.AlertaError("Inválido", "Produto já está na lista");
+                        movto.cdProduto.requestFocus();
+                        return;
+                    }
+                }
+                
+                movto.dsProduto.setText(prod.getDsProduto());
+                movto.qtEstoque.setText(prod.getQtEstqAtual().toString());
+                movto.vlItem.setText(prod.getVlCustoMedio().toString());
+                calculaTotal(movto);
+            } catch (Exception ex) {
+                Alerta.AlertaError("Notificação", "Produto não encontrado!");
+                movto.cdProduto.requestFocus();
+            }
+        } else {
+            movto.dsProduto.setText("");
+            movto.qtEstoque.setText("");
+            movto.vlItem.setText("");
+            movto.vlTotalItem.setText("");
+        }
+    }
+    
+    public void abrirListaProduto(AjusteMovtoHit movto) {
+        Tela tela = new Tela();
+        String valor = tela.abrirListaGenerica(new Produto(), "cdProduto", "dsProduto", "AND $inAtivo$ = 'T'", "Lista de Produtos");
+        if (valor != null) {
+            movto.cdProduto.setText(valor);
+            validaCodigoProduto(movto);
+        }
+    }
+    
+    public void calculaTotal(AjusteMovtoHit movto) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        if (!movto.qtAjuste.getText().equals("") && !movto.vlItem.getText().equals("")) {
+            double qtAjust = Double.parseDouble(movto.qtAjuste.getText());
+            double vlIte = Double.parseDouble(movto.vlItem.getText());
+            movto.vlTotalItem.setText(df.format(qtAjust * vlIte));
+        } else {
+            movto.vlTotalItem.setText("");
         }
     }
 
@@ -134,7 +188,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 vlItem.setText(movEstoq.getVlItem().toString());
                 vlTotalItem.setText(String.valueOf(movEstoq.getQtMovto() * movEstoq.getVlItem()));
                 inCancelado.setSelected(movEstoq.getInCancelado());
-
+                
                 AjusteMovtoHit ajusteHit = new AjusteMovtoHit();
                 ajusteHit.cdEstoqMovto = movEstoq.getCdEstqMovto();
                 ajusteHit.cdAjuste = movEstoq.getCdAjuste();
@@ -146,7 +200,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 ajusteHit.vlTotalItem = vlTotalItem;
                 ajusteHit.inCancelado.setSelected(movEstoq.getInCancelado());
                 ajusteHit.inCancelado.setDisable(ajusteHit.inCancelado.isSelected());
-
+                
                 listMovto.add(ajusteHit);
             }
         } catch (Exception ex) {
@@ -154,10 +208,10 @@ public class FrmCadAjustEstoqFXML implements Initializable {
         }
         atualizaListaAjustes();
     }
-
+    
     public void atualizaListaAjustes() {
         int total = listMovto.size();
-
+        
         LayoutYAjustes = this.cdProduto.getLayoutY();
         painelAjustes.getChildren().clear();
         Iterator it = listMovto.iterator();
@@ -225,15 +279,29 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             LayoutYAjustes += (this.cdProduto.getHeight() + 5);
             addValidacaoTelefone(b, i, total);
         }
-
+        
         painelAjustes.setPrefHeight(LayoutYAjustes
                 + 10);
     }
-
+    
     public void addValidacaoTelefone(AjusteMovtoHit ajusteMovto, int posicao, int total) {
         FuncaoCampo.mascaraNumeroInteiro(ajusteMovto.cdProduto);
         FuncaoCampo.mascaraNumeroDecimal(ajusteMovto.qtAjuste);
-
+        
+        ajusteMovto.cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                validaCodigoProduto(ajusteMovto);
+            }
+        });
+        
+        ajusteMovto.btnPesqProd.setOnAction((ActionEvent event) -> {
+            abrirListaProduto(ajusteMovto);
+        });
+        
+        ajusteMovto.qtAjuste.textProperty().addListener((ObservableValue<? extends String> obs, String velho, String novo) -> {
+            calculaTotal(ajusteMovto);
+        });
+        
         ajusteMovto.btnAdd.setOnAction((ActionEvent event) -> {
             if (listMovto.get(posicao).cdAjuste != null) {
                 Alerta.AlertaError("Não autorizado!", "Não é possivel adicionar mais produtos, apenas cancela-los.");
@@ -242,7 +310,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             listMovto.add(posicao + 1, getAjusteNovo());
             atualizaListaAjustes();
         });
-
+        
         ajusteMovto.btnRem.setOnAction((ActionEvent event) -> {
             if (listMovto.get(posicao).cdAjuste != null) {
                 Alerta.AlertaError("Não autorizado!", "Não é possivel remover um produto já salvo, apenas cancela-lo.");
@@ -254,9 +322,9 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             }
             atualizaListaAjustes();
         });
-
+        
     }
-
+    
     private AjusteMovtoHit getAjusteNovo() {
         TextField cdProduto = new TextField();
         TextField dsProduto = new TextField();
@@ -270,7 +338,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
         qtAjuste.setText("");
         vlItem.setText("");
         vlTotalItem.setText("");
-
+        
         AjusteMovtoHit ajusteHit = new AjusteMovtoHit();
         ajusteHit.cdProduto = cdProduto;
         ajusteHit.dsProduto = dsProduto;
@@ -280,9 +348,9 @@ public class FrmCadAjustEstoqFXML implements Initializable {
         ajusteHit.vlTotalItem = vlTotalItem;
         return ajusteHit;
     }
-
+    
     public class AjusteMovtoHit {
-
+        
         public Integer cdEstoqMovto;
         public Integer cdAjuste;
         public TextField cdProduto;
@@ -295,7 +363,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
         public CheckBox inCancelado;
         public Button btnAdd;
         public Button btnRem;
-
+        
         public AjusteMovtoHit() {
             this.btnPesqProd = new Button();
             this.btnAdd = new Button();
@@ -306,5 +374,5 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             this.inCancelado.setDisable(true);
         }
     }
-
+    
 }
