@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SingleSelectionModel;
+import br.integrado.jnpereira.nutrimix.controle.EstoqueController;
 
 public class TrataCombo {
 
@@ -173,85 +174,22 @@ public class TrataCombo {
         }
     }
 
-    public static void setValueComboTpAjustEstoq(ChoiceBox combo, String selecionado) {
+    public static void setValueComboTpAjustEstoq(ChoiceBox combo, Integer selecionado) {
         if (combo.getItems().isEmpty()) {
-            combo.setItems(FXCollections.observableArrayList(getAllTipoAjuste()));
+            combo.setItems(FXCollections.observableArrayList(EstoqueController.getAllTipoAjuste()));
         }
         if (selecionado != null) {
             SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
-            switch (selecionado.replace(" ", "")) {
-                case "1":
-                    model.select(0);
-                    break;
-                case "2":
-                    model.select(1);
-                    break;
-                default:
-                    break;
-            }
+            model.select(selecionado - 1);
         }
     }
 
     public static Integer getValueComboTpAjustEstoq(ChoiceBox combo) {
         SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
         if (model.getSelectedIndex() > -1) {
-            return getAllTipoAjuste().get(model.getSelectedIndex()).getCdTpAjuste();
+            return EstoqueController.getAllTipoAjuste().get(model.getSelectedIndex()).getCdTpAjuste();
         }
         return null;
-    }
-
-    public static ArrayList<TipoAjusteEstoque> getAllTipoAjuste() {
-        ArrayList<TipoAjusteEstoque> tipos = new ArrayList<>();
-        tipos.add(new TipoAjusteEstoque(1, "Consumo Interno", "S"));
-        tipos.add(new TipoAjusteEstoque(2, "Correção de Quantidade (Entrada)", "E"));
-        tipos.add(new TipoAjusteEstoque(3, "Correção de Quantidade (Saída)", "S"));
-        tipos.add(new TipoAjusteEstoque(4, "Desperdício", "S"));
-        tipos.add(new TipoAjusteEstoque(5, "Validade Vencida", "S"));
-        tipos.add(new TipoAjusteEstoque(6, "Quebra/CAT", "S"));
-        tipos.add(new TipoAjusteEstoque(7, "Roubo", "S"));
-        return tipos;
-    }
-
-    public static class TipoAjusteEstoque {
-
-        private Integer cdTpAjuste;
-        private String dsTpAjuste;
-        private String tpAjuste;
-
-        public TipoAjusteEstoque(Integer cdTpAjuste, String dsTpAjuste, String tpAjuste) {
-            this.cdTpAjuste = cdTpAjuste;
-            this.dsTpAjuste = dsTpAjuste;
-            this.tpAjuste = tpAjuste;
-        }
-
-        public Integer getCdTpAjuste() {
-            return cdTpAjuste;
-        }
-
-        public void setCdTpAjuste(Integer cdTpAjuste) {
-            this.cdTpAjuste = cdTpAjuste;
-        }
-
-        public String getDsTpAjuste() {
-            return dsTpAjuste;
-        }
-
-        public void setDsTpAjuste(String dsTpAjuste) {
-            this.dsTpAjuste = dsTpAjuste;
-        }
-
-        public String getTpAjuste() {
-            return tpAjuste;
-        }
-
-        public void setTpAjuste(String tpAjuste) {
-            this.tpAjuste = tpAjuste;
-        }
-
-        @Override
-        public String toString() {
-            return getDsTpAjuste();
-        }
     }
 
 }

@@ -25,10 +25,16 @@ public class MovtoEstoque {
     private Double vlItem;
     @Coluna(nome = "qt_estoque")
     private Double qtEstoque;
+    @Coluna(nome = "vl_customedio")
+    private Double vlCustoMedio;
     @Coluna(nome = "cd_ajuste")
     private Integer cdAjuste;
     @Coluna(nome = "cd_movcompvend")
     private Integer cdMovCompVend;
+    @Coluna(nome="cd_usercancel")
+    private Integer cdUserCancel;
+    @Coluna(nome="dt_cancelado")
+    private Date dtCancelado;
     @Coluna(nome = "in_cancelado")
     private Boolean inCancelado;
 
@@ -110,6 +116,30 @@ public class MovtoEstoque {
 
     public void setInCancelado(Boolean inCancelado) {
         this.inCancelado = inCancelado;
+    }
+
+    public Double getVlCustoMedio() {
+        return vlCustoMedio;
+    }
+
+    public void setVlCustoMedio(Double vlCustoMedio) {
+        this.vlCustoMedio = vlCustoMedio;
+    }
+
+    public Integer getCdUserCancel() {
+        return cdUserCancel;
+    }
+
+    public void setCdUserCancel(Integer cdUserCancel) {
+        this.cdUserCancel = cdUserCancel;
+    }
+
+    public Date getDtCancelado() {
+        return dtCancelado;
+    }
+
+    public void setDtCancelado(Date dtCancelado) {
+        this.dtCancelado = dtCancelado;
     }
 
 }

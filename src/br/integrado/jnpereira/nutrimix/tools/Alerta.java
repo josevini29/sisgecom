@@ -35,6 +35,15 @@ public class Alerta {
         alert.initStyle(StageStyle.UTILITY);
         alert.showAndWait();
     }
+    
+    public static void AlertaWarning(String titulo, String texto) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(texto);
+        alert.initStyle(StageStyle.UTILITY);
+        alert.showAndWait();
+    }
 
     public static boolean AlertaConfirmation(String titulo, String texto) {
         Alert alert = new Alert(AlertType.CONFIRMATION);

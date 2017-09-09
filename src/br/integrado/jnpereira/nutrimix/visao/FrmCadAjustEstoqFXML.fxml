@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="818.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmCadAjustEstoqFXML">
+<AnchorPane fx:id="painel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="818.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmCadAjustEstoqFXML">
    <children>
-      <Button fx:id="btnSalvar" layoutX="30.0" layoutY="431.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="82.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
+      <Button layoutX="30.0" layoutY="431.0" mnemonicParsing="false" onAction="#salvar" prefHeight="26.0" prefWidth="82.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
          <font>
             <Font size="12.0" />
          </font>
@@ -26,7 +26,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="btnSalvar1" layoutX="127.0" layoutY="431.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="88.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Limpar">
+      <Button layoutX="127.0" layoutY="431.0" mnemonicParsing="false" onAction="#limpar" prefHeight="28.0" prefWidth="88.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Limpar">
          <font>
             <Font size="12.0" />
          </font>
@@ -44,7 +44,7 @@
               <content>
                 <AnchorPane fx:id="painelAjustes" minHeight="0.0" minWidth="0.0" prefHeight="42.0" prefWidth="734.0">
                      <children>
-                        <TextField fx:id="qtAjuste" alignment="CENTER_RIGHT" layoutX="346.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0">
+                        <TextField fx:id="qtAjuste" layoutX="346.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0" styleClass="numero_editavel">
                            <font>
                               <Font size="12.0" />
                            </font>
@@ -72,7 +72,7 @@
                               <Font size="12.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="dsProduto" editable="false" layoutX="99.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="161.0">
+                        <TextField fx:id="dsProduto" editable="false" layoutX="99.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="161.0" styleClass="texto_estatico">
                            <font>
                               <Font size="12.0" />
                            </font>
@@ -86,17 +86,17 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <TextField fx:id="vlItem" alignment="CENTER_RIGHT" editable="false" layoutX="425.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0">
+                        <TextField fx:id="vlItem" alignment="CENTER_RIGHT" editable="false" layoutX="425.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0" styleClass="numero_estatico">
                            <font>
                               <Font size="12.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="vlTotalItem" alignment="CENTER_RIGHT" editable="false" layoutX="503.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0">
+                        <TextField fx:id="vlTotalItem" alignment="CENTER_RIGHT" editable="false" layoutX="503.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0" styleClass="numero_estatico">
                            <font>
                               <Font size="12.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="qtEstoque" alignment="CENTER_RIGHT" editable="false" layoutX="266.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0">
+                        <TextField fx:id="qtEstoque" alignment="CENTER_RIGHT" editable="false" layoutX="266.0" layoutY="3.0" maxHeight="30.0" prefHeight="30.0" prefWidth="74.0" styleClass="numero_estatico">
                            <font>
                               <Font size="12.0" />
                            </font>
