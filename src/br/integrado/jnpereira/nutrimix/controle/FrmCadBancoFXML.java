@@ -111,6 +111,7 @@ public class FrmCadBancoFXML implements Initializable {
                 b.codBanco.setPrefWidth(codBanco.getWidth());
                 b.codBanco.setLayoutX(codBanco.getLayoutX());
                 b.codBanco.setLayoutY(LayoutYBanco);
+                b.codBanco.getStyleClass().addAll(this.codBanco.getStyleClass());
                 b.dsBanco.setEditable(dsBanco.isEditable());
                 b.dsBanco.setPrefHeight(dsBanco.getHeight());
                 b.dsBanco.setPrefWidth(dsBanco.getWidth());

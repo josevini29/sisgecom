@@ -3,6 +3,7 @@ package br.integrado.jnpereira.nutrimix.tools;
 import br.integrado.jnpereira.nutrimix.controle.FrmListaGenericaFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmListaPessoaFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
+import br.integrado.jnpereira.nutrimix.controle.FrmListaAjustEstoqFXML;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import javafx.fxml.FXMLLoader;
@@ -112,6 +113,29 @@ public class Tela {
             controler.setClasse(obj);
             controler.setStage(stage);
             controler.setInAtivo(inAtivo);
+            controler.iniciaTela();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.resizableProperty().setValue(Boolean.FALSE);
+            stage.centerOnScreen();
+            stage.showAndWait();
+            return controler.getDsRetorno();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
+        }
+        return null;
+    }
+    
+    public String abrirListaAjusteEstoq() {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaAjustEstoqFXML.fxml"));
+            Parent root = (Parent) loader.load();
+            FrmListaAjustEstoqFXML controler = (FrmListaAjustEstoqFXML) loader.getController();
+            controler.setStage(stage);
             controler.iniciaTela();
             Scene scene = new Scene(root);
             stage.setScene(scene);

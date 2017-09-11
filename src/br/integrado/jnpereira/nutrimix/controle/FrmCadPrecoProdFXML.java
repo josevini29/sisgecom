@@ -56,6 +56,13 @@ public class FrmCadPrecoProdFXML implements Initializable {
                 Produto prod = new Produto();
                 prod.setCdProduto(Integer.parseInt(codProduto.getText()));
                 dao.get(prod);
+
+                if (!prod.getInAtivo()) {
+                    Alerta.AlertaError("Inválido", "Produto está inativo.");
+                    codProduto.requestFocus();
+                    return;
+                }
+
                 dsProduto.setText(prod.getDsProduto());
                 atualizaTable();
             } catch (Exception ex) {
@@ -124,7 +131,7 @@ public class FrmCadPrecoProdFXML implements Initializable {
     @FXML
     public void abrirListaProduto() {
         Tela tela = new Tela();
-        String valor = tela.abrirListaGenerica(new Produto(), "cdProduto", "dsProduto", "AND $inAtivo$ = 'T'","Lista de Produtos");
+        String valor = tela.abrirListaGenerica(new Produto(), "cdProduto", "dsProduto", "AND $inAtivo$ = 'T'", "Lista de Produtos");
         if (valor != null) {
             codProduto.setText(valor);
             validaCodigo();

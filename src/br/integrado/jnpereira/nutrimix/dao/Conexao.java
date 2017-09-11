@@ -11,7 +11,8 @@ import java.sql.Statement;
  * @author Jose Vinicius 23/06/2016 Conexao com banco de dados Oracle 11g
  */
 public class Conexao {
-     //Postgres
+    //Postgres
+
     private final String DRIVER = "org.postgresql.Driver";
     private final String URL = "jdbc:postgresql://localhost:5432/postgres";
     private final String SCHEMA = "nutrimix";
@@ -24,7 +25,6 @@ public class Conexao {
     private final String SCHEMA = "topicosbd";
     private final String USER = "root";
     private final String PASSWORD = "root";*/
-
     private static Connection Conexao;
     private Statement statement;
     private boolean AUTO_COMMIT = true;
@@ -42,7 +42,7 @@ public class Conexao {
                     Alerta.AlertaError("Erro!", "Banco de dados está fechado." + ex.toString());
                     System.exit(0);
                 } else {
-                    Alerta.AlertaError("Erro!","Erro ao tentar conectar ao banco." + ex.toString());
+                    Alerta.AlertaError("Erro!", "Erro ao tentar conectar ao banco." + ex.toString());
                     System.exit(0);
                 }
                 return null;
@@ -63,7 +63,7 @@ public class Conexao {
             Conexao.close();
             System.out.println("Desconectado de PostgreSQL.");
         } catch (SQLException ex) {
-           Alerta.AlertaError("Erro!","Erro ao tentar desconectar do banco.");
+            Alerta.AlertaError("Erro!", "Erro ao tentar desconectar do banco.");
         }
 
     }
@@ -74,20 +74,22 @@ public class Conexao {
 
     public void commit() {
         try {
-            Conexao.commit();
             System.out.println("SQL -> COMMIT;");
+            Conexao.commit();
         } catch (SQLException ex) {
-           //Alerta.AlertaError("Erro!", "Erro ao tentar commit do banco.");
+            System.out.println("Erro Commit -> " + ex.toString());
+            //Alerta.AlertaError("Erro!", "Erro ao tentar commit do banco.");
         }
 
     }
 
     public void rollback() {
         try {
-            Conexao.rollback();
             System.out.println("SQL -> ROLLBACK;");
+            Conexao.rollback();
         } catch (SQLException ex) {
-           Alerta.AlertaError("Erro!", "Erro ao tentar rollback do banco.");
+            System.out.println("Erro Rollback -> " + ex.toString());
+            //Alerta.AlertaError("Erro!", "Erro ao tentar rollback do banco.");
         }
 
     }
@@ -97,10 +99,10 @@ public class Conexao {
         try {
             Conexao.setAutoCommit(AUTO_COMMIT);
             statement = Conexao.createStatement();
-            System.out.println("SQL -> " + sql);
+            System.out.println((AUTO_COMMIT?"AC:ON":"AC:OFF")+" SQL -> " + sql);
             statement.executeUpdate(sql);
         } catch (SQLException ex) {
-           Alerta.AlertaError("Erro!", "Erro ao executar SQL." + ex.toString() + "\n SQL: " + sql);
+            Alerta.AlertaError("Erro!", "Erro ao executar SQL." + ex.toString() + "\n SQL: " + sql);
             return false;
         }
         return true;
@@ -114,7 +116,7 @@ public class Conexao {
             System.out.println("SQL -> " + sql);
             return statement.executeQuery(sql);
         } catch (SQLException ex) {
-           Alerta.AlertaError("Erro!", "Erro ao executar SQL." + ex.toString() + "\n SQL: " + sql);
+            Alerta.AlertaError("Erro!", "Erro ao executar SQL." + ex.toString() + "\n SQL: " + sql);
             return null;
         }
     }

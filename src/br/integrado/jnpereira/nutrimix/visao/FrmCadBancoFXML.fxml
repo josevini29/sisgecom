@@ -15,7 +15,7 @@
         <content>
           <AnchorPane fx:id="painel" minHeight="0.0" minWidth="0.0" prefHeight="57.0" prefWidth="411.0">
                <children>
-                  <TextField id="campo" fx:id="codBanco" alignment="CENTER" editable="false" layoutX="7.0" layoutY="3.0" prefHeight="28.0" prefWidth="48.0">
+                  <TextField id="campo" fx:id="codBanco" alignment="CENTER" editable="false" layoutX="7.0" layoutY="3.0" prefHeight="28.0" prefWidth="48.0" styleClass="numero_estatico">
                      <font>
                         <Font size="12.0" />
                      </font>

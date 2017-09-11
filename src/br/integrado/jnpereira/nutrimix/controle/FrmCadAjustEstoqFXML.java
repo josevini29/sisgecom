@@ -14,7 +14,6 @@ import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
@@ -101,6 +100,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 dsObs.setText(ajuste.getDsObs());
                 lblCadastro.setText(Numero.getCadastro(ajuste.getCdUserCad(), ajuste.getDtCadastro()));
                 cdAjuste.setEditable(false);
+                tpAjuste.setDisable(true);
                 atualizaMovtoHit();
             } catch (Exception ex) {
                 Alerta.AlertaError("Notificação", ex.getMessage());
@@ -117,6 +117,12 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 Produto prod = new Produto();
                 prod.setCdProduto(Integer.parseInt(movto.cdProduto.getText()));
                 dao.get(prod);
+
+                if (!prod.getInAtivo()) {
+                    Alerta.AlertaError("Inválido", "Produto está inativo.");
+                    movto.cdProduto.requestFocus();
+                    return;
+                }
 
                 for (AjusteMovtoHit movtoHit : listMovto) {
                     if (movtoHit.cdProduto.getText().equals(movto.cdProduto.getText())
@@ -140,6 +146,16 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             movto.qtEstoque.setText("");
             movto.vlItem.setText("");
             movto.vlTotalItem.setText("");
+        }
+    }
+
+    @FXML
+    public void abrirListaAjustEstoq() {
+        Tela tela = new Tela();
+        String valor = tela.abrirListaAjusteEstoq();
+        if (valor != null) {
+           cdAjuste.setText(valor);
+            validaCodigoAjuste();
         }
     }
 
@@ -186,8 +202,23 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 Alerta.AlertaError("Campo inválido", "Qt. ajuste é obrigatório.");
                 return;
             }
+
+            Produto prod = new Produto();
+            prod.setCdProduto(Integer.parseInt(movto.cdProduto.getText()));
+            try {
+                dao.get(prod);
+                if (!prod.getInConsumo() && TrataCombo.getValueComboTpAjustEstoq(tpAjuste) == 1) {
+                    Alerta.AlertaWarning("Não permitido!", "Produto sem autorização para consumo interno. (" + prod.getCdProduto() + ": " + prod.getDsProduto() + ")");
+                    return;
+                }
+            } catch (Exception ex) {
+                Alerta.AlertaError("Erro!", "Erro ao validar produto.\n" + ex.getMessage());
+                return;
+            }
+
         }
         try {
+            dao.autoCommit(false);
             if (ajuste == null) {
                 ajuste = new AjusteEstoque();
                 ajuste.setDtAjuste(Data.getAgora());
@@ -220,6 +251,8 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                     movtoEstoque.setTpMovto(EstoqueController.getTipoAjusteEstoque(TrataCombo.getValueComboTpAjustEstoq(tpAjuste)).getTpAjuste());
                     movtoEstoque.setCdProduto(Integer.parseInt(movto.cdProduto.getText()));
                     movtoEstoque.setDtMovto(Data.getAgora());
+                    movtoEstoque.setQtMovto(Double.parseDouble(movto.qtAjuste.getText()));
+                    movtoEstoque.setInCancelado(false);
                     EstoqueController estq = new EstoqueController();
                     estq.geraMovtoEstoque(movtoEstoque);
                 }
@@ -230,8 +263,8 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             cdAjuste.setText(cod.toString());
             validaCodigoAjuste();
         } catch (Exception ex) {
-            Alerta.AlertaError("Erro!", ex.getMessage());
             dao.rollback();
+            Alerta.AlertaError("Erro!", ex.getMessage());
             return;
         }
 
@@ -249,6 +282,9 @@ public class FrmCadAjustEstoqFXML implements Initializable {
         FuncaoCampo.limparCampos(painel);
         atualizaMovtoHit();
         lblCadastro.setText("");
+        cdAjuste.setEditable(true);
+        tpAjuste.setDisable(false);
+        dtAjuste.setText(Data.AmericaToBrasilSemHora(Data.getAgora()));
     }
 
     //Inicio codigo da lista de movimentos de produto
@@ -278,8 +314,9 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 dsProduto.setText(prod.getDsProduto());
                 qtEstoque.setText(movEstoq.getQtEstoque().toString());
                 qtAjuste.setText(movEstoq.getQtMovto().toString());
-                vlItem.setText(movEstoq.getVlItem().toString());
-                vlTotalItem.setText(String.valueOf(movEstoq.getQtMovto() * movEstoq.getVlItem()));
+                qtAjuste.setEditable(false);
+                vlItem.setText(movEstoq.getVlCustoMedio().toString());
+                vlTotalItem.setText(String.valueOf(movEstoq.getQtMovto() * movEstoq.getVlCustoMedio()));
                 inCancelado.setSelected(movEstoq.getInCancelado());
 
                 AjusteMovtoHit ajusteHit = new AjusteMovtoHit();
@@ -297,6 +334,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 listMovto.add(ajusteHit);
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             Alerta.AlertaError("Erro!", "Erro ao iniciar tela.\n" + ex.toString());
         }
         atualizaListaAjustes();
@@ -330,7 +368,6 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             b.qtAjuste.setPrefHeight(this.qtAjuste.getHeight());
             b.qtAjuste.setPrefWidth(this.qtAjuste.getWidth());
             b.qtAjuste.setLayoutX(this.qtAjuste.getLayoutX());
-            b.qtAjuste.setEditable(this.qtAjuste.isEditable());
             b.qtAjuste.setLayoutY(LayoutYAjustes);
             b.qtAjuste.getStyleClass().addAll(this.qtAjuste.getStyleClass());
             b.vlItem.setPrefHeight(this.vlItem.getHeight());

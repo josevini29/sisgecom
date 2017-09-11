@@ -20,25 +20,25 @@ public class EstoqueController {
 
     public void geraMovtoEstoque(MovtoEstoque movto) throws Exception {
 
+        Produto produto = new Produto();
+        produto.setCdProduto(movto.getCdProduto());
+        dao.get(produto);
+
         if (movto.getInCancelado() && movto.getCdEstqMovto() != null) {
-            cancelaMovto(movto);
+            cancelaMovto(movto, produto);
         } else if (!movto.getInCancelado() && movto.getCdEstqMovto() == null) {
-            geraMovto(movto);
+            geraMovto(movto, produto);
         } else {
             throw new Exception("Tipo de movimento de estoque não esperado.");
         }
 
     }
 
-    private void cancelaMovto(MovtoEstoque movto) throws Exception {
+    private void cancelaMovto(MovtoEstoque movto, Produto produto) throws Exception {
         dao.get(movto);
         movto.setInCancelado(true);
         movto.setCdUserCancel(FrmMenuFXML.usuarioAtivo);
         movto.setDtCancelado(Data.getAgora());
-
-        Produto produto = new Produto();
-        produto.setCdProduto(movto.getCdProduto());
-        dao.get(produto);
 
         if (movto.getTpMovto().equals("E")) {
             produto.setQtEstqAtual(produto.getQtEstqAtual() - movto.getQtMovto());
@@ -55,10 +55,7 @@ public class EstoqueController {
         dao.update(movto);
     }
 
-    private void geraMovto(MovtoEstoque movto) throws Exception {
-        Produto produto = new Produto();
-        produto.setCdProduto(movto.getCdProduto());
-        dao.get(produto);
+    private void geraMovto(MovtoEstoque movto, Produto produto) throws Exception {
 
         movto.setQtEstoque(produto.getQtEstqAtual());
         movto.setVlCustoMedio(produto.getVlCustoMedio());
@@ -82,12 +79,14 @@ public class EstoqueController {
     public static ArrayList<TipoAjusteEstoque> getAllTipoAjuste() {
         ArrayList<TipoAjusteEstoque> tipos = new ArrayList<>();
         tipos.add(new TipoAjusteEstoque(1, "Consumo Interno", SAIDA));
-        tipos.add(new TipoAjusteEstoque(2, "Correção de Quantidade (Entrada)", ENTRADA));
-        tipos.add(new TipoAjusteEstoque(3, "Correção de Quantidade (Saída)", SAIDA));
+        tipos.add(new TipoAjusteEstoque(2, "Ajuste (Entrada)", ENTRADA));
+        tipos.add(new TipoAjusteEstoque(3, "Ajuste (Saída)", SAIDA));
         tipos.add(new TipoAjusteEstoque(4, "Desperdício", SAIDA));
         tipos.add(new TipoAjusteEstoque(5, "Validade Vencida", SAIDA));
         tipos.add(new TipoAjusteEstoque(6, "Quebra/CAT", SAIDA));
         tipos.add(new TipoAjusteEstoque(7, "Roubo", SAIDA));
+        tipos.add(new TipoAjusteEstoque(8, "Bonificação", ENTRADA));
+        tipos.add(new TipoAjusteEstoque(9, "Doação", SAIDA));
         return tipos;
     }
 
