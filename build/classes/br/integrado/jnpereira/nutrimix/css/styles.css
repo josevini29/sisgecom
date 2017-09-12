@@ -1,0 +1,139 @@
+.label {
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+
+.text-field {
+    -fx-font-size: 14px;
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.button_refresh {
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+}
+
+.tab {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.tab-pane {
+    -fx-border-color:  #ACACAC;
+}
+
+.anchor {
+    -fx-border-color:  #ACACAC;	
+}
+
+.anchor_welcome {
+    -fx-border-color:  #ACACAC;	
+    -fx-background-color: #233742;
+}
+
+.label_welcome {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: #FFF;
+    -fx-font-style: italic;
+}
+
+.label_titulo {
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.label_titulo2 {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.codigo {
+    -fx-background-color: linear-gradient(#89CFDA,  #90D6E1, #89CFDA);
+    -fx-border-color: #ACACAC;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 0px;
+    -fx-effect: innershadow(gaussian ,#5DB9C7, 5,0.2,0.2,0.2);
+    -fx-alignment: center;
+}
+
+.codigo:focused {
+    -fx-border-color: #ACACAC;
+    -fx-effect: innershadow(gaussian ,#2282E2, 5,0.2,0.2,0.2);
+}
+
+.transparente {
+    -fx-background-color: transparent;
+}
+
+.button_add {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-text-fill: blue;
+    -fx-padding: 0;
+    -fx-text-alignment: center
+}
+
+.button_rem {
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-text-fill: red;
+    -fx-padding: 0;
+    -fx-text-alignment: center
+}
+
+.chart-title {
+    -fx-text-fill: #FFF;
+    -fx-font-size: 16px;
+}
+
+.axis{
+    -fx-tick-label-fill: #FFF;
+}
+
+.chart-pie-label {
+    -fx-fill: #FFF;
+    -fx-font-size: 1em;
+}
+
+.chart {
+    -fx-padding: 10px;
+    -fx-border-color:  #ACACAC;	
+    -fx-effect: dropshadow( gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 0.0, 0.0 );
+    -fx-background-color: #233742;
+    -fx-text-fill: #FFF;  
+}
+
+#scrollChart .scroll-bar{
+    -fx-background-color: rgb(144,144,144);
+    -fx-pref-width: 20px;
+}
+
+.texto_estatico {
+    -fx-background-color: linear-gradient(#E8E8E8,  #E8E8E8, #E8E8E8);
+    -fx-border-color: #ABABAB;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 5px;
+    -fx-effect: innershadow(gaussian ,#ABABAB, 1,0.1,0.1,0.1);
+    -fx-alignment: center-left;
+}
+
+.numero_estatico {
+    -fx-background-color: linear-gradient(#E8E8E8,  #E8E8E8, #E8E8E8);
+    -fx-border-color: #ABABAB;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 5px;
+    -fx-effect: innershadow(gaussian ,#ABABAB, 1,0.1,0.1,0.1);
+    -fx-alignment: center-right;
+}
+
+.numero_editavel {
+    -fx-alignment: center-right;
+}
