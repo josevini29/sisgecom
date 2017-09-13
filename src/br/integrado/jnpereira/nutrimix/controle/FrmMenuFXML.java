@@ -143,6 +143,12 @@ public class FrmMenuFXML implements Initializable {
         Tela tela = new Tela();
         tela.abrirTelaModal(stage, Tela.CAD_AJUSTPROD);
     }
+    
+    @FXML
+    public void abrirConMovtoEstoq(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModal(stage, Tela.CON_MOVTO_ESTOQ);
+    }
 
     public Stage getStage() {
         return stage;

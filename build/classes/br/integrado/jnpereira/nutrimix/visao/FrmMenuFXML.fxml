@@ -43,6 +43,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadUnidPadrao" text="Unidade Padrão" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadPrecoProd" text="Preço Produto" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadAjustEstoq" text="Ajuste de Estoque" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirConMovtoEstoq" text="Consulta Movto. Estoque" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Cliente">

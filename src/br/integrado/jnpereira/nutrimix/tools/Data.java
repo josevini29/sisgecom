@@ -3,12 +3,26 @@ package br.integrado.jnpereira.nutrimix.tools;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javafx.scene.control.TextField;
 
 public class Data {
 
     public static Date getAgora() {
         Date agora = new Date();
         return agora;
+    }
+
+    public static void autoComplete(TextField campo) {
+        if (campo.getText().length() == 10) {
+            return;
+        }
+        String data = AmericaToBrasilSemHora(getAgora());
+        if (campo.getText().length() == 2) {
+            campo.setText(campo.getText() + data.substring(2, 10));
+        }
+        if (campo.getText().length() == 5) {
+            campo.setText(campo.getText() + data.substring(5, 10));
+        }
     }
 
     public static Date StringToDate(String data) throws Exception {

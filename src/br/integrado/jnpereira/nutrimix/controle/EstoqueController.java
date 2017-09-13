@@ -76,6 +76,7 @@ public class EstoqueController {
         dao.save(movto);
     }
 
+    //Tipo de Ajuste
     public static ArrayList<TipoAjusteEstoque> getAllTipoAjuste() {
         ArrayList<TipoAjusteEstoque> tipos = new ArrayList<>();
         tipos.add(new TipoAjusteEstoque(1, "Consumo Interno", SAIDA));
@@ -134,5 +135,62 @@ public class EstoqueController {
         public String toString() {
             return getDsTpAjuste();
         }
+    }
+    //Tipo de Ajuste
+
+    //Tipo de Movimento de Estoque
+     public static ArrayList<TipoMovtoEstoque> getAllTipoMovtoEstoque() {
+        ArrayList<TipoMovtoEstoque> tipos = new ArrayList<>();
+        tipos.add(new TipoMovtoEstoque(1, "Compra"));
+        tipos.add(new TipoMovtoEstoque(2, "Venda"));
+        tipos.add(new TipoMovtoEstoque(3, "Ajuste"));
+        return tipos;
+    }
+
+    public static TipoMovtoEstoque getTipoMovtoEstoque(int id) {
+        return getAllTipoMovtoEstoque().get(id - 1);
+    }
+    
+    public static class TipoMovtoEstoque {
+
+        private Integer cdTpMovto;
+        private String dsTpMovto;
+        
+        public TipoMovtoEstoque(Integer cdTpMovto, String dsTpMovto){
+            this.cdTpMovto = cdTpMovto;
+            this.dsTpMovto = dsTpMovto;
+        }
+        
+        @Override
+        public String toString() {
+            return getDsTpMovto();
+        }
+
+        public Integer getCdTpMovto() {
+            return cdTpMovto;
+        }
+
+        public void setCdTpMovto(Integer cdTpMovto) {
+            this.cdTpMovto = cdTpMovto;
+        }
+
+        public String getDsTpMovto() {
+            return dsTpMovto;
+        }
+
+        public void setDsTpMovto(String dsTpMovto) {
+            this.dsTpMovto = dsTpMovto;
+        }
+ 
+    }
+    //Tip de Movimento de Estoque
+    
+    public static String getDsEntraSaida(String tpMovto){
+        if (tpMovto.equals("E")){
+            return "Entrada";
+        }else if (tpMovto.equals("S")){
+            return "Saída";
+        }
+        return null;
     }
 }

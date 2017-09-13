@@ -192,4 +192,53 @@ public class TrataCombo {
         return null;
     }
 
+    public static void setValueComboTpMovtoEstoque(ChoiceBox combo, Integer selecionado) {
+        if (combo.getItems().isEmpty()) {
+            combo.setItems(FXCollections.observableArrayList(EstoqueController.getAllTipoMovtoEstoque()));
+        }
+        if (selecionado != null) {
+            SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+            model.select(selecionado - 1);
+        }
+    }
+
+    public static Integer getValueComboTpMovtoEstoque(ChoiceBox combo) {
+        SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+        if (model.getSelectedIndex() > -1) {
+            return EstoqueController.getAllTipoMovtoEstoque().get(model.getSelectedIndex()).getCdTpMovto();
+        }
+        return null;
+    }
+
+    public static void setValueComboEntradaSaida(ChoiceBox combo, String selecionado) {
+        if (combo.getItems().isEmpty()) {
+            combo.setItems(FXCollections.observableArrayList("Entrada", "Saída"));
+        }
+        if (selecionado != null) {
+            SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+            switch (selecionado.replace(" ", "")) {
+                case "E":
+                    model.select(0);
+                    break;
+                case "S":
+                    model.select(1);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public static String getValueComboEntradaSaida(ChoiceBox combo) {
+        SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+        switch (model.getSelectedIndex()) {
+            case 0:
+                return "E";
+            case 1:
+                return "S";
+            default:
+                return null;
+        }
+    }
+
 }

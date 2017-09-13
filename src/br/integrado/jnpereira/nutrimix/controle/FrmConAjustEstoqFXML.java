@@ -1,20 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
+import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
+import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
-import br.integrado.jnpereira.nutrimix.tools.Data;
-import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
+import br.integrado.jnpereira.nutrimix.tools.Criteria;
 import br.integrado.jnpereira.nutrimix.tools.CustomDate;
+import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.TrataCombo;
-import br.integrado.jnpereira.nutrimix.modelo.AjusteEstoque;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,40 +23,43 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class FrmListaAjustEstoqFXML implements Initializable {
-
-    Dao dao = new Dao();
-    ObservableList<ClasseGenerica> data;
+public class FrmConAjustEstoqFXML implements Initializable {
 
     @FXML
-    TextField cdAjuste;
+    TextField cdProduto;
     @FXML
-    ChoiceBox tpAjuste;
+    TextField dsProduto;
     @FXML
     TextField dtInicio;
     @FXML
     TextField dtFim;
     @FXML
-    TableView<ClasseGenerica> gridGenerica;
+    ChoiceBox tpMovto;
 
-    private Stage stage;
-    private String dsRetorno = null;
+    @FXML
+    TableView<ClasseGenerica> gridMovto;
+
+    ObservableList<ClasseGenerica> data;
+    Dao dao = new Dao();
+
+    public void iniciaTela() {
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        gridGenerica = ContruirTableView.Criar(gridGenerica, ClasseGenerica.class);
-        gridGenerica.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TrataCombo.setValueComboTpMovtoEstoque(tpMovto, null);
+        gridMovto = ContruirTableView.Criar(gridMovto, ClasseGenerica.class);
+        gridMovto.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        gridGenerica.setOnMousePressed((MouseEvent event) -> {
+        /*gridMovto.setOnMousePressed((MouseEvent event) -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 ok();
             }
-        });
-
+        });*/
         dtInicio.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 if (!dtInicio.getText().equals("")) {
@@ -120,11 +119,11 @@ public class FrmListaAjustEstoqFXML implements Initializable {
         });
     }
 
+    @FXML
     public void atualizaGrid() {
         ArrayList<ClasseGenerica> valoresArray = new ArrayList<>();
-        getStage().setTitle("Lista de Ajustes de Estoque");
         String sql = "";
-        if (!cdAjuste.getText().equals("")) {
+        /*if (!cdAjuste.getText().equals("")) {
             sql = " $AjusteEstoque.cdAjuste$ = " + cdAjuste.getText();
         }
 
@@ -146,18 +145,37 @@ public class FrmListaAjustEstoqFXML implements Initializable {
 
         if (!sql.equals("")) {
             sql = "WHERE " + sql;
-        }
+        }*/
 
-        sql = sql + " ORDER BY $AjusteEstoque.cdAjuste$ ASC";
+        sql = sql + " ORDER BY $MovtoEstoque.dtMovto$ ASC";
 
         try {
-            ArrayList<Object> ajustes = dao.getAllWhere(new AjusteEstoque(), sql);
+            Criteria criterio = new Criteria();
+            criterio.AddAnd("cdProduto", new MovtoEstoque(), cdProduto.getText(), false);
+            String teste = criterio.getWhereSql();
+
+            ArrayList<Object> ajustes = dao.getAllWhere(new MovtoEstoque(), sql);
             for (Object obj : ajustes) {
-                AjusteEstoque ajus = (AjusteEstoque) obj;
+                MovtoEstoque movto = (MovtoEstoque) obj;
                 ClasseGenerica classeGenerica = new ClasseGenerica();
-                classeGenerica.setCdAjuste(ajus.getCdAjuste());
-                classeGenerica.setTpAjuste(EstoqueController.getTipoAjusteEstoque(ajus.getTpAjuste()).getDsTpAjuste());
-                classeGenerica.setDtMovto(new CustomDate(ajus.getDtCadastro().getTime()));
+                classeGenerica.setCdProduto(movto.getCdProduto());
+                Produto prod = new Produto();
+                prod.setCdProduto(movto.getCdProduto());
+                dao.get(prod);
+                classeGenerica.setDsProduto(prod.getDsProduto());
+                classeGenerica.setDsMovto(EstoqueController.getDsEntraSaida(movto.getTpMovto()));
+                Integer codMovto = null;
+                if (movto.getCdMovCompVend() != null && movto.getTpMovto().equals("E")) {
+                    codMovto = 1;
+                } else if (movto.getCdMovCompVend() != null && movto.getTpMovto().equals("S")) {
+                    codMovto = 2;
+                } else if (movto.getCdAjuste() != null) {
+                    codMovto = 3;
+                }
+                classeGenerica.setTpMovto(EstoqueController.getTipoMovtoEstoque(codMovto).getDsTpMovto());
+                classeGenerica.setDtMovto(new CustomDate(movto.getDtMovto().getTime()));
+                classeGenerica.setQtMovto(movto.getQtMovto());
+                classeGenerica.setQtEstoq(movto.getQtEstoque());
                 valoresArray.add(classeGenerica);
             }
         } catch (Exception ex) {
@@ -165,75 +183,53 @@ public class FrmListaAjustEstoqFXML implements Initializable {
         }
 
         data = FXCollections.observableArrayList(valoresArray);
-        gridGenerica.setItems(data);
-        gridGenerica.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        gridMovto.setItems(data);
+        gridMovto.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    @FXML
-    public void ok() {
-        ClasseGenerica generica = gridGenerica.getSelectionModel().getSelectedItem();
-        if (generica == null) {
-            Alerta.AlertaInfo("Aviso!", "Selecione um item.");
-            return;
-        }
-        setDsRetorno(generica.getCdAjuste().toString());
-        stage.close();
-    }
+    public class ClasseGenerica extends MovtoEstoque {
 
-    @FXML
-    public void cancelar() {
-        stage.close();
-    }
-
-    @FXML
-    public void pesquisar() {
-        atualizaGrid();
-    }
-
-    public void iniciaTela() {
-        FuncaoCampo.mascaraNumeroInteiro(cdAjuste);
-        FuncaoCampo.mascaraData(dtInicio);
-        FuncaoCampo.mascaraData(dtFim);
-        TrataCombo.setValueComboTpAjustEstoq(tpAjuste, null);
-        atualizaGrid();
-    }
-
-    public String getDsRetorno() {
-        return dsRetorno;
-    }
-
-    public void setDsRetorno(String dsRetorno) {
-        this.dsRetorno = dsRetorno;
-    }
-
-    public Stage getStage() {
-        return stage;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public class ClasseGenerica {
-
-        @Coluna(nome = "Código")
-        @Style(css = "-fx-alignment: CENTER-RIGHT;")
-        private Integer cdAjuste;
-        @Coluna(nome = "Tipo Ajuste")
+        @Coluna(nome = "Cód. Prod.")
         @Style(css = "-fx-alignment: CENTER;")
-        private String tpAjuste;
+        private Integer cdProduto;
+        @Coluna(nome = "Descrição do Produto")
+        @Style(css = "-fx-alignment: CENTER-LEFT;")
+        private String dsProduto;
         @Coluna(nome = "Data Movto")
         @Style(css = "-fx-alignment: CENTER;")
         private CustomDate dtMovto;
+        @Coluna(nome = "Entrada/Saída")
+        @Style(css = "-fx-alignment: CENTER;")
+        private String dsMovto;
+        @Coluna(nome = "Tipo de Movto")
+        @Style(css = "-fx-alignment: CENTER;")
+        private String tpMovto;
+        @Coluna(nome = "Qt. Movto")
+        @Style(css = "-fx-alignment: CENTER;")
+        private Double qtMovto;
+        @Coluna(nome = "Qt. Estoq.")
+        @Style(css = "-fx-alignment: CENTER;")
+        private Double qtEstoq;
 
-        public String getTpAjuste() {
-            return tpAjuste;
+        @Override
+        public Integer getCdProduto() {
+            return cdProduto;
         }
 
-        public void setTpAjuste(String tpAjuste) {
-            this.tpAjuste = tpAjuste;
+        @Override
+        public void setCdProduto(Integer cdProduto) {
+            this.cdProduto = cdProduto;
         }
 
+        public String getDsProduto() {
+            return dsProduto;
+        }
+
+        public void setDsProduto(String dsProduto) {
+            this.dsProduto = dsProduto;
+        }
+
+        @Override
         public CustomDate getDtMovto() {
             return dtMovto;
         }
@@ -242,13 +238,42 @@ public class FrmListaAjustEstoqFXML implements Initializable {
             this.dtMovto = dtMovto;
         }
 
-        public Integer getCdAjuste() {
-            return cdAjuste;
+        public String getDsMovto() {
+            return dsMovto;
         }
 
-        public void setCdAjuste(Integer cdAjuste) {
-            this.cdAjuste = cdAjuste;
+        public void setDsMovto(String dsMovto) {
+            this.dsMovto = dsMovto;
+        }
+
+        @Override
+        public String getTpMovto() {
+            return tpMovto;
+        }
+
+        @Override
+        public void setTpMovto(String tpMovto) {
+            this.tpMovto = tpMovto;
+        }
+
+        @Override
+        public Double getQtMovto() {
+            return qtMovto;
+        }
+
+        @Override
+        public void setQtMovto(Double qtMovto) {
+            this.qtMovto = qtMovto;
+        }
+
+        public Double getQtEstoq() {
+            return qtEstoq;
+        }
+
+        public void setQtEstoq(Double qtEstoq) {
+            this.qtEstoq = qtEstoq;
         }
 
     }
+
 }
