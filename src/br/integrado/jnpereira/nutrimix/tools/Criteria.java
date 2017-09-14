@@ -15,13 +15,62 @@ public class Criteria {
 
     private Object classe = new Object();
     private String orderBy = new String();
+    private String sql = new String();
 
     public Criteria(Object classe) {
         this.classe = classe;
     }
 
-    public void AddAnd(String campo, Object valor, boolean consideraNulo) {
-        criterios.add(new CriteriaItem(campo, valor, "AND", consideraNulo));
+    public void AddAnd(String campo, Object valor, boolean consideraNulo) throws Exception {
+        if (valor != null || consideraNulo) {
+            Field field;
+            try {
+                field = classe.getClass().getDeclaredField(campo);
+            } catch (Exception ex) {
+                throw new Exception("Erro ao obter campo " + campo + ".\n" + ex.toString());
+            }
+            if (field.getType().getSimpleName().toLowerCase().equals("string")) {
+                if (!sql.equals("")) {
+                    sql += " AND ";
+                }
+                valor = (String) "'" + valor + "' ";
+                String dsClasse = (String) classe.getClass().getSimpleName();
+                String proposicao = "$" + dsClasse + "." + campo + "$ " + (valor == null ? "is " : "= ") + valor;
+            } else if (field.getType().getSimpleName().toLowerCase().equals("integer")) {
+                if (!String.valueOf(valor).equals("")) {
+                    if (!sql.equals("")) {
+                        sql += " AND ";
+                    }
+                    valor = String.valueOf(valor);
+                    String dsClasse = (String) classe.getClass().getSimpleName();
+                    String proposicao = "$" + dsClasse + "." + campo + "$ " + (valor == null ? "is " : "= ") + valor;
+                    sql += proposicao;
+                }
+            }
+        }
+    }
+
+    public void AddAndBetweenDate(String campo, String dtInicio, String dtFim) throws Exception {
+        if (dtInicio != null && dtFim != null) {
+            if (!dtInicio.equals("") && !dtFim.equals("")) {
+                Field field;
+                try {
+                    field = classe.getClass().getDeclaredField(campo);
+                } catch (Exception ex) {
+                    throw new Exception("Erro ao obter campo " + campo + ".\n" + ex.toString());
+                }
+                if (field.getType().getSimpleName().toLowerCase().equals("date")) {
+                    if (!sql.equals("")) {
+                        sql += "AND ";
+                    }
+                    dtInicio = "'" + dtInicio + " 00:00:00'";
+                    dtFim = "'" + dtFim + " 23:59:59' ";
+                    String dsClasse = (String) classe.getClass().getSimpleName();
+                    String proposicao = "$" + dsClasse + "." + campo + "$ BETWEEN " + dtInicio + " AND " + dtFim;
+                    sql += proposicao;
+                }
+            }
+        }
     }
 
     public void AddOrderByAsc(String campo) {
@@ -37,41 +86,6 @@ public class Criteria {
     }
 
     public String getWhereSql() throws Exception {
-        String sql = "";
-        Iterator it = criterios.iterator();
-        for (int i = 0; it.hasNext(); i++) {
-            CriteriaItem item = (CriteriaItem) it.next();
-            if (item.valor != null || item.nulo) {
-                Field field;
-                try {
-                    field = classe.getClass().getDeclaredField(item.campo);
-                } catch (Exception ex) {
-                    throw new Exception("Erro ao obter campo " + item.campo + ".\n" + ex.toString());
-                }
-                if (field.getType().getSimpleName().toLowerCase().equals("string")) {
-                    //if (!((String) item.valor).equals("")) {
-                    if (i > 0) {
-                        sql += item.tipo + " ";
-                    }
-                    String tipo = (String) item.tipo;
-                    String valor = (String) "'" + item.valor + "' ";
-                    String dsClasse = (String) classe.getClass().getSimpleName();
-                    String proposicao = "$" + dsClasse + "." + item.campo + "$ = " + valor;
-                    //}
-                } else if (field.getType().getSimpleName().toLowerCase().equals("integer")) {
-                    if (!String.valueOf(item.valor).equals("")) {
-                        if (i > 0) {
-                            sql += item.tipo + " ";
-                        }
-                        String tipo = (String) item.tipo;
-                        String valor = (String) item.valor;
-                        String dsClasse = (String) classe.getClass().getSimpleName();
-                        String proposicao = "$" + dsClasse + "." + item.campo + "$ = " + valor;
-                        sql += proposicao;
-                    }
-                }
-            }
-        }
 
         if (!sql.equals("")) {
             sql = " WHERE " + sql;
@@ -86,13 +100,15 @@ public class Criteria {
     private class CriteriaItem {
 
         private String campo;
-        private Object valor;
+        private Object valor1;
+        private Object valor2;
         private String tipo;
         private boolean nulo;
 
-        public CriteriaItem(String campo, Object valor, String tipo, boolean nulo) {
+        public CriteriaItem(String campo, Object valor1, Object valor2, String tipo, boolean nulo) {
             this.campo = campo;
-            this.valor = valor;
+            this.valor1 = valor1;
+            this.valor2 = valor2;
             this.tipo = tipo;
             this.nulo = nulo;
         }

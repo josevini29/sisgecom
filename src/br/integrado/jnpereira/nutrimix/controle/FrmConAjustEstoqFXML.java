@@ -10,6 +10,7 @@ import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Criteria;
 import br.integrado.jnpereira.nutrimix.tools.CustomDate;
 import br.integrado.jnpereira.nutrimix.tools.Data;
+import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
 import br.integrado.jnpereira.nutrimix.tools.TrataCombo;
 import java.net.URL;
 import java.util.ArrayList;
@@ -50,8 +51,11 @@ public class FrmConAjustEstoqFXML implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        FuncaoCampo.mascaraNumeroInteiro(cdProduto);
+        FuncaoCampo.mascaraData(dtInicio);
+        FuncaoCampo.mascaraData(dtFim);
         TrataCombo.setValueComboTpMovtoEstoque(tpMovto, null);
+
         gridMovto = ContruirTableView.Criar(gridMovto, ClasseGenerica.class);
         gridMovto.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -149,6 +153,7 @@ public class FrmConAjustEstoqFXML implements Initializable {
         try {
             Criteria criterio = new Criteria(new MovtoEstoque());
             criterio.AddAnd("cdProduto", cdProduto.getText(), false);
+            criterio.AddAndBetweenDate("dtMovto", dtInicio.getText(), dtFim.getText());
             criterio.AddOrderByAsc("dtMovto");
             String sql = criterio.getWhereSql();
 
