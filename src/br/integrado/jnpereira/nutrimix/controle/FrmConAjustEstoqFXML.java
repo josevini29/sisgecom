@@ -122,7 +122,6 @@ public class FrmConAjustEstoqFXML implements Initializable {
     @FXML
     public void atualizaGrid() {
         ArrayList<ClasseGenerica> valoresArray = new ArrayList<>();
-        String sql = "";
         /*if (!cdAjuste.getText().equals("")) {
             sql = " $AjusteEstoque.cdAjuste$ = " + cdAjuste.getText();
         }
@@ -147,12 +146,11 @@ public class FrmConAjustEstoqFXML implements Initializable {
             sql = "WHERE " + sql;
         }*/
 
-        sql = sql + " ORDER BY $MovtoEstoque.dtMovto$ ASC";
-
         try {
-            Criteria criterio = new Criteria();
-            criterio.AddAnd("cdProduto", new MovtoEstoque(), cdProduto.getText(), false);
-            String teste = criterio.getWhereSql();
+            Criteria criterio = new Criteria(new MovtoEstoque());
+            criterio.AddAnd("cdProduto", cdProduto.getText(), false);
+            criterio.AddOrderByAsc("dtMovto");
+            String sql = criterio.getWhereSql();
 
             ArrayList<Object> ajustes = dao.getAllWhere(new MovtoEstoque(), sql);
             for (Object obj : ajustes) {
