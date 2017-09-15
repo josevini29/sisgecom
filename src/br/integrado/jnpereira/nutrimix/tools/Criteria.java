@@ -7,7 +7,6 @@ package br.integrado.jnpereira.nutrimix.tools;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Criteria {
 
@@ -33,17 +32,20 @@ public class Criteria {
                 if (!sql.equals("")) {
                     sql += " AND ";
                 }
+                boolean inNulo = (valor == null);
                 valor = (String) "'" + valor + "' ";
                 String dsClasse = (String) classe.getClass().getSimpleName();
-                String proposicao = "$" + dsClasse + "." + campo + "$ " + (valor == null ? "is " : "= ") + valor;
+                String proposicao = "$" + dsClasse + "." + campo + "$ " + (inNulo ? "is " : "= ") + valor;
+                sql += proposicao;
             } else if (field.getType().getSimpleName().toLowerCase().equals("integer")) {
                 if (!String.valueOf(valor).equals("")) {
                     if (!sql.equals("")) {
                         sql += " AND ";
                     }
+                    boolean inNulo = (valor == null);
                     valor = String.valueOf(valor);
                     String dsClasse = (String) classe.getClass().getSimpleName();
-                    String proposicao = "$" + dsClasse + "." + campo + "$ " + (valor == null ? "is " : "= ") + valor;
+                    String proposicao = "$" + dsClasse + "." + campo + "$ " + (inNulo ? "IS " : "= ") + valor;
                     sql += proposicao;
                 }
             }

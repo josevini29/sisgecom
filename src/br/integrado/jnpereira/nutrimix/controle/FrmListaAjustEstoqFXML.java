@@ -124,6 +124,14 @@ public class FrmListaAjustEstoqFXML implements Initializable {
         ArrayList<ClasseGenerica> valoresArray = new ArrayList<>();
         getStage().setTitle("Lista de Ajustes de Estoque");
         String sql = "";
+        if (!dtInicio.getText().equals("") && dtFim.getText().equals("")) {
+            dtFim.setText(Data.AmericaToBrasilSemHora(Data.getAgora()));
+        }
+        if (dtInicio.getText().equals("") && !dtFim.getText().equals("")) {
+            Alerta.AlertaError("Não permitido", "Data de início é obrigatória.");
+            dtInicio.requestFocus();
+            return;
+        }
         if (!cdAjuste.getText().equals("")) {
             sql = " $AjusteEstoque.cdAjuste$ = " + cdAjuste.getText();
         }

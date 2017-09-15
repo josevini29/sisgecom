@@ -11,6 +11,7 @@ import br.integrado.jnpereira.nutrimix.tools.Criteria;
 import br.integrado.jnpereira.nutrimix.tools.CustomDate;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
+import br.integrado.jnpereira.nutrimix.tools.Tela;
 import br.integrado.jnpereira.nutrimix.tools.TrataCombo;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 public class FrmConAjustEstoqFXML implements Initializable {
 
@@ -49,6 +49,39 @@ public class FrmConAjustEstoqFXML implements Initializable {
 
     }
 
+    @FXML
+    public void abrirListaProduto() {
+        Tela tela = new Tela();
+        String valor = tela.abrirListaGenerica(new Produto(), "cdProduto", "dsProduto", "AND $inAtivo$ = 'T'", "Lista de Produtos");
+        if (valor != null) {
+            cdProduto.setText(valor);
+            validaCodigoProduto();
+        }
+    }
+
+    private void validaCodigoProduto() {
+        if (!cdProduto.getText().equals("")) {
+            try {
+                Produto prod = new Produto();
+                prod.setCdProduto(Integer.parseInt(cdProduto.getText()));
+                dao.get(prod);
+
+                if (!prod.getInAtivo()) {
+                    Alerta.AlertaError("Inválido", "Produto está inativo.");
+                    cdProduto.requestFocus();
+                    return;
+                }
+
+                dsProduto.setText(prod.getDsProduto());
+            } catch (Exception ex) {
+                Alerta.AlertaError("Notificação", "Produto não encontrado!");
+                cdProduto.requestFocus();
+            }
+        } else {
+            dsProduto.setText("");
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FuncaoCampo.mascaraNumeroInteiro(cdProduto);
@@ -58,6 +91,11 @@ public class FrmConAjustEstoqFXML implements Initializable {
 
         gridMovto = ContruirTableView.Criar(gridMovto, ClasseGenerica.class);
         gridMovto.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                validaCodigoProduto();
+            }
+        });
 
         /*gridMovto.setOnMousePressed((MouseEvent event) -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
@@ -126,34 +164,30 @@ public class FrmConAjustEstoqFXML implements Initializable {
     @FXML
     public void atualizaGrid() {
         ArrayList<ClasseGenerica> valoresArray = new ArrayList<>();
-        /*if (!cdAjuste.getText().equals("")) {
-            sql = " $AjusteEstoque.cdAjuste$ = " + cdAjuste.getText();
+        if (!dtInicio.getText().equals("") && dtFim.getText().equals("")) {
+            dtFim.setText(Data.AmericaToBrasilSemHora(Data.getAgora()));
         }
-
-        if (TrataCombo.getValueComboTpAjustEstoq(tpAjuste) != null) {
-            if (!sql.equals("")) {
-                sql += " AND";
-            }
-            sql += " $AjusteEstoque.tpAjuste$ = " + TrataCombo.getValueComboTpAjustEstoq(tpAjuste);
+        if (dtInicio.getText().equals("") && !dtFim.getText().equals("")) {
+            Alerta.AlertaError("Não permitido", "Data de início é obrigatória.");
+            dtInicio.requestFocus();
+            return;
         }
-
-        if (!dtInicio.getText().equals("")) {
-            if (!sql.equals("")) {
-                sql += " AND";
-            }
-
-            sql += " $AjusteEstoque.dtCadastro$ BETWEEN "
-                    + "'" + dtInicio.getText() + " 00:00:00' AND '" + dtFim.getText() + " 23:59:59'";
-        }
-
-        if (!sql.equals("")) {
-            sql = "WHERE " + sql;
-        }*/
-
         try {
             Criteria criterio = new Criteria(new MovtoEstoque());
             criterio.AddAnd("cdProduto", cdProduto.getText(), false);
             criterio.AddAndBetweenDate("dtMovto", dtInicio.getText(), dtFim.getText());
+
+            if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) != null) {
+                if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) == 1) {
+                    criterio.AddAnd("tpMovto", "E", false);
+                    criterio.AddAnd("cdAjuste", null, true);
+                } else if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) == 2) {
+                    criterio.AddAnd("tpMovto", "S", false);
+                    criterio.AddAnd("cdAjuste", null, true);
+                } else if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) == 3) {
+                    criterio.AddAnd("cdMovCompVend", null, true);
+                }
+            }
             criterio.AddOrderByAsc("dtMovto");
             String sql = criterio.getWhereSql();
 

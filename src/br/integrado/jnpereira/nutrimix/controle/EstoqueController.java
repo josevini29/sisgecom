@@ -141,6 +141,7 @@ public class EstoqueController {
     //Tipo de Movimento de Estoque
      public static ArrayList<TipoMovtoEstoque> getAllTipoMovtoEstoque() {
         ArrayList<TipoMovtoEstoque> tipos = new ArrayList<>();
+        tipos.add(new TipoMovtoEstoque(null, ""));
         tipos.add(new TipoMovtoEstoque(1, "Compra"));
         tipos.add(new TipoMovtoEstoque(2, "Venda"));
         tipos.add(new TipoMovtoEstoque(3, "Ajuste"));
@@ -148,7 +149,7 @@ public class EstoqueController {
     }
 
     public static TipoMovtoEstoque getTipoMovtoEstoque(int id) {
-        return getAllTipoMovtoEstoque().get(id - 1);
+        return getAllTipoMovtoEstoque().get(id);
     }
     
     public static class TipoMovtoEstoque {

@@ -34,7 +34,7 @@
          </font>
       </TextField>
       <Label layoutX="119.0" layoutY="15.0" text="Descrição do Produto" />
-      <Button layoutX="83.0" layoutY="33.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0">
+      <Button layoutX="83.0" layoutY="33.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" onAction="#abrirListaProduto" prefHeight="30.0" prefWidth="28.0">
          <graphic>
             <ImageView fitHeight="17.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                <image>

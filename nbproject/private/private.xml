@@ -5,10 +5,8 @@
         <group>
             <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/sisgecom/src/br/integrado/jnpereira/nutrimix/tools/Criteria.java</file>
             <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/sisgecom/src/br/integrado/jnpereira/nutrimix/controle/FrmConAjustEstoqFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/sisgecom/src/br/integrado/jnpereira/nutrimix/controle/EstoqueController.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/sisgecom/src/br/integrado/jnpereira/nutrimix/tools/Data.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/sisgecom/src/br/integrado/jnpereira/nutrimix/controle/FrmListaAjustEstoqFXML.java</file>
             <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/sisgecom/src/br/integrado/jnpereira/nutrimix/dao/Dao.java</file>
+            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/sisgecom/src/br/integrado/jnpereira/nutrimix/table/ContruirTableView.java</file>
             <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/sisgecom/src/br/integrado/jnpereira/nutrimix/controle/FrmCadAjustEstoqFXML.java</file>
         </group>
     </open-files>
