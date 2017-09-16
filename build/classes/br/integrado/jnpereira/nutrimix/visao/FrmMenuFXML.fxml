@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="366.0" prefWidth="546.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML">
+<AnchorPane id="AnchorPane" prefHeight="520.0" prefWidth="631.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML">
    <children>
       <GridPane prefHeight="366.0" prefWidth="546.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -140,7 +140,7 @@
                      <content>
                         <ScrollPane fx:id="scrollChart" prefHeight="200.0" prefWidth="200.0">
                            <content>
-                              <AnchorPane fx:id="paneChart" prefHeight="170.0" prefWidth="446.0">
+                              <AnchorPane fx:id="paneChart" prefHeight="170.0" prefWidth="446.0" style="-fx-padding: 0 0 15 0;">
                                  <children>
                                     <Button layoutX="8.0" layoutY="8.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="92.0" styleClass="button_refresh" text="Atualizar">
                                        <graphic>
@@ -166,7 +166,68 @@
                 </Tab>
                 <Tab text="Atendimento">
                      <content>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <GridPane layoutX="68.0" layoutY="97.0" prefHeight="399.0" prefWidth="629.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1">
+                                      <content>
+                                        <AnchorPane fx:id="paneAtend" style="-fx-padding: 0 0 15 0;">
+                                             <children>
+                                                <Button alignment="TOP_CENTER" contentDisplay="BOTTOM" graphicTextGap="20.0" layoutX="16.0" layoutY="14.0" maxHeight="102.0" maxWidth="97.0" minHeight="102.0" minWidth="97.0" mnemonicParsing="false" prefHeight="102.0" prefWidth="97.0" text="Mesa 01" textAlignment="CENTER">
+                                                   <graphic>
+                                                      <ImageView fitHeight="43.0" fitWidth="96.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../icon/mesa.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                </Button>
+                                                <Button alignment="BOTTOM_CENTER" layoutX="16.0" layoutY="116.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="97.0" text="Acerto">
+                                                   <graphic>
+                                                      <ImageView fitHeight="17.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../icon/dinheiro.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                </Button>
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </ScrollPane>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <Button alignment="BOTTOM_CENTER" layoutX="209.0" layoutY="15.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="172.0" text="Fechar Caixa">
+                                             <graphic>
+                                                <ImageView fitHeight="17.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../icon/caixa_finan.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </Button>
+                                          <Button alignment="BOTTOM_CENTER" layoutX="25.0" layoutY="15.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="172.0" text="Novo Atendimento">
+                                             <graphic>
+                                                <ImageView fitHeight="17.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../icon/add.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </Button>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </GridPane>
+                           </children></AnchorPane>
                      </content>
                      <graphic>
                         <ImageView fitHeight="22.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">

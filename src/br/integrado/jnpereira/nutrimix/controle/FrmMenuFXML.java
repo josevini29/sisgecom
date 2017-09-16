@@ -8,8 +8,10 @@ package br.integrado.jnpereira.nutrimix.controle;
 import br.integrado.jnpereira.nutrimix.tools.Charts;
 import br.integrado.jnpereira.nutrimix.tools.Relogio;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
+import br.integrado.jnpereira.nutrimix.tools.ButtonAtend;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,6 +38,8 @@ public class FrmMenuFXML implements Initializable {
     @FXML
     private AnchorPane paneChart;
     @FXML
+    private AnchorPane paneAtend;
+    @FXML
     private Label lblRelogio;
     @FXML
     private TabPane tabInicio;
@@ -44,7 +48,13 @@ public class FrmMenuFXML implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        tabInicio.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldValue, Number newValue) -> {
+           if (newValue.intValue() == 0){
+               //loadDashBoard();
+           }else{
+               //loadButtonAtend();
+           }
+        });
     }
 
     public void iniciaTela() {
@@ -58,12 +68,19 @@ public class FrmMenuFXML implements Initializable {
         Relogio rel = new Relogio(lblRelogio);
         rel.start();
         loadDashBoard();
+        loadButtonAtend();
     }
 
     private void loadDashBoard() {
         Charts chart = new Charts();
         chart.setPaneChart(paneChart);
         chart.start();
+    }
+
+    private void loadButtonAtend() {
+        ButtonAtend buttonAntend = new ButtonAtend();
+        buttonAntend.setPaneAtend(paneAtend);
+        buttonAntend.start();
     }
 
     @FXML
@@ -137,13 +154,13 @@ public class FrmMenuFXML implements Initializable {
         Tela tela = new Tela();
         tela.abrirTelaModal(stage, Tela.CAD_FUNC);
     }
-    
+
     @FXML
     public void abrirCadAjustEstoq(ActionEvent event) {
         Tela tela = new Tela();
         tela.abrirTelaModal(stage, Tela.CAD_AJUSTPROD);
     }
-    
+
     @FXML
     public void abrirConMovtoEstoq(ActionEvent event) {
         Tela tela = new Tela();

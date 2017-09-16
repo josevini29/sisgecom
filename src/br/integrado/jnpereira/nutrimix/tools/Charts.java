@@ -74,7 +74,7 @@ public class Charts extends Thread {
             paneChart.getChildren().add(grafico4);
             spaceHeightY += (chartHeight + spaceHeight); //somente no grafico da segundo coluna
             
-                        //Grafico(2,1)
+            //Grafico(2,1)
             Node grafico5 = getTesteBarra();
             grafico5.setLayoutY(spaceHeightY);
             grafico5.setLayoutX(spaceWidth);

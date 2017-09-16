@@ -1,4 +1,3 @@
-
 package br.integrado.jnpereira.nutrimix.modelo;
 
 import br.integrado.jnpereira.nutrimix.dao.AutoIncrement;
@@ -7,19 +6,19 @@ import br.integrado.jnpereira.nutrimix.dao.Id;
 import br.integrado.jnpereira.nutrimix.dao.Tabela;
 import java.util.Date;
 
-
-@Tabela(nome="atendimento")
+@Tabela(nome = "atendimento")
 public class Atendimento {
-    
+
     @Id
     @AutoIncrement
-    @Coluna(nome="cd_atend")
+    @Coluna(nome = "cd_atend")
     private Integer cdAtend;
-    @Coluna(nome="nr_mesa")
-    private Integer nrMesa;
-    @Coluna(nome="dt_atend")
+    @Id
+    @Coluna(nome = "dt_atend")
     private Date dtAtend;
-    @Coluna(nome="st_atend")
+    @Coluna(nome = "nr_mesa")
+    private Integer nrMesa;
+    @Coluna(nome = "st_atend")
     private String stAtend;
 
     public Integer getCdAtend() {
@@ -53,6 +52,5 @@ public class Atendimento {
     public void setStAtend(String stAtend) {
         this.stAtend = stAtend;
     }
-    
-    
+
 }
