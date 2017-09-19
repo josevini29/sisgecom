@@ -82,6 +82,11 @@ public class FrmMenuFXML implements Initializable {
         buttonAntend.setPaneAtend(paneAtend);
         buttonAntend.start();
     }
+    
+    @FXML
+    public void atualizarButtonAtend(){
+        loadButtonAtend();
+    }
 
     @FXML
     public void abrirCadBanco(ActionEvent event) {

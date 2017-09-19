@@ -21,8 +21,6 @@ public class AtendimentoProduto {
     private Double qtProduto;
     @Coluna(nome = "qtPaga")
     private Double qtPaga;
-    @Coluna(nome = "st_item")
-    private String stItem;
     @Coluna(nome = "cd_usercad")
     private Integer cdUserCad;
     @Coluna(nome = "dt_cadastro")
@@ -58,14 +56,6 @@ public class AtendimentoProduto {
 
     public void setQtPaga(Double qtPaga) {
         this.qtPaga = qtPaga;
-    }
-
-    public String getStItem() {
-        return stItem;
-    }
-
-    public void setStItem(String stItem) {
-        this.stItem = stItem;
     }
 
     public Integer getCdUserCad() {

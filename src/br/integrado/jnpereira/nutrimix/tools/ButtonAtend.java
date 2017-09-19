@@ -10,12 +10,13 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.text.TextAlignment;
 
 public class ButtonAtend extends Thread {
-    
+
     private AnchorPane paneAtend;
     private final Dao dao = new Dao();
     private double layoutY;
@@ -28,7 +29,7 @@ public class ButtonAtend extends Thread {
     int btnAcertoWidth = 97;
     int btnAcertoHeight = 26;
     int qtLinha;
-    
+
     public ButtonAtend() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension tela = tk.getScreenSize();
@@ -36,14 +37,14 @@ public class ButtonAtend extends Thread {
         layoutY = spaceHeight;
         layoutX = spaceWidth;
     }
-    
+
     @Override
     public void run() {
         Platform.runLater(() -> {
             load();
         });
     }
-    
+
     private void load() {
         try {
             paneAtend.getChildren().clear();
@@ -66,12 +67,12 @@ public class ButtonAtend extends Thread {
                 }
                 paneAtend.setPrefHeight(layoutY);
             }
-            
+
         } catch (Exception ex) {
             Alerta.AlertaError("Erro!", ex.toString());
         }
     }
-    
+
     private void addButton(AtendimentoHit atendHit) {
         Button btnAtend = atendHit.btnAtend;
         btnAtend.setPrefSize(btnAtendWidth, btnAtendHeight);
@@ -85,7 +86,10 @@ public class ButtonAtend extends Thread {
         btnAtend.setTextAlignment(TextAlignment.CENTER);
         IconButtonHit.setIconAtend(btnAtend, IconButtonHit.ICON_MESA);
         paneAtend.getChildren().add(btnAtend);
-        
+        btnAtend.setOnAction((ActionEvent event) -> {
+            
+        });
+
         Button btnAcerto = atendHit.btnAcerto;
         btnAcerto.setPrefSize(btnAcertoWidth, btnAcertoHeight);
         btnAcerto.setLayoutX(layoutX);
@@ -97,19 +101,19 @@ public class ButtonAtend extends Thread {
         IconButtonHit.setIconComTexto(btnAcerto, IconButtonHit.ICON_DINHEIRO);
         paneAtend.getChildren().add(btnAcerto);
     }
-    
+
     public AnchorPane getPaneAtend() {
         return paneAtend;
     }
-    
+
     public void setPaneAtend(AnchorPane paneAtend) {
         this.paneAtend = paneAtend;
     }
-    
+
     private class AtendimentoHit extends Atendimento {
-        
+
         Button btnAtend = new Button();
         Button btnAcerto = new Button();
     }
-    
+
 }
