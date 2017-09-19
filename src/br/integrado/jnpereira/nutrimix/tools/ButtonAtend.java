@@ -55,9 +55,7 @@ public class ButtonAtend extends Thread {
                 f++;
                 Atendimento atend = (Atendimento) it.next();
                 AtendimentoHit atendHit = new AtendimentoHit();
-                atendHit.setCdAtend(atend.getCdAtend());
-                atendHit.setDtAtend(atend.getDtAtend());
-                atendHit.setNrMesa(atend.getNrMesa());
+                atendHit.atend = atend;
                 addButton(atendHit);
                 layoutX += (btnAtendWidth + spaceWidth);
                 if (f >= qtLinha) {
@@ -78,7 +76,7 @@ public class ButtonAtend extends Thread {
         btnAtend.setPrefSize(btnAtendWidth, btnAtendHeight);
         btnAtend.setLayoutX(layoutX);
         btnAtend.setLayoutY(layoutY);
-        btnAtend.setText("Mesa " + decFormat.format(atendHit.getNrMesa()));
+        btnAtend.setText("Mesa " + decFormat.format(atendHit.atend.getNrMesa()));
         btnAtend.setGraphicTextGap(20);
         btnAtend.setContentDisplay(ContentDisplay.BOTTOM);
         btnAtend.setAlignment(Pos.TOP_CENTER);
@@ -87,7 +85,7 @@ public class ButtonAtend extends Thread {
         IconButtonHit.setIconAtend(btnAtend, IconButtonHit.ICON_MESA);
         paneAtend.getChildren().add(btnAtend);
         btnAtend.setOnAction((ActionEvent event) -> {
-            
+
         });
 
         Button btnAcerto = atendHit.btnAcerto;
@@ -110,8 +108,8 @@ public class ButtonAtend extends Thread {
         this.paneAtend = paneAtend;
     }
 
-    private class AtendimentoHit extends Atendimento {
-
+    private class AtendimentoHit {
+        Atendimento atend;
         Button btnAtend = new Button();
         Button btnAcerto = new Button();
     }
