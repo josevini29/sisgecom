@@ -11,8 +11,6 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Dao extends Conexao {
 
@@ -276,6 +274,11 @@ public class Dao extends Conexao {
                         case "string"://colocar aspa simples em textos
                             values = "'" + ((String) field.get(obj)) + "'";
                             break;
+                        case "date"://colocar aspa simples em textos
+                            SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
+                            String data = in.format(((Date) field.get(obj)));
+                            values = "'" + data + "'";
+                            break;
                         case "boolean"://Converte padrao java true e false em 1 e 0 para o banco
                             values = (((boolean) field.get(obj)) ? "'T'" : "'F'");
                             break;
@@ -397,7 +400,8 @@ public class Dao extends Conexao {
         } else {
             if (field.get(obj).toString().equals("")) {
                 valido = false;
-            } else if (!field.getType().getSimpleName().toLowerCase().equals("string")) {
+            } else if (!field.getType().getSimpleName().toLowerCase().equals("string")
+                    && !field.getType().getSimpleName().toLowerCase().equals("date")) {
                 if (Double.parseDouble(field.get(obj).toString()) == 0) {
                     valido = false;
                 }

@@ -9,6 +9,7 @@ import br.integrado.jnpereira.nutrimix.tools.Charts;
 import br.integrado.jnpereira.nutrimix.tools.Relogio;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
 import br.integrado.jnpereira.nutrimix.tools.ButtonAtend;
+import br.integrado.jnpereira.nutrimix.modelo.Atendimento;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
@@ -49,11 +50,11 @@ public class FrmMenuFXML implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         tabInicio.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldValue, Number newValue) -> {
-           if (newValue.intValue() == 0){
-               //loadDashBoard();
-           }else{
-               //loadButtonAtend();
-           }
+            if (newValue.intValue() == 0) {
+                //loadDashBoard();
+            } else {
+                //loadButtonAtend();
+            }
         });
     }
 
@@ -79,13 +80,20 @@ public class FrmMenuFXML implements Initializable {
 
     private void loadButtonAtend() {
         ButtonAtend buttonAntend = new ButtonAtend();
+        buttonAntend.setStage(stage);
         buttonAntend.setPaneAtend(paneAtend);
         buttonAntend.start();
     }
-    
+
     @FXML
-    public void atualizarButtonAtend(){
+    public void atualizarButtonAtend() {
         loadButtonAtend();
+    }
+
+    @FXML
+    public void abrirTelaAtendimento() {
+        Tela tela = new Tela();
+        tela.abrirTelaModalComParam(getStage(), Tela.CAD_ATEND, null);
     }
 
     @FXML

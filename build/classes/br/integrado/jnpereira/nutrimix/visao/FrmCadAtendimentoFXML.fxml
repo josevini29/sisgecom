@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -11,6 +12,102 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="628.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmCadAtendimentoFXML">
    <children>
+      <TextField fx:id="cdAtend" alignment="CENTER" layoutX="28.0" layoutY="46.0" prefHeight="30.0" prefWidth="66.0" styleClass="codigo">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="dtAtend" alignment="CENTER" layoutX="98.0" layoutY="46.0" prefHeight="30.0" prefWidth="105.0" styleClass="codigo">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Button layoutX="207.0" layoutY="46.0" maxHeight="102.0" maxWidth="96.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="35.0">
+         <graphic>
+            <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/lista.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <TextField fx:id="nrMesa" alignment="CENTER" layoutX="249.0" layoutY="46.0" prefHeight="30.0" prefWidth="66.0">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <ChoiceBox fx:id="tpSituacao" layoutX="320.0" layoutY="45.0" prefHeight="30.0" prefWidth="178.0" />
+      <AnchorPane layoutX="25.0" layoutY="107.0" prefHeight="229.0" prefWidth="583.0" styleClass="anchor">
+         <children>
+            <ScrollPane layoutX="4.0" layoutY="26.0" prefHeight="199.0" prefWidth="573.0" styleClass="transparente">
+              <content>
+                <AnchorPane fx:id="painel" minHeight="0.0" minWidth="0.0" prefHeight="53.0" prefWidth="548.0">
+                     <children>
+                        <TextField fx:id="qtProduto" alignment="CENTER_RIGHT" layoutX="316.0" layoutY="2.0" prefHeight="30.0" prefWidth="74.0">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="btnAdd" layoutX="481.0" layoutY="4.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0" style="-fx-padding: 0px;">
+                           <graphic>
+                              <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="btnRem" accessibleHelp="Excluir Endereço" layoutX="514.0" layoutY="4.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0" style="-fx-padding: 0px;">
+                           <graphic>
+                              <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/excluir.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <TextField fx:id="cdProduto" alignment="CENTER" layoutX="8.0" layoutY="2.0" prefHeight="30.0" prefWidth="52.0" styleClass="codigo">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="dsProduto" editable="false" layoutX="102.0" layoutY="2.0" prefHeight="30.0" prefWidth="205.0" styleClass="texto_estatico">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="btnPesqProd" layoutX="63.0" layoutY="3.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0">
+                           <graphic>
+                              <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/lista.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <TextField fx:id="qtPaga" alignment="CENTER_RIGHT" editable="false" layoutX="397.0" layoutY="2.0" prefHeight="30.0" prefWidth="74.0" styleClass="numero_estatico">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <Label fx:id="lblCadProd" layoutX="190.0" layoutY="32.0" prefHeight="16.0" prefWidth="357.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+            <Label layoutX="323.0" layoutY="13.0" text="Quantidade" />
+            <Label layoutX="14.0" layoutY="13.0" text="Cód. Prod." />
+            <Label layoutX="109.0" layoutY="13.0" text="Descrição do Produto" />
+            <Label layoutX="404.0" layoutY="13.0" text="Qt. Pago" />
+         </children>
+      </AnchorPane>
+      <Label layoutX="26.0" layoutY="91.0" styleClass="label_titulo" text="Produtos">
+         <font>
+            <Font name="System Bold" size="11.0" />
+         </font>
+      </Label>
+      <Label layoutX="250.0" layoutY="30.0" text="Mesa" />
+      <Label layoutX="29.0" layoutY="30.0" text="Cód Atend" />
       <Button fx:id="btnSalvar" layoutX="26.0" layoutY="348.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="82.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
          <font>
             <Font size="12.0" />
@@ -35,96 +132,8 @@
             </ImageView>
          </graphic>
       </Button>
-      <AnchorPane layoutX="25.0" layoutY="107.0" prefHeight="229.0" prefWidth="583.0" styleClass="anchor">
-         <children>
-            <ScrollPane layoutX="4.0" layoutY="26.0" prefHeight="199.0" prefWidth="573.0" styleClass="transparente">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="53.0" prefWidth="548.0">
-                     <children>
-                        <TextField alignment="CENTER_RIGHT" layoutX="316.0" layoutY="2.0" prefHeight="30.0" prefWidth="74.0" text="2,00">
-                           <font>
-                              <Font size="12.0" />
-                           </font>
-                        </TextField>
-                        <Button layoutX="481.0" layoutY="4.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0" style="-fx-padding: 0px;">
-                           <graphic>
-                              <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icon/add.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <Button accessibleHelp="Excluir Endereço" layoutX="514.0" layoutY="4.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0" style="-fx-padding: 0px;">
-                           <graphic>
-                              <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icon/excluir.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <TextField alignment="CENTER" layoutX="8.0" layoutY="2.0" prefHeight="28.0" prefWidth="52.0" styleClass="codigo" text="1">
-                           <font>
-                              <Font size="12.0" />
-                           </font>
-                        </TextField>
-                        <TextField editable="false" layoutX="102.0" layoutY="2.0" prefHeight="30.0" prefWidth="205.0" text="Ref. Coca Cola 350ml">
-                           <font>
-                              <Font size="12.0" />
-                           </font>
-                        </TextField>
-                        <Button layoutX="66.0" layoutY="2.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0">
-                           <graphic>
-                              <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icon/lista.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <TextField alignment="CENTER_RIGHT" layoutX="397.0" layoutY="2.0" prefHeight="30.0" prefWidth="74.0" text="0,00">
-                           <font>
-                              <Font size="12.0" />
-                           </font>
-                        </TextField>
-                        <Label fx:id="dsCadastroProd" layoutX="202.0" layoutY="32.0" prefHeight="16.0" prefWidth="357.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </ScrollPane>
-            <Label layoutX="323.0" layoutY="13.0" text="Quantidade" />
-            <Label layoutX="14.0" layoutY="13.0" text="Cód. Prod." />
-            <Label layoutX="109.0" layoutY="13.0" text="Descrição do Produto" />
-            <Label layoutX="404.0" layoutY="13.0" text="Qt. Pago" />
-         </children>
-      </AnchorPane>
-      <Label layoutX="26.0" layoutY="91.0" styleClass="label_titulo" text="Produtos">
-         <font>
-            <Font name="System Bold" size="11.0" />
-         </font>
-      </Label>
-      <TextField alignment="CENTER" editable="false" layoutX="147.0" layoutY="46.0" prefHeight="30.0" prefWidth="66.0" text="13">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <Label layoutX="148.0" layoutY="32.0" text="Mesa" />
-      <Button layoutX="102.0" layoutY="46.0" maxHeight="102.0" maxWidth="96.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="35.0">
-         <graphic>
-            <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icon/lista.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
-      <TextField alignment="CENTER" layoutX="28.0" layoutY="46.0" prefHeight="30.0" prefWidth="66.0" styleClass="codigo" text="102">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <Label layoutX="29.0" layoutY="32.0" text="Cód Atend" />
-      <Label fx:id="dsCadastro" layoutX="235.0" layoutY="53.0" prefHeight="16.0" prefWidth="357.0" />
+      <Label fx:id="lblCadastro" layoutX="251.0" layoutY="355.0" prefHeight="16.0" prefWidth="357.0" />
+      <Label layoutX="321.0" layoutY="30.0" text="Situação" />
+      <Label layoutX="99.0" layoutY="30.0" text="Dt. Atendimento" />
    </children>
 </AnchorPane>

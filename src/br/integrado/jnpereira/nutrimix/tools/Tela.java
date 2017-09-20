@@ -77,6 +77,38 @@ public class Tela {
         }
     }
 
+    public void abrirTelaModalComParam(Stage stagePai, String[] tela, Object param) {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(tela[0]));
+            Parent root = (Parent) loader.load();
+            Object controler = loader.getController();
+            controler.getClass().getDeclaredField("param").set(controler, param);
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initOwner(stagePai);
+            stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+            stage.setTitle(tela[1]);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.resizableProperty().setValue(Boolean.FALSE);
+            stage.centerOnScreen();
+            Method method;
+            try {
+                method = controler.getClass().getMethod("iniciaTela");
+                method.invoke(controler);
+            } catch (Exception ex) {
+                Alerta.AlertaError("Erro!", "Erro ao chamar metodo inicia tela ou Erro de Parâmetro.\n" + ex.toString());
+                ex.printStackTrace();
+                return;
+            }
+            stage.showAndWait();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex.toString());
+            Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
+        }
+    }
+
     public String abrirListaGenerica(Object obj, String dsCampCod, String dsCampDes, String sqlAdd, String titulo) {
         try {
             Stage stage = new Stage();
@@ -130,7 +162,7 @@ public class Tela {
         }
         return null;
     }
-    
+
     public String abrirListaAjusteEstoq() {
         try {
             Stage stage = new Stage();

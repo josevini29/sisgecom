@@ -14,10 +14,12 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 public class ButtonAtend extends Thread {
 
     private AnchorPane paneAtend;
+    private Stage stage;
     private final Dao dao = new Dao();
     private double layoutY;
     private double layoutX;
@@ -30,7 +32,7 @@ public class ButtonAtend extends Thread {
     int btnAcertoHeight = 26;
     int qtLinha;
 
-    public ButtonAtend() {
+    public void config() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension tela = tk.getScreenSize();
         qtLinha = (int) (tela.width / (spaceWidth + btnAtendWidth));
@@ -47,6 +49,7 @@ public class ButtonAtend extends Thread {
 
     private void load() {
         try {
+            config();
             paneAtend.getChildren().clear();
             ArrayList<Object> atendimentos = dao.getAllWhere(new Atendimento(), " WHERE $Atendimento.stAtend$ = '1' ORDER BY $Atendimento.nrMesa$ ASC");
             Iterator it = atendimentos.iterator();
@@ -85,7 +88,9 @@ public class ButtonAtend extends Thread {
         IconButtonHit.setIconAtend(btnAtend, IconButtonHit.ICON_MESA);
         paneAtend.getChildren().add(btnAtend);
         btnAtend.setOnAction((ActionEvent event) -> {
-
+            Tela tela = new Tela();
+            tela.abrirTelaModalComParam(getStage(), Tela.CAD_ATEND, atendHit.atend);
+            load();
         });
 
         Button btnAcerto = atendHit.btnAcerto;
@@ -108,7 +113,16 @@ public class ButtonAtend extends Thread {
         this.paneAtend = paneAtend;
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     private class AtendimentoHit {
+
         Atendimento atend;
         Button btnAtend = new Button();
         Button btnAcerto = new Button();

@@ -214,7 +214,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <Button alignment="BOTTOM_CENTER" layoutX="25.0" layoutY="15.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="172.0" text="Novo Atendimento">
+                                          <Button alignment="BOTTOM_CENTER" layoutX="25.0" layoutY="15.0" mnemonicParsing="false" onAction="#abrirTelaAtendimento" prefHeight="27.0" prefWidth="172.0" text="Novo Atendimento">
                                              <graphic>
                                                 <ImageView fitHeight="17.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>

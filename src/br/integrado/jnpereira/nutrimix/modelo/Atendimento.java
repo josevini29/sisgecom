@@ -20,6 +20,10 @@ public class Atendimento {
     private Integer nrMesa;
     @Coluna(nome = "st_atend")
     private String stAtend;
+    @Coluna(nome = "cd_usercad")
+    private Integer cdUserCad;
+    @Coluna(nome = "dt_cadastro")
+    private Date dtCadastro;
 
     public Integer getCdAtend() {
         return cdAtend;
@@ -51,6 +55,22 @@ public class Atendimento {
 
     public void setStAtend(String stAtend) {
         this.stAtend = stAtend;
+    }
+
+    public Integer getCdUserCad() {
+        return cdUserCad;
+    }
+
+    public void setCdUserCad(Integer cdUserCad) {
+        this.cdUserCad = cdUserCad;
+    }
+
+    public Date getDtCadastro() {
+        return dtCadastro;
+    }
+
+    public void setDtCadastro(Date dtCadastro) {
+        this.dtCadastro = dtCadastro;
     }
 
 }

@@ -5,7 +5,7 @@ import br.integrado.jnpereira.nutrimix.dao.Id;
 import br.integrado.jnpereira.nutrimix.dao.Tabela;
 import java.util.Date;
 
-@Tabela(nome = "produto_atendimento")
+@Tabela(nome = "atendimento_produto")
 public class AtendimentoProduto {
 
     @Id
@@ -19,7 +19,7 @@ public class AtendimentoProduto {
     private Integer cdProduto;
     @Coluna(nome = "qt_produto")
     private Double qtProduto;
-    @Coluna(nome = "qtPaga")
+    @Coluna(nome = "qt_paga")
     private Double qtPaga;
     @Coluna(nome = "cd_usercad")
     private Integer cdUserCad;

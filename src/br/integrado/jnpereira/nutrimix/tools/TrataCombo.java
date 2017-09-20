@@ -241,4 +241,40 @@ public class TrataCombo {
         }
     }
 
+    public static void setValueComboStAtendimento(ChoiceBox combo, String selecionado) {
+        if (combo.getItems().isEmpty()) {
+            combo.setItems(FXCollections.observableArrayList("Pendente", "Finalizado", "Cancelado"));
+        }
+        if (selecionado != null) {
+            SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+            switch (selecionado.replace(" ", "")) {
+                case "1":
+                    model.select(0);
+                    break;
+                case "2":
+                    model.select(1);
+                    break;
+                case "3":
+                    model.select(2);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public static String getValueComboStAtendimento(ChoiceBox combo) {
+        SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+        switch (model.getSelectedIndex()) {
+            case 0:
+                return "1";
+            case 1:
+                return "2";
+            case 2:
+                return "3";
+            default:
+                return null;
+        }
+    }
+
 }
