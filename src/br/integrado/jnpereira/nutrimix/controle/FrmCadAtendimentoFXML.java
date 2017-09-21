@@ -25,7 +25,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 public class FrmCadAtendimentoFXML implements Initializable {
-    
+
+    @FXML
+    AnchorPane anchor;
     @FXML
     TextField cdAtend;
     @FXML
@@ -36,7 +38,7 @@ public class FrmCadAtendimentoFXML implements Initializable {
     ChoiceBox tpSituacao;
     @FXML
     Label lblCadastro;
-    
+
     @FXML
     AnchorPane painel;
     @FXML
@@ -55,13 +57,13 @@ public class FrmCadAtendimentoFXML implements Initializable {
     Button btnRem;
     @FXML
     Label lblCadProd;
-    
+
     public Object param;
     double LayoutYAtend;
     ArrayList<AtendProdHit> listAtendProd = new ArrayList<>();
     Dao dao = new Dao();
     Atendimento atendimento;
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         FuncaoCampo.mascaraNumeroInteiro(cdAtend);
@@ -80,7 +82,16 @@ public class FrmCadAtendimentoFXML implements Initializable {
             }
         });
     }
-    
+
+    public void iniciaTela() {
+        if (param != null) {
+            Atendimento atend = (Atendimento) param;
+            cdAtend.setText(atend.getCdAtend().toString());
+            dtAtend.setText(Data.AmericaToBrasilSemHora(atend.getDtAtend()));
+            validaCodigoAtendimento();
+        }
+    }
+
     private void validaCodigoAtendimento() {
         if (!cdAtend.getText().equals("") & !dtAtend.getText().equals("") & atendimento == null) {
             try {
@@ -102,16 +113,24 @@ public class FrmCadAtendimentoFXML implements Initializable {
             }
         }
     }
-    
-    public void iniciaTela() {
-        if (param != null) {
-            Atendimento atend = (Atendimento) param;
-            cdAtend.setText(atend.getCdAtend().toString());
-            dtAtend.setText(Data.AmericaToBrasil(atend.getDtAtend()));
-            validaCodigoAtendimento();
-        }
+
+    @FXML
+    public void limpar() {
+        limparTela();
     }
-    
+
+    private void limparTela() {
+        atendimento = null;
+        listAtendProd = new ArrayList<>();
+        FuncaoCampo.limparCampos(anchor);
+        atualizaAtendProd();
+        lblCadastro.setText("");
+        cdAtend.setEditable(true);
+        dtAtend.setEditable(true);
+        TrataCombo.setValueComboStAtendimento(tpSituacao, "1");
+        tpSituacao.setDisable(true);
+    }
+
     public void atualizaAtendProd() {
         try {
             ArrayList<Object> atends = new ArrayList<>();
@@ -144,7 +163,7 @@ public class FrmCadAtendimentoFXML implements Initializable {
         }
         atualizaLista();
     }
-    
+
     public void atualizaLista() {
         int total = 0;
         for (AtendProdHit b : listAtendProd) {
@@ -152,7 +171,7 @@ public class FrmCadAtendimentoFXML implements Initializable {
                 total++;
             }
         }
-        
+
         LayoutYAtend = cdProduto.getLayoutY();
         painel.getChildren().clear();
         Iterator it = listAtendProd.iterator();
@@ -160,7 +179,7 @@ public class FrmCadAtendimentoFXML implements Initializable {
             AtendProdHit b = (AtendProdHit) it.next();
             if (!b.isExcluir) {
                 b.cdProduto.setEditable(cdProduto.isEditable());
-                if (b.atendProd != null){
+                if (b.atendProd != null) {
                     b.cdProduto.setEditable(false);
                 }
                 b.cdProduto.setPrefHeight(cdProduto.getHeight());
@@ -220,11 +239,11 @@ public class FrmCadAtendimentoFXML implements Initializable {
         }
         painel.setPrefHeight(LayoutYAtend + 10);
     }
-    
+
     public void addValidacao(AtendProdHit atendProdHit, int posicao, int total) {
         FuncaoCampo.mascaraNumeroInteiro(atendProdHit.cdProduto);
         FuncaoCampo.mascaraNumeroDecimal(atendProdHit.qtProduto);
-        
+
         atendProdHit.btnAdd.setOnAction((ActionEvent event) -> {
             TextField codBanco = new TextField();
             codBanco.setText("");
@@ -234,7 +253,7 @@ public class FrmCadAtendimentoFXML implements Initializable {
             listAtendProd.add(posicao + 1, b);
             atualizaLista();
         });
-        
+
         atendProdHit.btnRem.setOnAction((ActionEvent event) -> {
             if (total == 1) {
                 AtendProdHit b = new AtendProdHit();
@@ -243,11 +262,11 @@ public class FrmCadAtendimentoFXML implements Initializable {
             listAtendProd.get(posicao).isExcluir = true;
             atualizaLista();
         });
-        
+
     }
-    
+
     public class AtendProdHit {
-        
+
         AtendimentoProduto atendProd;
         TextField cdProduto = new TextField();
         Button btnPesqProd = new Button();
@@ -260,5 +279,5 @@ public class FrmCadAtendimentoFXML implements Initializable {
         public boolean isExcluir = false;
         public boolean isAlterado = false;
     }
-    
+
 }

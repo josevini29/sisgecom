@@ -6,12 +6,16 @@ import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmListaAjustEstoqFXML;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Tela {
 
@@ -92,15 +96,17 @@ public class Tela {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.resizableProperty().setValue(Boolean.FALSE);
             stage.centerOnScreen();
-            Method method;
-            try {
-                method = controler.getClass().getMethod("iniciaTela");
-                method.invoke(controler);
-            } catch (Exception ex) {
-                Alerta.AlertaError("Erro!", "Erro ao chamar metodo inicia tela ou Erro de Parâmetro.\n" + ex.toString());
-                ex.printStackTrace();
-                return;
-            }
+            stage.addEventHandler(WindowEvent.WINDOW_SHOWN, (WindowEvent window) -> {
+                Method method;
+                try {
+                    method = controler.getClass().getMethod("iniciaTela");
+                    method.invoke(controler);
+                } catch (Exception ex) {
+                    Alerta.AlertaError("Erro!", "Erro ao chamar metodo inicia tela ou Erro de Parâmetro.\n" + ex.toString());
+                    ex.printStackTrace();
+                }
+            });
+
             stage.showAndWait();
         } catch (Exception ex) {
             ex.printStackTrace();
