@@ -71,6 +71,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
     Dao dao = new Dao();
     AjusteEstoque ajuste;
     ArrayList<AjusteMovtoHit> listMovto = new ArrayList<>();
+    boolean inAntiLoop = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -118,19 +119,25 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 prod.setCdProduto(Integer.parseInt(movto.cdProduto.getText()));
                 dao.get(prod);
 
-                if (!prod.getInAtivo()) {
-                    Alerta.AlertaError("Inválido", "Produto está inativo.");
-                    movto.cdProduto.requestFocus();
-                    return;
-                }
-
-                for (AjusteMovtoHit movtoHit : listMovto) {
-                    if (movtoHit.cdProduto.getText().equals(movto.cdProduto.getText())
-                            && !movtoHit.equals(movto)) {
-                        Alerta.AlertaError("Inválido", "Produto já está na lista");
+                if (movto.cdEstoqMovto == null) {
+                    inAntiLoop = false;
+                    if (!prod.getInAtivo()) {
+                        Alerta.AlertaError("Inválido", "Produto está inativo.");
                         movto.cdProduto.requestFocus();
+                        inAntiLoop = true;
                         return;
                     }
+
+                    for (AjusteMovtoHit movtoHit : listMovto) {
+                        if (movtoHit.cdProduto.getText().equals(movto.cdProduto.getText())
+                                && !movtoHit.equals(movto)) {
+                            Alerta.AlertaError("Inválido", "Produto já está na lista");
+                            movto.cdProduto.requestFocus();
+                            inAntiLoop = true;
+                            return;
+                        }
+                    }
+                    inAntiLoop = true;
                 }
 
                 movto.dsProduto.setText(prod.getDsProduto());
@@ -154,7 +161,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
         Tela tela = new Tela();
         String valor = tela.abrirListaAjusteEstoq();
         if (valor != null) {
-           cdAjuste.setText(valor);
+            cdAjuste.setText(valor);
             validaCodigoAjuste();
         }
     }
@@ -412,14 +419,14 @@ public class FrmCadAjustEstoqFXML implements Initializable {
             painelAjustes.getChildren().add(b.btnAdd);
             painelAjustes.getChildren().add(b.btnRem);
             LayoutYAjustes += (this.cdProduto.getHeight() + 5);
-            addValidacaoTelefone(b, i, total);
+            addValidacao(b, i, total);
         }
 
         painelAjustes.setPrefHeight(LayoutYAjustes
                 + 10);
     }
 
-    public void addValidacaoTelefone(AjusteMovtoHit ajusteMovto, int posicao, int total) {
+    public void addValidacao(AjusteMovtoHit ajusteMovto, int posicao, int total) {
         FuncaoCampo.mascaraNumeroInteiro(ajusteMovto.cdProduto);
         FuncaoCampo.mascaraNumeroDecimal(ajusteMovto.qtAjuste);
 

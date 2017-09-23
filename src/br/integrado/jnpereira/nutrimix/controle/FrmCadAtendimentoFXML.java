@@ -15,14 +15,19 @@ import br.integrado.jnpereira.nutrimix.tools.IconButtonHit;
 import br.integrado.jnpereira.nutrimix.tools.TrataCombo;
 import br.integrado.jnpereira.nutrimix.tools.Numero;
 import br.integrado.jnpereira.nutrimix.tools.Data;
+import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 public class FrmCadAtendimentoFXML implements Initializable {
 
@@ -58,11 +63,13 @@ public class FrmCadAtendimentoFXML implements Initializable {
     @FXML
     Label lblCadProd;
 
+    public Stage stage;
     public Object param;
     double LayoutYAtend;
     ArrayList<AtendProdHit> listAtendProd = new ArrayList<>();
     Dao dao = new Dao();
     Atendimento atendimento;
+    boolean inAntiLoop = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -89,7 +96,10 @@ public class FrmCadAtendimentoFXML implements Initializable {
             cdAtend.setText(atend.getCdAtend().toString());
             dtAtend.setText(Data.AmericaToBrasilSemHora(atend.getDtAtend()));
             validaCodigoAtendimento();
+        } else {
+            atualizaAtendProd();
         }
+
     }
 
     private void validaCodigoAtendimento() {
@@ -114,6 +124,58 @@ public class FrmCadAtendimentoFXML implements Initializable {
         }
     }
 
+    public void abrirListaProduto(AtendProdHit movto) {
+        if (movto.atendProd != null) {
+            Alerta.AlertaError("Não permitido!", "Não é possível alterar um produto já efetivado.");
+            return;
+        }
+
+        Tela tela = new Tela();
+        String valor = tela.abrirListaGenerica(new Produto(), "cdProduto", "dsProduto", "AND $inAtivo$ = 'T'", "Lista de Produtos");
+        if (valor != null) {
+            movto.cdProduto.setText(valor);
+            validaCodigoProduto(movto);
+        }
+    }
+
+    private void validaCodigoProduto(AtendProdHit atendHit) {
+        if (!atendHit.cdProduto.getText().equals("")) {
+            try {
+                Produto prod = new Produto();
+                prod.setCdProduto(Integer.parseInt(atendHit.cdProduto.getText()));
+                dao.get(prod);
+
+                if (atendHit.atendProd == null & inAntiLoop) {
+                    inAntiLoop = false;
+                    if (!prod.getInAtivo()) {
+                        Alerta.AlertaError("Inválido", "Produto está inativo.");
+                        atendHit.cdProduto.requestFocus();
+                        inAntiLoop = true;
+                        return;
+                    }
+
+                    for (AtendProdHit movtoHit : listAtendProd) {
+                        if (movtoHit.cdProduto.getText().equals(atendHit.cdProduto.getText())
+                                && !movtoHit.equals(atendHit)) {
+                            Alerta.AlertaError("Inválido", "Produto já está na lista");
+                            atendHit.cdProduto.requestFocus();
+                            inAntiLoop = true;
+                            return;
+                        }
+                    }
+                    inAntiLoop = true;
+                }
+
+                atendHit.dsProduto.setText(prod.getDsProduto());
+            } catch (Exception ex) {
+                Alerta.AlertaError("Notificação", "Produto não encontrado!");
+                atendHit.cdProduto.requestFocus();
+            }
+        } else {
+            atendHit.dsProduto.setText("");
+        }
+    }
+
     @FXML
     public void limpar() {
         limparTela();
@@ -123,12 +185,173 @@ public class FrmCadAtendimentoFXML implements Initializable {
         atendimento = null;
         listAtendProd = new ArrayList<>();
         FuncaoCampo.limparCampos(anchor);
-        atualizaAtendProd();
         lblCadastro.setText("");
         cdAtend.setEditable(true);
         dtAtend.setEditable(true);
         TrataCombo.setValueComboStAtendimento(tpSituacao, "1");
         tpSituacao.setDisable(true);
+        iniciaTela();
+    }
+
+    @FXML
+    public void salvar() {
+        if (atendimento != null) {
+            if (atendimento.getStAtend().equals("2")) {
+                Alerta.AlertaError("Não autorizado", "Atendimento já encerrado, não permitido alterações.");
+                return;
+            }
+
+            if (atendimento.getStAtend().equals("3")) {
+                Alerta.AlertaError("Não autorizado", "Atendimento já cancelado, não permitido alterações.");
+                return;
+            }
+
+            if (TrataCombo.getValueComboStAtendimento(tpSituacao).equals("3")) { //Cancelamento
+                for (AtendProdHit atendHit : listAtendProd) {
+                    if (atendHit.atendProd != null) {
+                        if (atendHit.atendProd.getQtPaga() > 0) {
+                            Alerta.AlertaError("Não autorizado", "Atendimento já contém produtos pagos, não permitido cancelamento.");
+                            return;
+                        }
+                    }
+                }
+                try {
+                    dao.autoCommit(false);
+                    dao.get(atendimento);
+                    atendimento.setStAtend("3");
+                    dao.update(atendimento);
+                    dao.commit();
+                    Alerta.AlertaInfo("Concluído", "Atendimento Cancelado!");
+                    return;
+                } catch (Exception ex) {
+                    Alerta.AlertaError("Erro!", ex.getMessage());
+                    return;
+                }
+            }
+        }
+
+        if (TrataCombo.getValueComboStAtendimento(tpSituacao).equals("2")) {
+            Alerta.AlertaError("Não autorizado", "Não permitido encerrar um atendimento nesta tela.");
+            return;
+        }
+
+        if (nrMesa.getText().equals("")) {
+            Alerta.AlertaError("Campo inválido", "Nª da Mesa é obrigatório");
+            nrMesa.requestFocus();
+            return;
+        }
+
+        try {
+            boolean vInValidaMesa = false;
+            if (atendimento == null) {
+                vInValidaMesa = true;
+            } else {
+                if (!atendimento.getNrMesa().toString().equals(nrMesa.getText())) {
+                    vInValidaMesa = true;
+                }
+            }
+            if (vInValidaMesa) {
+                String where = " WHERE $nrMesa$ = " + nrMesa.getText() + " AND $stAtend$ = '1'";
+                long qtMesas = dao.getCountWhere(new Atendimento(), where);
+                if (qtMesas > 0) {
+                    Alerta.AlertaError("Campo inválido!", "Já existe atendimento pendente para a Mesa: " + nrMesa.getText());
+                    nrMesa.requestFocus();
+                    return;
+                }
+            }
+
+        } catch (Exception ex) {
+            Alerta.AlertaError("Erro!", ex.getMessage());
+            return;
+        }
+
+        for (AtendProdHit atendHit : listAtendProd) {
+            if (atendHit.cdProduto.getText().equals("")) {
+                Alerta.AlertaError("Campo inválido", "Código do produto é obrigatório");
+                atendHit.cdProduto.requestFocus();
+                return;
+            }
+
+            if (atendHit.qtProduto.getText().equals("")) {
+                Alerta.AlertaError("Campo inválido", "Quantidade do atendimento é obrigatório.");
+                atendHit.qtProduto.requestFocus();
+                return;
+            } else {
+                double vlProduto = Double.parseDouble(atendHit.qtProduto.getText());
+                if (vlProduto <= 0) {
+                    Alerta.AlertaError("Campo inválido", "Quantidade do atendimento deve ser maior que 0.");
+                    atendHit.qtProduto.requestFocus();
+                    return;
+                }
+
+                double vlPaga = (atendHit.qtPaga.getText().equals("") ? 0.0 : Double.parseDouble(atendHit.qtPaga.getText()));
+                if (vlProduto < vlPaga) {
+                    Alerta.AlertaError("Campo inválido", "Quantidade do atendimento menor que quantidade paga.");
+                    atendHit.qtProduto.requestFocus();
+                    return;
+                }
+            }
+
+        }
+        try {
+            dao.autoCommit(false);
+            if (atendimento == null) {
+                atendimento = new Atendimento();
+                atendimento.setDtAtend(Data.getAgora());
+                String where = "WHERE $dtAtend$ = '" + Data.BrasilToAmericaSemHora(atendimento.getDtAtend()) + "'";
+                Long cdAtendimento = dao.getCountWhere(new Atendimento(), where) + 1;
+                atendimento.setCdAtend(Integer.parseInt(cdAtendimento.toString()));
+                atendimento.setNrMesa(Integer.parseInt(nrMesa.getText()));
+                atendimento.setStAtend(TrataCombo.getValueComboStAtendimento(tpSituacao));
+                atendimento.setCdUserCad(FrmMenuFXML.usuarioAtivo);
+                atendimento.setDtCadastro(Data.getAgora());
+                dao.save(atendimento);
+            } else {
+                atendimento.setNrMesa(Integer.parseInt(nrMesa.getText()));
+                atendimento.setStAtend(TrataCombo.getValueComboStAtendimento(tpSituacao));
+                dao.update(atendimento);
+            }
+
+            for (AtendProdHit atendHit : listAtendProd) {
+                if (atendHit.atendProd == null) {
+                    AtendimentoProduto atendPrd = new AtendimentoProduto();
+                    atendPrd.setCdAtend(atendimento.getCdAtend());
+                    atendPrd.setDtAtend(atendimento.getDtAtend());
+                    atendPrd.setCdProduto(Integer.parseInt(atendHit.cdProduto.getText()));
+                    atendPrd.setQtProduto(Double.parseDouble(atendHit.qtProduto.getText()));
+                    atendPrd.setQtPaga(0.0);
+                    atendPrd.setCdUserCad(FrmMenuFXML.usuarioAtivo);
+                    atendPrd.setDtCadastro(Data.getAgora());
+                    dao.save(atendPrd);
+                } else {
+                    if (atendHit.isExcluir) {
+                        dao.delete(atendHit.atendProd);
+                    } else {
+                        Double vlProduto = Double.parseDouble(atendHit.qtProduto.getText());
+                        if (!vlProduto.equals(atendHit.atendProd.getQtProduto())) {
+                            atendHit.atendProd.setQtProduto(vlProduto);
+                            dao.update(atendHit.atendProd);
+                        }
+                    }
+                }
+            }
+
+            dao.commit();
+            Integer cod = atendimento.getCdAtend();
+            Date date = atendimento.getDtAtend();
+            limpar();
+            cdAtend.setText(cod.toString());
+            dtAtend.setText(Data.AmericaToBrasilSemHora(date));
+            validaCodigoAtendimento();
+        } catch (Exception ex) {
+            dao.rollback();
+            Alerta.AlertaError("Erro!", ex.getMessage());
+            return;
+        }
+        Alerta.AlertaInfo("Concluído", "Atendimento salvo!");
+        if (param != null) {
+            getStage().close();
+        }
     }
 
     public void atualizaAtendProd() {
@@ -244,6 +467,16 @@ public class FrmCadAtendimentoFXML implements Initializable {
         FuncaoCampo.mascaraNumeroInteiro(atendProdHit.cdProduto);
         FuncaoCampo.mascaraNumeroDecimal(atendProdHit.qtProduto);
 
+        atendProdHit.cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                validaCodigoProduto(atendProdHit);
+            }
+        });
+
+        atendProdHit.btnPesqProd.setOnAction((ActionEvent event) -> {
+            abrirListaProduto(atendProdHit);
+        });
+
         atendProdHit.btnAdd.setOnAction((ActionEvent event) -> {
             TextField codBanco = new TextField();
             codBanco.setText("");
@@ -255,14 +488,33 @@ public class FrmCadAtendimentoFXML implements Initializable {
         });
 
         atendProdHit.btnRem.setOnAction((ActionEvent event) -> {
+            if (atendProdHit.atendProd != null) {
+                if (atendProdHit.atendProd.getQtPaga() > 0) {
+                    Alerta.AlertaError("Negado!", "Não é possivel deletar um item com quantidade paga.");
+                    return;
+                }
+            }
+
             if (total == 1) {
                 AtendProdHit b = new AtendProdHit();
                 listAtendProd.add(b);
             }
-            listAtendProd.get(posicao).isExcluir = true;
+            if (atendProdHit.atendProd == null) {
+                listAtendProd.remove(atendProdHit);
+            } else {
+                listAtendProd.get(posicao).isExcluir = true;
+            }
             atualizaLista();
         });
 
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public class AtendProdHit {
@@ -277,7 +529,6 @@ public class FrmCadAtendimentoFXML implements Initializable {
         Button btnRem = new Button();
         Label lblCadProd = new Label();
         public boolean isExcluir = false;
-        public boolean isAlterado = false;
     }
 
 }

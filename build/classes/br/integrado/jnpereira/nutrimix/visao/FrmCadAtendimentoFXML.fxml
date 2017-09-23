@@ -43,7 +43,7 @@
               <content>
                 <AnchorPane fx:id="painel" minHeight="0.0" minWidth="0.0" prefHeight="53.0" prefWidth="548.0">
                      <children>
-                        <TextField fx:id="qtProduto" alignment="CENTER_RIGHT" layoutX="316.0" layoutY="2.0" prefHeight="30.0" prefWidth="74.0">
+                        <TextField fx:id="qtProduto" alignment="CENTER_RIGHT" layoutX="316.0" layoutY="2.0" prefHeight="30.0" prefWidth="74.0" styleClass="numero_editavel">
                            <font>
                               <Font size="12.0" />
                            </font>
@@ -108,7 +108,7 @@
       </Label>
       <Label layoutX="250.0" layoutY="30.0" text="Mesa" />
       <Label layoutX="29.0" layoutY="30.0" text="Cód Atend" />
-      <Button fx:id="btnSalvar" layoutX="26.0" layoutY="348.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="82.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
+      <Button layoutX="26.0" layoutY="348.0" mnemonicParsing="false" onAction="#salvar" prefHeight="26.0" prefWidth="82.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
          <font>
             <Font size="12.0" />
          </font>

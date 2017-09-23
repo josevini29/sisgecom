@@ -232,8 +232,8 @@ public class Dao extends Conexao {
                             values = "'" + ((String) field.get(obj)) + "'";
                             break;
                         case "date"://trata campo data
-                            SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String data = in.format(((Date) field.get(obj)).toString());
+                            SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
+                            String data = in.format(((Date) field.get(obj)));
                             values = "'" + data + "'";
                             break;
                         case "boolean"://Converte padrao java true e false em 1 e 0 para o banco

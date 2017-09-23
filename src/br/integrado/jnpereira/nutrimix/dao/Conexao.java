@@ -99,7 +99,7 @@ public class Conexao {
         try {
             Conexao.setAutoCommit(AUTO_COMMIT);
             statement = Conexao.createStatement();
-            System.out.println((AUTO_COMMIT?"AC:ON":"AC:OFF")+" SQL -> " + sql);
+            System.out.println((AUTO_COMMIT?"COMMIT":"NO_COMMIT")+": SQL -> " + sql);
             statement.executeUpdate(sql);
         } catch (SQLException ex) {
             Alerta.AlertaError("Erro!", "Erro ao executar SQL." + ex.toString() + "\n SQL: " + sql);
@@ -113,7 +113,7 @@ public class Conexao {
         try {
             Conexao.setAutoCommit(AUTO_COMMIT);
             statement = Conexao.createStatement();
-            System.out.println("SQL -> " + sql);
+            System.out.println((AUTO_COMMIT?"COMMIT":"NO_COMMIT")+": SQL -> " + sql);
             return statement.executeQuery(sql);
         } catch (SQLException ex) {
             Alerta.AlertaError("Erro!", "Erro ao executar SQL." + ex.toString() + "\n SQL: " + sql);

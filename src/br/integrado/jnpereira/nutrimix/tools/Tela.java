@@ -6,9 +6,6 @@ import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmListaAjustEstoqFXML;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -88,6 +85,7 @@ public class Tela {
             Parent root = (Parent) loader.load();
             Object controler = loader.getController();
             controler.getClass().getDeclaredField("param").set(controler, param);
+            controler.getClass().getDeclaredField("stage").set(controler, stage);
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.initOwner(stagePai);

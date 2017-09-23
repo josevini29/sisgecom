@@ -173,7 +173,7 @@
                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 </columnConstraints>
                                 <rowConstraints>
-                                  <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="90.0" minHeight="90.0" prefHeight="90.0" vgrow="SOMETIMES" />
                                   <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
@@ -203,7 +203,7 @@
                                           </AnchorPane>
                                       </content>
                                     </ScrollPane>
-                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <AnchorPane prefHeight="73.0" prefWidth="629.0">
                                        <children>
                                           <Button alignment="BOTTOM_CENTER" layoutX="209.0" layoutY="15.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="172.0" text="Fechar Caixa">
                                              <graphic>
@@ -232,6 +232,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
+                                          <Label layoutX="25.0" layoutY="58.0" styleClass="label_titulo2" text="Atendimentos em Aberto" />
                                        </children>
                                     </AnchorPane>
                                  </children>

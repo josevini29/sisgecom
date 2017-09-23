@@ -9,7 +9,6 @@ import br.integrado.jnpereira.nutrimix.tools.Charts;
 import br.integrado.jnpereira.nutrimix.tools.Relogio;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
 import br.integrado.jnpereira.nutrimix.tools.ButtonAtend;
-import br.integrado.jnpereira.nutrimix.modelo.Atendimento;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
@@ -94,6 +93,7 @@ public class FrmMenuFXML implements Initializable {
     public void abrirTelaAtendimento() {
         Tela tela = new Tela();
         tela.abrirTelaModalComParam(getStage(), Tela.CAD_ATEND, null);
+        loadButtonAtend();
     }
 
     @FXML
