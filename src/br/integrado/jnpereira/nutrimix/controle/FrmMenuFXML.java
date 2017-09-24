@@ -34,7 +34,7 @@ public class FrmMenuFXML implements Initializable {
     public static int usuarioAtivo;
 
     @FXML
-    private Tab tabDashboard;
+    private Tab tabAtendimento;
     @FXML
     private AnchorPane paneChart;
     @FXML
@@ -48,13 +48,7 @@ public class FrmMenuFXML implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tabInicio.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> ov, Number oldValue, Number newValue) -> {
-            if (newValue.intValue() == 0) {
-                //loadDashBoard();
-            } else {
-                //loadButtonAtend();
-            }
-        });
+
     }
 
     public void iniciaTela() {
@@ -64,7 +58,7 @@ public class FrmMenuFXML implements Initializable {
             System.exit(0);
         });
         SingleSelectionModel<Tab> selectionModel = tabInicio.getSelectionModel();
-        selectionModel.select(tabDashboard);
+        selectionModel.select(tabAtendimento);
         Relogio rel = new Relogio(lblRelogio);
         rel.start();
         loadDashBoard();
@@ -93,6 +87,13 @@ public class FrmMenuFXML implements Initializable {
     public void abrirTelaAtendimento() {
         Tela tela = new Tela();
         tela.abrirTelaModalComParam(getStage(), Tela.CAD_ATEND, null);
+        loadButtonAtend();
+    }
+
+    @FXML
+    public void abrirTelaVenda() {
+        Tela tela = new Tela();
+        tela.abrirTelaModalComParam(getStage(), Tela.CAD_VENDA, null);
         loadButtonAtend();
     }
 
@@ -178,6 +179,18 @@ public class FrmMenuFXML implements Initializable {
     public void abrirConMovtoEstoq(ActionEvent event) {
         Tela tela = new Tela();
         tela.abrirTelaModal(stage, Tela.CON_MOVTO_ESTOQ);
+    }
+
+    @FXML
+    public void abrirCadVenda(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModalComParam(getStage(), Tela.CAD_VENDA, null);
+    }
+
+    @FXML
+    public void abrirConVenda(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModal(stage, Tela.CAD_VENDA);
     }
 
     public Stage getStage() {

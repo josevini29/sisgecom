@@ -86,12 +86,12 @@ public class ButtonAtend extends Thread {
         btnAtend.setMnemonicParsing(false);
         btnAtend.setTextAlignment(TextAlignment.CENTER);
         IconButtonHit.setIconAtend(btnAtend, IconButtonHit.ICON_MESA);
-        paneAtend.getChildren().add(btnAtend);
         btnAtend.setOnAction((ActionEvent event) -> {
             Tela tela = new Tela();
             tela.abrirTelaModalComParam(getStage(), Tela.CAD_ATEND, atendHit.atend);
             load();
         });
+        paneAtend.getChildren().add(btnAtend);
 
         Button btnAcerto = atendHit.btnAcerto;
         btnAcerto.setPrefSize(btnAcertoWidth, btnAcertoHeight);
@@ -102,6 +102,10 @@ public class ButtonAtend extends Thread {
         btnAcerto.setAlignment(Pos.BOTTOM_CENTER);
         btnAcerto.setTextAlignment(TextAlignment.LEFT);
         IconButtonHit.setIconComTexto(btnAcerto, IconButtonHit.ICON_DINHEIRO);
+        btnAcerto.setOnAction((ActionEvent event) -> {
+            Tela tela = new Tela();
+            tela.abrirTelaModalComParam(getStage(), Tela.CAD_VENDA, atendHit.atend);
+        });
         paneAtend.getChildren().add(btnAcerto);
     }
 

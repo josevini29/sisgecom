@@ -1,9 +1,11 @@
 package br.integrado.jnpereira.nutrimix.tools;
 
+import br.integrado.jnpereira.nutrimix.dao.Dao;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.ResultSet;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
@@ -25,6 +27,8 @@ public class Charts extends Thread {
     double chartWidth;
     double spaceHeight;
     double spaceWidth;
+
+    Dao dao = new Dao();
 
     public Charts() {
         Toolkit tk = Toolkit.getDefaultToolkit();
@@ -49,7 +53,7 @@ public class Charts extends Thread {
             paneChart.getChildren().add(getButtonRefresh());
 
             //Grafico(1,1)
-            Node grafico1 = getGrafPizzaEntradaXSaida();
+            Node grafico1 = getGrafPizzaEstoqueNegativo();
             grafico1.setLayoutY(spaceHeightY);
             grafico1.setLayoutX(spaceWidth);
             paneChart.getChildren().add(grafico1);
@@ -73,7 +77,7 @@ public class Charts extends Thread {
             grafico4.setLayoutX(spaceWidth + chartWidth + spaceWidth);
             paneChart.getChildren().add(grafico4);
             spaceHeightY += (chartHeight + spaceHeight); //somente no grafico da segundo coluna
-            
+
             //Grafico(2,1)
             Node grafico5 = getTesteBarra();
             grafico5.setLayoutY(spaceHeightY);
@@ -86,10 +90,11 @@ public class Charts extends Thread {
             grafico6.setLayoutX(spaceWidth + chartWidth + spaceWidth);
             paneChart.getChildren().add(grafico6);
             spaceHeightY += (chartHeight + spaceHeight); //somente no grafico da segundo coluna
-            
+
         } catch (Exception ex) {
             paneChart.getChildren().clear();
             paneChart.getChildren().add(getLabelError("Erro ao gerar Dashboard, entre em contato com o suporte!\n" + getStack(ex)));
+            ex.printStackTrace();
         }
 
     }
@@ -121,6 +126,27 @@ public class Charts extends Thread {
         lblRefresh.setLayoutY(8);
         lblRefresh.setText(dsError);
         return lblRefresh;
+    }
+
+    public Node getGrafPizzaEstoqueNegativo() throws Exception {
+        PieChart graficoPizza = new PieChart();
+        ResultSet rs;
+
+        String sqlPrdNomal = "SELECT COUNT(*) QT_PRODUTO FROM "
+                + "&Produto& WHERE $Produto.inAtivo$ = 'T' AND $Produto.inEstoque$ = 'T' AND $Produto.qtEstqAtual$ > $Produto.qtEstoqMin$";
+        rs = dao.execSQL(sqlPrdNomal);
+        rs.next();
+        graficoPizza.getData().add(new PieChart.Data("Produto Estoque Normal: " + rs.getInt("QT_PRODUTO"), rs.getInt("QT_PRODUTO")));
+
+        String sqlPrdMinimo = "SELECT COUNT(*) QT_PRODUTO FROM "
+                + "&Produto& WHERE $Produto.inAtivo$ = 'T' AND $Produto.inEstoque$ = 'T' AND $Produto.qtEstqAtual$ <= $Produto.qtEstoqMin$";
+        rs = dao.execSQL(sqlPrdMinimo);
+        rs.next();
+        graficoPizza.getData().add(new PieChart.Data("Produto Estoque Mínimo: " + rs.getInt("QT_PRODUTO"), rs.getInt("QT_PRODUTO")));
+
+        graficoPizza.setPrefSize(chartWidth, chartHeight);
+        graficoPizza.setTitle("Situação do Estoque");
+        return graficoPizza;
     }
 
     public Node getGrafPizzaEntradaXSaida() {

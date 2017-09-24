@@ -124,6 +124,16 @@
     -fx-alignment: center-left;
 }
 
+.texto_estatico_center {
+    -fx-background-color: linear-gradient(#E8E8E8,  #E8E8E8, #E8E8E8);
+    -fx-border-color: #ABABAB;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 0 5 0 5;
+    -fx-effect: innershadow(gaussian ,#ABABAB, 1,0.1,0.1,0.1);
+    -fx-alignment: center;
+}
+
 .numero_estatico {
     -fx-background-color: linear-gradient(#E8E8E8,  #E8E8E8, #E8E8E8);
     -fx-border-color: #ABABAB;

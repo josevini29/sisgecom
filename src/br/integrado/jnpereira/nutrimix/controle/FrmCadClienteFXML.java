@@ -414,13 +414,29 @@ public class FrmCadClienteFXML implements Initializable {
         }
 
         for (EnderecoHit endAlt : enderecosHit) {
-            if (endAlt.getCdCidade() == null) {
-                Alerta.AlertaError("Campo inválido!", "Campo cidade é obrigatório.");
-                return;
-            }
-            if (endAlt.getCdCidade().equals("")) {
-                Alerta.AlertaError("Campo inválido!", "Campo cidade é obrigatório.");
-                return;
+            if (endAlt.getCdCidade() != null) {
+                if (!endAlt.getCdCidade().equals("")) {
+                    if (trataNulo(endAlt.getCdCep()).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo CEP é obrigatório.");
+                        return;
+                    }
+                    if (trataNulo(endAlt.getDsLogradouro()).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo Logradouro é obrigatório.");
+                        return;
+                    }
+                    if (trataNulo(TrataCombo.getValueComboEndereco(tpEndereco)).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo CEP é obrigatório.");
+                        return;
+                    }
+                    if (trataNulo(endAlt.getNrImovel()).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo CEP é obrigatório.");
+                        return;
+                    }
+                    if (trataNulo(endAlt.getDsBairro()).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo CEP é obrigatório.");
+                        return;
+                    }
+                }
             }
         }
 
@@ -502,29 +518,33 @@ public class FrmCadClienteFXML implements Initializable {
 
             //Adiciona ou altera os endereços
             for (EnderecoHit endAlt : enderecosHit) {
-                if (endAlt.getCdEndereco() != null && endAlt.getCdPessoa() != null) {
-                    Endereco end = new Endereco();
-                    end.setCdEndereco(endAlt.getCdEndereco());
-                    end.setCdPessoa(endAlt.getCdPessoa());
-                    end.setCdCidade(endAlt.getCdCidade());
-                    end.setTpEndereco(Integer.parseInt(TrataCombo.getValueComboEndereco(tpEndereco)));
-                    end.setDsLogradouro(endAlt.getDsLogradouro());
-                    end.setDsComplemeto(endAlt.getDsComplemeto());
-                    end.setNrImovel(endAlt.getNrImovel());
-                    end.setCdCep(Numero.RemoveMascara(endAlt.getCdCep()));
-                    end.setDsBairro(endAlt.getDsBairro());
-                    dao.update(end);
-                } else {
-                    Endereco end = new Endereco();
-                    end.setCdPessoa(pessoa.getCdPessoa());
-                    end.setCdCidade(endAlt.getCdCidade());
-                    end.setTpEndereco(Integer.parseInt(TrataCombo.getValueComboEndereco(tpEndereco)));
-                    end.setDsLogradouro(endAlt.getDsLogradouro());
-                    end.setDsComplemeto(endAlt.getDsComplemeto());
-                    end.setNrImovel(endAlt.getNrImovel());
-                    end.setCdCep(Numero.RemoveMascara(endAlt.getCdCep()));
-                    end.setDsBairro(endAlt.getDsBairro());
-                    dao.save(end);
+                if (endAlt.getCdCidade() != null) {
+                    if (!endAlt.getCdCidade().equals("")) {
+                        if (endAlt.getCdEndereco() != null && endAlt.getCdPessoa() != null) {
+                            Endereco end = new Endereco();
+                            end.setCdEndereco(endAlt.getCdEndereco());
+                            end.setCdPessoa(endAlt.getCdPessoa());
+                            end.setCdCidade(endAlt.getCdCidade());
+                            end.setTpEndereco(Integer.parseInt(TrataCombo.getValueComboEndereco(tpEndereco)));
+                            end.setDsLogradouro(endAlt.getDsLogradouro());
+                            end.setDsComplemeto(endAlt.getDsComplemeto());
+                            end.setNrImovel(endAlt.getNrImovel());
+                            end.setCdCep(Numero.RemoveMascara(endAlt.getCdCep()));
+                            end.setDsBairro(endAlt.getDsBairro());
+                            dao.update(end);
+                        } else {
+                            Endereco end = new Endereco();
+                            end.setCdPessoa(pessoa.getCdPessoa());
+                            end.setCdCidade(endAlt.getCdCidade());
+                            end.setTpEndereco(Integer.parseInt(TrataCombo.getValueComboEndereco(tpEndereco)));
+                            end.setDsLogradouro(endAlt.getDsLogradouro());
+                            end.setDsComplemeto(endAlt.getDsComplemeto());
+                            end.setNrImovel(endAlt.getNrImovel());
+                            end.setCdCep(Numero.RemoveMascara(endAlt.getCdCep()));
+                            end.setDsBairro(endAlt.getDsBairro());
+                            dao.save(end);
+                        }
+                    }
                 }
             }
 
