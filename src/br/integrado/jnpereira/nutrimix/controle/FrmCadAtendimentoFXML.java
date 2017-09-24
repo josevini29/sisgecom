@@ -476,10 +476,6 @@ public class FrmCadAtendimentoFXML implements Initializable {
         });
 
         atendProdHit.btnAdd.setOnAction((ActionEvent event) -> {
-            TextField codBanco = new TextField();
-            codBanco.setText("");
-            TextField dsBanco = new TextField();
-            dsBanco.setText("");
             AtendProdHit b = new AtendProdHit();
             listAtendProd.add(posicao + 1, b);
             atualizaLista();
@@ -504,7 +500,6 @@ public class FrmCadAtendimentoFXML implements Initializable {
             }
             atualizaLista();
         });
-
     }
 
     public Stage getStage() {
@@ -516,7 +511,6 @@ public class FrmCadAtendimentoFXML implements Initializable {
     }
 
     public class AtendProdHit {
-
         AtendimentoProduto atendProd;
         TextField cdProduto = new TextField();
         Button btnPesqProd = new Button();
