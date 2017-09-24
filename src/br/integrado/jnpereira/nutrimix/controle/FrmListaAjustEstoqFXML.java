@@ -164,7 +164,7 @@ public class FrmListaAjustEstoqFXML implements Initializable {
                 AjusteEstoque ajus = (AjusteEstoque) obj;
                 ClasseGenerica classeGenerica = new ClasseGenerica();
                 classeGenerica.setCdAjuste(ajus.getCdAjuste());
-                classeGenerica.setTpAjuste(EstoqueController.getTipoAjusteEstoque(ajus.getTpAjuste()).getDsTpAjuste());
+                classeGenerica.setTpAjuste(ProdutoController.getTipoAjusteEstoque(ajus.getTpAjuste()).getDsTpAjuste());
                 classeGenerica.setDtMovto(new CustomDate(ajus.getDtCadastro().getTime()));
                 valoresArray.add(classeGenerica);
             }

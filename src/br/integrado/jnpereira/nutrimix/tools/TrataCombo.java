@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SingleSelectionModel;
-import br.integrado.jnpereira.nutrimix.controle.EstoqueController;
+import br.integrado.jnpereira.nutrimix.controle.ProdutoController;
 
 public class TrataCombo {
 
@@ -176,7 +176,7 @@ public class TrataCombo {
 
     public static void setValueComboTpAjustEstoq(ChoiceBox combo, Integer selecionado) {
         if (combo.getItems().isEmpty()) {
-            combo.setItems(FXCollections.observableArrayList(EstoqueController.getAllTipoAjuste()));
+            combo.setItems(FXCollections.observableArrayList(ProdutoController.getAllTipoAjuste()));
         }
         if (selecionado != null) {
             SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
@@ -187,14 +187,14 @@ public class TrataCombo {
     public static Integer getValueComboTpAjustEstoq(ChoiceBox combo) {
         SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
         if (model.getSelectedIndex() > -1) {
-            return EstoqueController.getAllTipoAjuste().get(model.getSelectedIndex()).getCdTpAjuste();
+            return ProdutoController.getAllTipoAjuste().get(model.getSelectedIndex()).getCdTpAjuste();
         }
         return null;
     }
 
     public static void setValueComboTpMovtoEstoque(ChoiceBox combo, Integer selecionado) {
         if (combo.getItems().isEmpty()) {
-            combo.setItems(FXCollections.observableArrayList(EstoqueController.getAllTipoMovtoEstoque()));
+            combo.setItems(FXCollections.observableArrayList(ProdutoController.getAllTipoMovtoEstoque()));
         }
         if (selecionado != null) {
             SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
@@ -205,7 +205,7 @@ public class TrataCombo {
     public static Integer getValueComboTpMovtoEstoque(ChoiceBox combo) {
         SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
         if (model.getSelectedIndex() > -1) {
-            return EstoqueController.getAllTipoMovtoEstoque().get(model.getSelectedIndex()).getCdTpMovto();
+            return ProdutoController.getAllTipoMovtoEstoque().get(model.getSelectedIndex()).getCdTpMovto();
         }
         return null;
     }

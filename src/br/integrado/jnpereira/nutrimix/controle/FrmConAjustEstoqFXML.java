@@ -200,7 +200,7 @@ public class FrmConAjustEstoqFXML implements Initializable {
                 prod.setCdProduto(movto.getCdProduto());
                 dao.get(prod);
                 classeGenerica.setDsProduto(prod.getDsProduto());
-                classeGenerica.setDsMovto(EstoqueController.getDsEntraSaida(movto.getTpMovto()));
+                classeGenerica.setDsMovto(ProdutoController.getDsEntraSaida(movto.getTpMovto()));
                 Integer codMovto = null;
                 if (movto.getCdMovCompVend() != null && movto.getTpMovto().equals("E")) {
                     codMovto = 1;
@@ -209,7 +209,7 @@ public class FrmConAjustEstoqFXML implements Initializable {
                 } else if (movto.getCdAjuste() != null) {
                     codMovto = 3;
                 }
-                classeGenerica.setTpMovto(EstoqueController.getTipoMovtoEstoque(codMovto).getDsTpMovto());
+                classeGenerica.setTpMovto(ProdutoController.getTipoMovtoEstoque(codMovto).getDsTpMovto());
                 classeGenerica.setDtMovto(new CustomDate(movto.getDtMovto().getTime()));
                 classeGenerica.setQtMovto(movto.getQtMovto());
                 classeGenerica.setQtEstoq(movto.getQtEstoque());

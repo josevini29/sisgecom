@@ -11,7 +11,7 @@ import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import java.util.ArrayList;
 
-public class EstoqueController {
+public class ProdutoController {
 
     public final static String SAIDA = "S";
     public final static String ENTRADA = "E";

@@ -248,19 +248,19 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                         dao.get(movtoEstoque);
                         if (!movtoEstoque.getInCancelado() && movto.inCancelado.isSelected()) {
                             movtoEstoque.setInCancelado(true);
-                            EstoqueController estq = new EstoqueController();
+                            ProdutoController estq = new ProdutoController();
                             estq.geraMovtoEstoque(movtoEstoque);
                         }
                     }
                 } else {
                     MovtoEstoque movtoEstoque = new MovtoEstoque();
                     movtoEstoque.setCdAjuste(ajuste.getCdAjuste());
-                    movtoEstoque.setTpMovto(EstoqueController.getTipoAjusteEstoque(TrataCombo.getValueComboTpAjustEstoq(tpAjuste)).getTpAjuste());
+                    movtoEstoque.setTpMovto(ProdutoController.getTipoAjusteEstoque(TrataCombo.getValueComboTpAjustEstoq(tpAjuste)).getTpAjuste());
                     movtoEstoque.setCdProduto(Integer.parseInt(movto.cdProduto.getText()));
                     movtoEstoque.setDtMovto(Data.getAgora());
                     movtoEstoque.setQtMovto(Double.parseDouble(movto.qtAjuste.getText()));
                     movtoEstoque.setInCancelado(false);
-                    EstoqueController estq = new EstoqueController();
+                    ProdutoController estq = new ProdutoController();
                     estq.geraMovtoEstoque(movtoEstoque);
                 }
             }
