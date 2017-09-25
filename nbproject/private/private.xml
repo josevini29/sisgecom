@@ -5,8 +5,8 @@
         <group>
             <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/modelo/AjusteEstoque.java</file>
             <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmCadVendaFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/EstoqueController.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmCadAtendimentoFXML.java</file>
+            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/ProdutoController.java</file>
+            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/tools/Tela.java</file>
         </group>
     </open-files>
 </project-private>

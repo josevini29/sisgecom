@@ -373,8 +373,8 @@ public class FrmCadAtendimentoFXML implements Initializable {
                 produto.setCdProduto(atendProd.getCdProduto());
                 dao.get(produto);
                 atendHit.dsProduto.setText(produto.getDsProduto());
-                atendHit.qtProduto.setText(atendProd.getQtProduto().toString());
-                atendHit.qtPaga.setText(atendProd.getQtPaga().toString());
+                atendHit.qtProduto.setText(Numero.doubleToReal(atendProd.getQtProduto(), 2));
+                atendHit.qtPaga.setText(Numero.doubleToReal(atendProd.getQtPaga(), 2));
                 atendHit.lblCadProd.setText(Numero.getCadastro(atendProd.getCdUserCad(), atendProd.getDtCadastro()));
                 atendHit.atendProd = atendProd;
                 listAtendProd.add(atendHit);
@@ -474,6 +474,14 @@ public class FrmCadAtendimentoFXML implements Initializable {
         atendProdHit.btnPesqProd.setOnAction((ActionEvent event) -> {
             abrirListaProduto(atendProdHit);
         });
+        atendProdHit.qtProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!atendProdHit.qtProduto.getText().equals("")) {
+                    Double valor = Double.parseDouble(atendProdHit.qtProduto.getText());
+                    atendProdHit.qtProduto.setText(Numero.doubleToReal(valor, 2));
+                }
+            }
+        });
 
         atendProdHit.btnAdd.setOnAction((ActionEvent event) -> {
             AtendProdHit b = new AtendProdHit();
@@ -511,6 +519,7 @@ public class FrmCadAtendimentoFXML implements Initializable {
     }
 
     public class AtendProdHit {
+
         AtendimentoProduto atendProd;
         TextField cdProduto = new TextField();
         Button btnPesqProd = new Button();

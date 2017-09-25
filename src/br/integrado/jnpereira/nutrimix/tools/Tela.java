@@ -101,16 +101,14 @@ public class Tela {
                     method = controler.getClass().getMethod("iniciaTela");
                     method.invoke(controler);
                 } catch (Exception ex) {
-                    Alerta.AlertaError("Erro!", "Erro ao chamar metodo inicia tela ou Erro de Parâmetro.\n" + ex.toString());
                     ex.printStackTrace();
+                    stage.close();
                 }
             });
 
             stage.showAndWait();
         } catch (Exception ex) {
             ex.printStackTrace();
-            System.out.println(ex.toString());
-            Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
         }
     }
 

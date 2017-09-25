@@ -8,6 +8,7 @@ package br.integrado.jnpereira.nutrimix.controle;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
+import br.integrado.jnpereira.nutrimix.modelo.PrecoProduto;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import java.util.ArrayList;
 
@@ -76,6 +77,16 @@ public class ProdutoController {
         dao.save(movto);
     }
 
+    public Double getUltimoPreco(Integer cdProduto) throws Exception {
+        String where = "WHERE $cdProduto$ = " + cdProduto + " ORDER BY $dtPreco$ DESC";
+        ArrayList<Object> precos = dao.getAllWhere(new PrecoProduto(), where);
+        if (precos.isEmpty()){
+            return null;
+        }
+        PrecoProduto preco = (PrecoProduto) precos.get(0);
+        return preco.getVlPreco();
+    }
+
     //Tipo de Ajuste
     public static ArrayList<TipoAjusteEstoque> getAllTipoAjuste() {
         ArrayList<TipoAjusteEstoque> tipos = new ArrayList<>();
@@ -139,7 +150,7 @@ public class ProdutoController {
     //Tipo de Ajuste
 
     //Tipo de Movimento de Estoque
-     public static ArrayList<TipoMovtoEstoque> getAllTipoMovtoEstoque() {
+    public static ArrayList<TipoMovtoEstoque> getAllTipoMovtoEstoque() {
         ArrayList<TipoMovtoEstoque> tipos = new ArrayList<>();
         tipos.add(new TipoMovtoEstoque(null, ""));
         tipos.add(new TipoMovtoEstoque(1, "Compra"));
@@ -151,17 +162,17 @@ public class ProdutoController {
     public static TipoMovtoEstoque getTipoMovtoEstoque(int id) {
         return getAllTipoMovtoEstoque().get(id);
     }
-    
+
     public static class TipoMovtoEstoque {
 
         private Integer cdTpMovto;
         private String dsTpMovto;
-        
-        public TipoMovtoEstoque(Integer cdTpMovto, String dsTpMovto){
+
+        public TipoMovtoEstoque(Integer cdTpMovto, String dsTpMovto) {
             this.cdTpMovto = cdTpMovto;
             this.dsTpMovto = dsTpMovto;
         }
-        
+
         @Override
         public String toString() {
             return getDsTpMovto();
@@ -182,14 +193,14 @@ public class ProdutoController {
         public void setDsTpMovto(String dsTpMovto) {
             this.dsTpMovto = dsTpMovto;
         }
- 
+
     }
     //Tip de Movimento de Estoque
-    
-    public static String getDsEntraSaida(String tpMovto){
-        if (tpMovto.equals("E")){
+
+    public static String getDsEntraSaida(String tpMovto) {
+        if (tpMovto.equals("E")) {
             return "Entrada";
-        }else if (tpMovto.equals("S")){
+        } else if (tpMovto.equals("S")) {
             return "Saída";
         }
         return null;

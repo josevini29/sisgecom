@@ -21,7 +21,7 @@ public class Numero {
             formato += "0";
         }
         DecimalFormat decFormat = new DecimalFormat("0." + formato);
-        return decFormat.format(valor);
+        return decFormat.format(valor).replace(",", ".");
     }
 
     public static double RealToDouble(String real) {
