@@ -11,7 +11,6 @@ import br.integrado.jnpereira.nutrimix.tools.Tela;
 import br.integrado.jnpereira.nutrimix.tools.ButtonAtend;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -131,6 +130,12 @@ public class FrmMenuFXML implements Initializable {
     public void abrirCadFormaPagto(ActionEvent event) {
         Tela tela = new Tela();
         tela.abrirTelaModal(stage, Tela.CAD_FORMA_PAGTO);
+    }
+    
+    @FXML
+    public void abrirCadCondicaoPagto(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModal(stage, Tela.CAD_CONDICAO_PAGTO);
     }
 
     @FXML

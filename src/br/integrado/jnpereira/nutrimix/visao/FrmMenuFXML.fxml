@@ -72,6 +72,7 @@
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#abrirCadTipoDespesa" text="Tipo de Despesa" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadFormaPagto" text="Forma de Pagamento" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirCadCondicaoPagto" text="Condição de Pagamento" />
                   </items>
                 </Menu>
               </menus>

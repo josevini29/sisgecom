@@ -23,6 +23,7 @@ public class Tela {
     final public static String[] CAD_UNID_PADRAO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadUnidPadraoFXML.fxml", "Cadastro de Unidade Padrão"};
     final public static String[] CAD_ESTADO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadEstadoFXML.fxml", "Cadastro de Estado"};
     final public static String[] CAD_FORMA_PAGTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadFormaPagtoFXML.fxml", "Cadastro de Forma de Pagamento"};
+    final public static String[] CAD_CONDICAO_PAGTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadCondicaoPagtoFXML.fxml", "Cadastro de Condição de Pagamento"};
     final public static String[] CAD_PRECO_PROD = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadPrecoProdFXML.fxml", "Cadastro de Preço Produto"};
     final public static String[] CAD_CIDADE = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadCidadeFXML.fxml", "Cadastro de Cidade"};
     final public static String[] CAD_PRODUTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadProdutoFXML.fxml", "Cadastro de Produto"};

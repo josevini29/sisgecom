@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="704.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmCadCondicaoPagtoFXML">
+   <children>
+      <ScrollPane hbarPolicy="NEVER" layoutX="14.0" layoutY="53.0" prefHeight="321.0" prefWidth="676.0" styleClass="anchor">
+        <content>
+          <AnchorPane fx:id="painel" minHeight="0.0" minWidth="0.0" prefHeight="41.0" prefWidth="662.0">
+               <children>
+                  <TextField id="campo" fx:id="codCondicaoPagto" alignment="CENTER" editable="false" layoutX="7.0" layoutY="3.0" prefHeight="30.0" prefWidth="48.0" styleClass="texto_estatico_center">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="dsCondicaoPagto" layoutX="60.0" layoutY="3.0" prefHeight="30.0" prefWidth="231.0">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </TextField>
+                  <CheckBox fx:id="inAtivo" layoutX="526.0" layoutY="8.0" mnemonicParsing="false" text="Ativo" />
+                  <Button fx:id="btnAdd" layoutX="588.0" layoutY="3.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0px;">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icon/add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnRem" accessibleHelp="Excluir Endereço" layoutX="625.0" layoutY="3.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-padding: 0px;">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icon/excluir.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <TextField id="campo" fx:id="qtParcelas" alignment="CENTER" layoutX="296.0" layoutY="3.0" prefHeight="30.0" prefWidth="70.0" styleClass="numero_editavel">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </TextField>
+                  <TextField id="campo" fx:id="nrIntervalo" alignment="CENTER" layoutX="370.0" layoutY="3.0" prefHeight="30.0" prefWidth="68.0" styleClass="numero_editavel">
+                     <font>
+                        <Font size="12.0" />
+                     </font>
+                  </TextField>
+                  <CheckBox fx:id="inEntrada" layoutX="448.0" layoutY="8.0" mnemonicParsing="false" text="Entrada" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+      <Button layoutX="14.0" layoutY="387.0" mnemonicParsing="false" onAction="#salvar" prefHeight="29.0" prefWidth="99.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
+         <font>
+            <Font size="12.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/salvar.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="123.0" layoutY="387.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="29.0" prefWidth="99.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Cancelar">
+         <font>
+            <Font size="12.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/limpar.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Label layoutX="24.0" layoutY="36.0" text="Código" />
+      <Label layoutX="77.0" layoutY="36.0" text="Descrição Forma de Pagamento" />
+      <Label layoutX="313.0" layoutY="36.0" text="Qt. Parcelas" />
+      <Label layoutX="394.0" layoutY="36.0" text="Intervalo" />
+   </children>
+</AnchorPane>

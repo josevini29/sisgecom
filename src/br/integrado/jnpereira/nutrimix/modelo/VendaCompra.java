@@ -38,6 +38,8 @@ public class VendaCompra {
     private Integer cdAtend;
     @Coluna(nome="dt_atend")
     private Date dtAtend;
+    @Coluna(nome="vl_total")
+    private Double vlTotal;
     @Coluna(nome="in_cancelado")
     private Boolean inCancelado;
 
@@ -159,5 +161,13 @@ public class VendaCompra {
 
     public void setInCancelado(Boolean inCancelado) {
         this.inCancelado = inCancelado;
+    }
+
+    public Double getVlTotal() {
+        return vlTotal;
+    }
+
+    public void setVlTotal(Double vlTotal) {
+        this.vlTotal = vlTotal;
     }
 }

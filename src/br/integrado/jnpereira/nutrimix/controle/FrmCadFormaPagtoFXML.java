@@ -71,9 +71,9 @@ public class FrmCadFormaPagtoFXML implements Initializable {
                                 iniciaTela();
                                 return;
                             }*/
-                            FormaPagto forma = new FormaPagto();
-                            forma.setCdFormaPagto(Integer.parseInt(b.codFormaPagto.getText()));
-                            dao.delete(forma);
+                            //FormaPagto forma = new FormaPagto();
+                            //forma.setCdFormaPagto(Integer.parseInt(b.codFormaPagto.getText()));
+                            //dao.delete(forma);
                         } else if (b.isAlterado) {
                             FormaPagto forma = new FormaPagto();
                             forma.setCdFormaPagto(Integer.parseInt(b.codFormaPagto.getText()));
@@ -84,7 +84,7 @@ public class FrmCadFormaPagtoFXML implements Initializable {
                     }
                 }
             } catch (Exception ex) {
-                Alerta.AlertaError("Erro!", "Erro ao salvar Tipo Despesa.\n" + ex.toString());
+                Alerta.AlertaError("Erro!", "Erro ao salvar Tipo Forma de Pagamento.\n" + ex.toString());
                 return;
             }
         }
@@ -117,15 +117,18 @@ public class FrmCadFormaPagtoFXML implements Initializable {
                 b.codFormaPagto.setPrefWidth(codFormaPagto.getWidth());
                 b.codFormaPagto.setLayoutX(codFormaPagto.getLayoutX());
                 b.codFormaPagto.setLayoutY(LayoutYFormaPagto);
+                b.codFormaPagto.getStyleClass().addAll(codFormaPagto.getStyleClass());
                 b.dsFormaPagto.setEditable(dsFormaPagto.isEditable());
                 b.dsFormaPagto.setPrefHeight(dsFormaPagto.getHeight());
                 b.dsFormaPagto.setPrefWidth(dsFormaPagto.getWidth());
                 b.dsFormaPagto.setLayoutX(dsFormaPagto.getLayoutX());
                 b.dsFormaPagto.setLayoutY(LayoutYFormaPagto);
+                b.dsFormaPagto.getStyleClass().addAll(dsFormaPagto.getStyleClass());
                 b.cbxAtivo.setPrefHeight(cbxAtivo.getHeight());
                 b.cbxAtivo.setPrefWidth(cbxAtivo.getWidth());
                 b.cbxAtivo.setLayoutX(cbxAtivo.getLayoutX());
                 b.cbxAtivo.setLayoutY(LayoutYFormaPagto + 5);
+                b.cbxAtivo.getStyleClass().addAll(cbxAtivo.getStyleClass());
                 b.btnAdd.setPrefHeight(btnAdd.getHeight());
                 b.btnAdd.setPrefWidth(btnAdd.getWidth());
                 b.btnAdd.setLayoutX(btnAdd.getLayoutX());
@@ -213,6 +216,10 @@ public class FrmCadFormaPagtoFXML implements Initializable {
         });
 
         forma.btnRem.setOnAction((ActionEvent event) -> {
+            if (!forma.codFormaPagto.getText().equals("")) {
+                Alerta.AlertaError("Não permitido!", "Não é possivel excluir um item salvo, apenas inativar.");
+                return;
+            }
             if (total == 1) {
                 TextField codFormaPagto = new TextField();
                 codFormaPagto.setText("");
