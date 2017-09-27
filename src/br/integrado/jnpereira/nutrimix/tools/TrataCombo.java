@@ -5,6 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SingleSelectionModel;
 import br.integrado.jnpereira.nutrimix.controle.ProdutoController;
+import br.integrado.jnpereira.nutrimix.dao.Dao;
+import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
+import br.integrado.jnpereira.nutrimix.modelo.FormaPagto;
+import java.util.List;
 
 public class TrataCombo {
 
@@ -277,4 +281,101 @@ public class TrataCombo {
         }
     }
 
+    public static void setValueComboTpCondicaoPagto(ChoiceBox combo, Integer selecionado) {
+        if (combo.getItems().isEmpty()) {
+            try {
+                Dao dao = new Dao();
+                ArrayList<Object> objs = dao.getAllWhere(new CondicaoPagto(), null);
+                ArrayList<CondicaoHit> hits = new ArrayList<>();
+                int i = 0;
+                for (Object obj : objs) {
+                    CondicaoHit hit = new CondicaoHit();
+                    hit.condicao = (CondicaoPagto) obj;
+                    hits.add(hit);
+                    if (selecionado == hit.condicao.getCdCondicao()) {
+                        selecionado = i;
+                    }
+                    i++;
+                }
+                combo.setItems(FXCollections.observableArrayList(hits));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alerta.AlertaError("Atenção!", "Nenhuma condição de pagamento cadastrada!");
+                return;
+            }
+        }
+        if (selecionado != null) {
+            SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+            model.select(selecionado);
+        }
+    }
+
+    public static Integer getValueComboTpCondicaoPagto(ChoiceBox combo) {
+        SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+        if (model.getSelectedIndex() > -1) {
+            List lista = combo.getItems();
+            CondicaoHit cond = (CondicaoHit) lista.get(model.getSelectedIndex());
+            return cond.condicao.getCdCondicao();
+        }
+        return null;
+    }
+
+    public static class CondicaoHit {
+
+        CondicaoPagto condicao;
+
+        @Override
+        public String toString() {
+            return condicao.getCdCondicao() + ": " + condicao.getDsCondicao();
+        }
+    }
+
+    public static void setValueComboTpFormaPagto(ChoiceBox combo, Integer selecionado) {
+        if (combo.getItems().isEmpty()) {
+            try {
+                Dao dao = new Dao();
+                ArrayList<Object> objs = dao.getAllWhere(new FormaPagto(), null);
+                ArrayList<FormaHit> hits = new ArrayList<>();
+                int i = 0;
+                for (Object obj : objs) {
+                    FormaHit hit = new FormaHit();
+                    hit.forma = (FormaPagto) obj;
+                    hits.add(hit);
+                    if (selecionado == hit.forma.getCdFormaPagto()) {
+                        selecionado = i;
+                    }
+                    i++;
+                }
+                combo.setItems(FXCollections.observableArrayList(hits));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alerta.AlertaError("Atenção!", "Nenhuma forma de pagamento cadastrada!");
+                return;
+            }
+        }
+        if (selecionado != null) {
+            SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+            model.select(selecionado);
+        }
+    }
+
+    public static Integer getValueComboTpFormaPagto(ChoiceBox combo) {
+        SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+        if (model.getSelectedIndex() > -1) {
+            List lista = combo.getItems();
+            FormaHit forma = (FormaHit) lista.get(model.getSelectedIndex());
+            return forma.forma.getCdFormaPagto();
+        }
+        return null;
+    }
+
+    public static class FormaHit {
+
+        FormaPagto forma;
+
+        @Override
+        public String toString() {
+            return forma.getCdFormaPagto() + ": " + forma.getDsFormaPagto();
+        }
+    }
 }
