@@ -24,8 +24,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -372,7 +370,7 @@ public class FrmCadVendaFXML implements Initializable {
 
             dao.save(venda);
 
-            for (VendaProdHit vendaHit : listVendaProd) {
+            for (VendaProdHit vendaHit : listVendaProd) { //baixa do produto de um atendimento
                 VendaCompraProduto vendaProd = new VendaCompraProduto();
                 Double qtVenda = Double.parseDouble(vendaHit.qtUnitario.getText());
                 vendaProd.setCdMovto(venda.getCdMovto());
@@ -387,7 +385,7 @@ public class FrmCadVendaFXML implements Initializable {
                 }
             }
 
-            if (atendimento != null) {
+            if (atendimento != null) { //Encerra o atendimento
                 String where = "WHERE $cdAtend$ = " + atendimento.getCdAtend() + " AND $dtAtend$ = '" + Data.BrasilToAmericaSemHora(atendimento.getDtAtend()) + "'";
                 ArrayList<Object> atendProds = dao.getAllWhere(new AtendimentoProduto(), where);
                 boolean vInEncerrado = true;
@@ -411,7 +409,7 @@ public class FrmCadVendaFXML implements Initializable {
             Alerta.AlertaError("Erro!", ex.getMessage());
             return;
         }
-        if (Alerta.AlertaConfirmation("Confirmação", "Nova venda?")) {
+        if (Alerta.AlertaConfirmation("Confirmação", "Venda efetivada com sucesso.\nDeseja realizar uma nova venda?")) {
             param = null;
             limparTela();
         } else {
@@ -450,7 +448,7 @@ public class FrmCadVendaFXML implements Initializable {
             for (Object obj : atendsProd) {
                 AtendimentoProduto vendaProd = (AtendimentoProduto) obj;
                 boolean vInAdd = true;
-                if (vendaProd.getQtProduto() != vendaProd.getQtPaga()) {
+                if (vendaProd.getQtProduto() > vendaProd.getQtPaga()) {
                     VendaProdHit vendaHit = new VendaProdHit();
                     vendaHit.cdProduto.setText(vendaProd.getCdProduto().toString());
                     Produto produto = new Produto();
