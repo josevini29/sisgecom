@@ -273,10 +273,10 @@ public class FrmCadVendaFXML implements Initializable {
                             vendaHit.cdProduto.requestFocus();
                             return;
                         }
+                        vendaHit.atendProd = atendProd;
                         vendaHit.qtUnitario.setText(String.valueOf(atendProd.getQtProduto() - atendProd.getQtPaga()));
                         vendaHit.cdProduto.setEditable(false);
-                        vendaHit.qtUnitario.setEditable(false);
-                        vendaHit.qtUnitario.getStyleClass().addAll("numero_estatico");
+                        vendaHit.cdProduto.getStyleClass().addAll("texto_estatico_center");
                     } catch (Exception ex) {
                     }
                 }
@@ -369,8 +369,41 @@ public class FrmCadVendaFXML implements Initializable {
             }
             venda.setVlTotal(Double.parseDouble(vlTotalVenda.getText()));
             venda.setInCancelado(false);
-            
+
             dao.save(venda);
+
+            for (VendaProdHit vendaHit : listVendaProd) {
+                VendaCompraProduto vendaProd = new VendaCompraProduto();
+                Double qtVenda = Double.parseDouble(vendaHit.qtUnitario.getText());
+                vendaProd.setCdMovto(venda.getCdMovto());
+                vendaProd.setCdProduto(Integer.parseInt(vendaHit.cdProduto.getText()));
+                vendaProd.setQtUnitario(qtVenda);
+                vendaProd.setVlUnitario(Double.parseDouble(vendaHit.vlUnitario.getText()));
+                dao.save(vendaProd);
+                if (vendaHit.atendProd != null) {
+                    Double qtPaga = vendaHit.atendProd.getQtPaga() + qtVenda;
+                    vendaHit.atendProd.setQtPaga(qtPaga);
+                    dao.update(vendaHit.atendProd);
+                }
+            }
+
+            if (atendimento != null) {
+                String where = "WHERE $cdAtend$ = " + atendimento.getCdAtend() + " AND $dtAtend$ = '" + Data.BrasilToAmericaSemHora(atendimento.getDtAtend()) + "'";
+                ArrayList<Object> atendProds = dao.getAllWhere(new AtendimentoProduto(), where);
+                boolean vInEncerrado = true;
+                for (Object obj : atendProds) {
+                    AtendimentoProduto atendProd = (AtendimentoProduto) obj;
+                    if (atendProd.getQtProduto() > atendProd.getQtPaga()) {
+                        vInEncerrado = false;
+                    }
+                }
+
+                if (vInEncerrado) {
+                    atendimento.setStAtend("3");
+                    dao.update(atendimento);
+                }
+            }
+
             dao.commit();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -424,7 +457,7 @@ public class FrmCadVendaFXML implements Initializable {
                     produto.setCdProduto(vendaProd.getCdProduto());
                     dao.get(produto);
                     vendaHit.dsProduto.setText(produto.getDsProduto());
-                    vendaHit.qtUnitario.setText(String.valueOf(vendaProd.getQtProduto() - vendaProd.getQtPaga()));
+                    vendaHit.qtUnitario.setText(Numero.doubleToReal(vendaProd.getQtProduto() - vendaProd.getQtPaga(), 2));
                     vendaHit.atendProd = vendaProd;
                     ProdutoController prodController = new ProdutoController();
                     Double vlPreco = prodController.getUltimoPreco(produto.getCdProduto());
@@ -455,6 +488,7 @@ public class FrmCadVendaFXML implements Initializable {
             b.cdProduto.setEditable(cdProduto.isEditable());
             if (b.atendProd != null) {
                 b.cdProduto.setEditable(false);
+                b.cdProduto.getStyleClass().addAll("texto_estatico_center");
             }
             b.cdProduto.setPrefHeight(cdProduto.getHeight());
             b.cdProduto.setPrefWidth(cdProduto.getWidth());
@@ -473,10 +507,10 @@ public class FrmCadVendaFXML implements Initializable {
             b.qtUnitario.setLayoutX(qtUnitario.getLayoutX());
             b.qtUnitario.setLayoutY(LayoutY);
             b.qtUnitario.getStyleClass().addAll(this.qtUnitario.getStyleClass());
-            if (b.atendProd != null) {
-                b.qtUnitario.setEditable(false);
-                b.qtUnitario.getStyleClass().addAll("numero_estatico");
-            }
+            //if (b.atendProd != null) {
+            //b.qtUnitario.setEditable(false);
+            //b.qtUnitario.getStyleClass().addAll("numero_estatico");
+            //}
             b.vlUnitario.setEditable(vlUnitario.isEditable());
             b.vlUnitario.setPrefHeight(vlUnitario.getHeight());
             b.vlUnitario.setPrefWidth(vlUnitario.getWidth());
@@ -536,6 +570,11 @@ public class FrmCadVendaFXML implements Initializable {
             if (!newPropertyValue) {
                 if (!vendaProdHit.qtUnitario.getText().equals("")) {
                     Double valor = Double.parseDouble(vendaProdHit.qtUnitario.getText());
+                    if (valor <= 0) {
+                        Alerta.AlertaError("Campo inválido", "Venda deve ser maior que 0.00!");
+                        vendaProdHit.qtUnitario.requestFocus();
+                        return;
+                    }
                     vendaProdHit.qtUnitario.setText(Numero.doubleToReal(valor, 2));
                 }
                 calculaTotalProd();

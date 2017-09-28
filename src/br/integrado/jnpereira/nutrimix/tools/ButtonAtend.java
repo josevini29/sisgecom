@@ -105,6 +105,7 @@ public class ButtonAtend extends Thread {
         btnAcerto.setOnAction((ActionEvent event) -> {
             Tela tela = new Tela();
             tela.abrirTelaModalComParam(getStage(), Tela.CAD_VENDA, atendHit.atend);
+            load();
         });
         paneAtend.getChildren().add(btnAcerto);
     }

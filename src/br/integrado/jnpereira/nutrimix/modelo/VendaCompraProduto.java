@@ -19,7 +19,7 @@ public class VendaCompraProduto {
     @Coluna(nome="cd_produto")
     private Integer cdProduto;
     @Coluna(nome="qt_unitario")
-    private Double qtUnidario;
+    private Double qtUnitario;
     @Coluna(nome="vl_unitario")
     private Double vlUnitario;
     @Coluna(nome="cd_pedido")
@@ -41,14 +41,6 @@ public class VendaCompraProduto {
 
     public void setCdProduto(Integer cdProduto) {
         this.cdProduto = cdProduto;
-    }
-
-    public Double getQtUnidario() {
-        return qtUnidario;
-    }
-
-    public void setQtUnidario(Double qtUnidario) {
-        this.qtUnidario = qtUnidario;
     }
 
     public Double getVlUnitario() {
@@ -73,6 +65,14 @@ public class VendaCompraProduto {
 
     public void setNrSeqPedItem(Integer nrSeqPedItem) {
         this.nrSeqPedItem = nrSeqPedItem;
+    }
+
+    public Double getQtUnitario() {
+        return qtUnitario;
+    }
+
+    public void setQtUnitario(Double qtUnitario) {
+        this.qtUnitario = qtUnitario;
     }
       
 }
