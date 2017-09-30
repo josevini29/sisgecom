@@ -6,13 +6,17 @@ import javafx.scene.layout.AnchorPane;
 import br.integrado.jnpereira.nutrimix.modelo.Atendimento;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -39,7 +43,22 @@ public class ButtonAtend extends Thread {
         layoutY = spaceHeight;
         layoutX = spaceWidth;
     }
+    
+    public Node getLabelError(String dsError) {
+        Label lblRefresh = new Label();
+        lblRefresh.setLayoutX(spaceWidth);
+        lblRefresh.setLayoutY(8);
+        lblRefresh.setText(dsError);
+        return lblRefresh;
+    }
 
+    public static String getStack(Throwable exception) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        return (sw.toString());
+    }
+    
     @Override
     public void run() {
         Platform.runLater(() -> {
@@ -70,7 +89,9 @@ public class ButtonAtend extends Thread {
             }
 
         } catch (Exception ex) {
-            Alerta.AlertaError("Erro!", ex.toString());
+            paneAtend.getChildren().clear();
+            paneAtend.getChildren().add(getLabelError("Erro ao gerar lista de atendimento, entre em contato com o suporte!\n" + getStack(ex)));
+            ex.printStackTrace();
         }
     }
 

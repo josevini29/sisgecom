@@ -354,8 +354,6 @@ public class FrmCadVendaFXML implements Initializable {
             VendaCompra venda = new VendaCompra();
             venda.setTpMovto("S");
             venda.setCdPessoa(pessoa != null ? pessoa.getCdPessoa() : null);
-            venda.setCdFormaPagto(TrataCombo.getValueComboTpFormaPagto(tpFormaPagto));
-            venda.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
             venda.setVlDesconto(!vlDesconto.getText().equals("") ? Double.parseDouble(vlDesconto.getText()) : 0.0);
             venda.setVlAdicional(!vlAdicional.getText().equals("") ? Double.parseDouble(vlAdicional.getText()) : 0.0);
             venda.setVlFrete(!vlFrete.getText().equals("") ? Double.parseDouble(vlFrete.getText()) : 0.0);

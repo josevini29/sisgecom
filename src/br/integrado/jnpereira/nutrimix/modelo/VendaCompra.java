@@ -16,10 +16,6 @@ public class VendaCompra {
     private String tpMovto;
     @Coluna(nome="cd_pessoa")
     private Integer cdPessoa;
-    @Coluna(nome="cd_forma_pg")
-    private Integer cdFormaPagto;
-    @Coluna(nome="cd_condicao")
-    private Integer cdCondicao;
     @Coluna(nome="nr_nota")
     private Integer nrNota;
     @Coluna(nome="cd_serie")
@@ -66,23 +62,7 @@ public class VendaCompra {
     public void setCdPessoa(Integer cdPessoa) {
         this.cdPessoa = cdPessoa;
     }
-
-    public Integer getCdFormaPagto() {
-        return cdFormaPagto;
-    }
-
-    public void setCdFormaPagto(Integer cdFormaPagto) {
-        this.cdFormaPagto = cdFormaPagto;
-    }
-
-    public Integer getCdCondicao() {
-        return cdCondicao;
-    }
-
-    public void setCdCondicao(Integer cdCondicao) {
-        this.cdCondicao = cdCondicao;
-    }
-
+    
     public Integer getNrNota() {
         return nrNota;
     }

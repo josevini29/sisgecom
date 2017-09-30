@@ -285,7 +285,7 @@ public class TrataCombo {
         if (combo.getItems().isEmpty()) {
             try {
                 Dao dao = new Dao();
-                ArrayList<Object> objs = dao.getAllWhere(new CondicaoPagto(), null);
+                ArrayList<Object> objs = dao.getAllWhere(new CondicaoPagto(), "WHERE $inAtivo$ = 'T'");
                 ArrayList<CondicaoHit> hits = new ArrayList<>();
                 int i = 0;
                 for (Object obj : objs) {
@@ -334,7 +334,7 @@ public class TrataCombo {
         if (combo.getItems().isEmpty()) {
             try {
                 Dao dao = new Dao();
-                ArrayList<Object> objs = dao.getAllWhere(new FormaPagto(), null);
+                ArrayList<Object> objs = dao.getAllWhere(new FormaPagto(), "WHERE $inAtivo$ = 'T'");
                 ArrayList<FormaHit> hits = new ArrayList<>();
                 int i = 0;
                 for (Object obj : objs) {
