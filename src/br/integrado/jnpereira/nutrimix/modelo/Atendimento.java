@@ -10,7 +10,6 @@ import java.util.Date;
 public class Atendimento {
 
     @Id
-    @AutoIncrement
     @Coluna(nome = "cd_atend")
     private Integer cdAtend;
     @Id

@@ -11,6 +11,7 @@ import br.integrado.jnpereira.nutrimix.modelo.AtendimentoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Cliente;
+import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
@@ -100,8 +101,8 @@ public class FrmCadVendaFXML implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         FuncaoCampo.mascaraNumeroInteiro(cdCliente);
-        TrataCombo.setValueComboTpCondicaoPagto(tpCondPagto, null);
-        TrataCombo.setValueComboTpFormaPagto(tpFormaPagto, null);
+        TrataCombo.setValueComboTpCondicaoPagto(tpCondPagto, 1);
+        TrataCombo.setValueComboTpFormaPagto(tpFormaPagto, 1);
         FuncaoCampo.mascaraNumeroDecimal(vlDesconto);
         FuncaoCampo.mascaraNumeroDecimal(vlAdicional);
         FuncaoCampo.mascaraNumeroDecimal(vlFrete);
@@ -399,8 +400,14 @@ public class FrmCadVendaFXML implements Initializable {
                     dao.update(atendimento);
                 }
             }
-
-            dao.commit();
+            
+            ParcelaController parcela = new ParcelaController();
+            CondicaoPagto condicao = new CondicaoPagto();
+            condicao.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
+            dao.get(condicao);
+            parcela.getParcelas(condicao, venda.getVlTotal());
+            dao.rollback();
+            //dao.commit();
         } catch (Exception ex) {
             ex.printStackTrace();
             dao.rollback();
@@ -461,6 +468,7 @@ public class FrmCadVendaFXML implements Initializable {
                         inAntiLoop = true;
                         vInAdd = false;
                         Alerta.AlertaError("Não permitido", "Produto: " + produto.getCdProduto() + " sem preço cadastrado.");
+                        stage.close();
                     }
                     vendaHit.vlUnitario.setText(Numero.doubleToReal(vlPreco, 2));
                     if (vInAdd) {

@@ -25,7 +25,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <TextField fx:id="dsProduto" editable="false" layoutX="119.0" layoutY="40.0" prefHeight="30.0" prefWidth="266.0">
+      <TextField fx:id="dsProduto" editable="false" layoutX="119.0" layoutY="40.0" prefHeight="30.0" prefWidth="266.0" styleClass="texto_estatico">
          <font>
             <Font size="12.0" />
          </font>
