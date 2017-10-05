@@ -34,6 +34,7 @@ public class Tela {
     final public static String[] CON_MOVTO_ESTOQ = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConAjustEstoqFXML.fxml", "Consulta Movimento de Estoque"};
     final public static String[] CAD_ATEND = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAtendimentoFXML.fxml", "Atendimento a Mesa"};
     final public static String[] CAD_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadVendaFXML.fxml", "Venda"};
+    final public static String[] CON_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConParcelaFXML.fxml", "Consulta Parcelas"};
 
     public void abrirMenu(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(MENU[0]));

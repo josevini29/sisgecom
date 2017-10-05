@@ -126,7 +126,7 @@
       <ChoiceBox fx:id="tpFormaPagto" layoutX="27.0" layoutY="415.0" prefHeight="30.0" prefWidth="126.0" />
       <Label layoutX="28.0" layoutY="397.0" text="Forma de Pagamento" />
       <ChoiceBox fx:id="tpCondPagto" layoutX="159.0" layoutY="415.0" prefHeight="30.0" prefWidth="134.0" />
-      <Button layoutX="297.0" layoutY="415.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Parcelas">
+      <Button layoutX="297.0" layoutY="415.0" mnemonicParsing="false" onAction="#visualizarParcelas" prefHeight="30.0" prefWidth="100.0" text="Parcelas">
          <graphic>
             <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -185,5 +185,10 @@
       </Button>
       <Label layoutX="658.0" layoutY="399.0" text="Total Venda" />
       <Label fx:id="lblAtendimento" layoutX="30.0" layoutY="73.0" prefHeight="16.0" prefWidth="498.0" />
+      <ImageView fitHeight="42.0" fitWidth="43.0" layoutX="676.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../icon/balcao.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

@@ -12,6 +12,7 @@ import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Cliente;
 import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
+import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
@@ -158,6 +159,18 @@ public class FrmCadVendaFXML implements Initializable {
         }
     }
 
+    @FXML
+    public void visualizarParcelas() {
+        Double vlTotal = Double.parseDouble(vlTotalVenda.getText());
+        if (vlTotal > 0 && TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto) != null) {
+            ContasPagarReceber conta = new ContasPagarReceber();
+            conta.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
+            conta.setVlConta(vlTotal);
+            Tela tela = new Tela();
+            tela.abrirTelaModalComParam(stage, Tela.CON_PARCELA, conta);
+        }
+    }
+
     public void abrirListaProduto(VendaProdHit movto) {
         if (movto.atendProd != null) {
             Alerta.AlertaError("Não permitido!", "Altere o item no atendimento.");
@@ -273,7 +286,7 @@ public class FrmCadVendaFXML implements Initializable {
                             return;
                         }
                         vendaHit.atendProd = atendProd;
-                        vendaHit.qtUnitario.setText(String.valueOf(atendProd.getQtProduto() - atendProd.getQtPaga()));
+                        vendaHit.qtUnitario.setText(Numero.doubleToReal(atendProd.getQtProduto() - atendProd.getQtPaga(), 2));
                         vendaHit.cdProduto.setEditable(false);
                         vendaHit.cdProduto.getStyleClass().addAll("texto_estatico_center");
                     } catch (Exception ex) {
@@ -400,14 +413,8 @@ public class FrmCadVendaFXML implements Initializable {
                     dao.update(atendimento);
                 }
             }
-            
-            ParcelaController parcela = new ParcelaController();
-            CondicaoPagto condicao = new CondicaoPagto();
-            condicao.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
-            dao.get(condicao);
-            parcela.getParcelas(condicao, venda.getVlTotal());
-            dao.rollback();
-            //dao.commit();
+
+            dao.commit();
         } catch (Exception ex) {
             ex.printStackTrace();
             dao.rollback();
