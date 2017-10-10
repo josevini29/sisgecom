@@ -35,11 +35,27 @@ public class Tela {
     final public static String[] CAD_ATEND = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAtendimentoFXML.fxml", "Atendimento a Mesa"};
     final public static String[] CAD_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadVendaFXML.fxml", "Venda"};
     final public static String[] CON_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConParcelaFXML.fxml", "Consulta Parcelas"};
+    final public static String[] LOGIN = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmLoginFXML.fxml", "Login"};
 
-    public void abrirMenu(Stage stage) throws IOException {
+    public void abrirLogin(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
+        Parent root = (Parent) loader.load();
+        FrmMenuFXML controler = (FrmMenuFXML) loader.getController();
+        controler.setStage(stage);
+        controler.iniciaTela();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+        stage.setTitle(LOGIN[1]);
+        stage.setMaximized(true);
+        stage.show();
+    }
+    
+    public void abrirMenu() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(MENU[0]));
         Parent root = (Parent) loader.load();
         FrmMenuFXML controler = (FrmMenuFXML) loader.getController();
+        Stage stage = new Stage();
         controler.setStage(stage);
         controler.iniciaTela();
         Scene scene = new Scene(root);

@@ -8,20 +8,16 @@ import br.integrado.jnpereira.nutrimix.modelo.Parcela;
 import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
-import br.integrado.jnpereira.nutrimix.tools.CustomDate;
 import br.integrado.jnpereira.nutrimix.tools.CustomDateNoTime;
 import br.integrado.jnpereira.nutrimix.tools.Numero;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class FrmConParcelaFXML implements Initializable {

@@ -413,6 +413,18 @@ public class FrmCadVendaFXML implements Initializable {
                     dao.update(atendimento);
                 }
             }
+            
+            ContasPagarReceber conta = new ContasPagarReceber();
+            conta.setTpMovto("E");
+            conta.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
+            conta.setCdForma(TrataCombo.getValueComboTpFormaPagto(tpFormaPagto));
+            conta.setCdMovto(venda.getCdMovto());
+            conta.setVlConta(Double.parseDouble(vlTotalVenda.getText()));
+            conta.setStConta("1");
+            dao.save(conta);
+            
+            ParcelaController parcela = new ParcelaController();
+            parcela.gerarParcelas(conta);
 
             dao.commit();
         } catch (Exception ex) {

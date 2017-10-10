@@ -1,12 +1,12 @@
 package br.integrado.jnpereira.nutrimix.controle;
 
+import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
 import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.Parcela;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,14 +15,22 @@ public class ParcelaController {
 
     DecimalFormat df = new DecimalFormat("0.00");
     DecimalFormat dfs = new DecimalFormat("0.00");
+    Dao dao = new Dao();
 
     public ParcelaController() {
         df.setMaximumFractionDigits(2);
         df.setRoundingMode(RoundingMode.DOWN);
     }
 
-    public void gerarParcelas(ContasPagarReceber conta) {
-
+    public void gerarParcelas(ContasPagarReceber conta) throws Exception {
+        dao.autoCommit(false);
+        CondicaoPagto condicao  = new CondicaoPagto();
+        condicao.setCdCondicao(conta.getCdCondicao());
+        dao.get(condicao);
+        for (Parcela parcela: getParcelas(condicao, conta.getVlConta())){
+            parcela.setCdConta(conta.getCdConta());
+            dao.save(parcela);
+        }
     }
 
     public ArrayList<Parcela> getParcelas(CondicaoPagto condicao, Double vlTotal) {
