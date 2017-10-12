@@ -2,18 +2,15 @@ package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 
 public class FrmLoginFXML implements Initializable {
 
-    public Stage stage;
+    private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -27,9 +24,10 @@ public class FrmLoginFXML implements Initializable {
     @FXML
     public void login() {
         try {
-            Tela tela = new Tela();
+            Tela tela = new Tela();            
             tela.abrirMenu();
-        } catch (IOException ex) {
+            stage.close();
+        } catch (Exception ex) {
             Alerta.AlertaError("Erro!", ex.toString());
             System.exit(0);
         }
@@ -38,6 +36,14 @@ public class FrmLoginFXML implements Initializable {
     @FXML
     public void sair() {
         System.exit(0);
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
 }

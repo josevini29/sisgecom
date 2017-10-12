@@ -4,6 +4,7 @@ import br.integrado.jnpereira.nutrimix.controle.FrmListaGenericaFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmListaPessoaFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmListaAjustEstoqFXML;
+import br.integrado.jnpereira.nutrimix.controle.FrmLoginFXML;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class Tela {
@@ -40,14 +42,14 @@ public class Tela {
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
         Parent root = (Parent) loader.load();
-        FrmMenuFXML controler = (FrmMenuFXML) loader.getController();
+        FrmLoginFXML controler = (FrmLoginFXML) loader.getController();
         controler.setStage(stage);
         controler.iniciaTela();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
         stage.setTitle(LOGIN[1]);
-        stage.setMaximized(true);
+        stage.initStyle(StageStyle.UTILITY);
         stage.show();
     }
     

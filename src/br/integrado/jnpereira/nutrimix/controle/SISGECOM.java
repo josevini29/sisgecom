@@ -21,7 +21,7 @@ public class SISGECOM extends Application {
         Conexao cn = new Conexao();
         cn.conecta();
         Tela tela = new Tela();
-        tela.abrirTelaModal(stage, Tela.LOGIN);
+        tela.abrirLogin(stage);
     }
 
     /**
