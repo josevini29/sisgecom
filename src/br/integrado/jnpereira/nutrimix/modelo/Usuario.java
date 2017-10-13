@@ -9,8 +9,8 @@ import java.util.Date;
 public class Usuario {
 
     @Id
-    @Coluna(nome = "cd_pessoa")
-    private Integer cdPessoa;
+    @Coluna(nome = "cd_usuario")
+    private Integer cdUsuario;
     @Coluna(nome = "cd_perfil")
     private Integer cdPerfil;
     @Coluna(nome = "ds_login")
@@ -23,13 +23,15 @@ public class Usuario {
     private Date dtCadastro;
     @Coluna(nome = "in_ativo")
     private Boolean inAtivo;
+    @Coluna(nome="cd_funcionario")
+    private Integer cdFuncionario;
 
-    public Integer getCdPessoa() {
-        return cdPessoa;
+    public Integer getCdUsuario() {
+        return cdUsuario;
     }
 
-    public void setCdPessoa(Integer cdPessoa) {
-        this.cdPessoa = cdPessoa;
+    public void setCdUsuario(Integer cdUsuario) {
+        this.cdUsuario = cdUsuario;
     }
 
     public Integer getCdPerfil() {
@@ -79,4 +81,14 @@ public class Usuario {
     public void setInAtivo(Boolean inAtivo) {
         this.inAtivo = inAtivo;
     }
+
+    public Integer getCdFuncionario() {
+        return cdFuncionario;
+    }
+
+    public void setCdFuncionario(Integer cdFuncionario) {
+        this.cdFuncionario = cdFuncionario;
+    }
+
+    
 }
