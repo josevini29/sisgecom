@@ -3,6 +3,7 @@ package br.integrado.jnpereira.nutrimix.controle;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.Usuario;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
+import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,11 +26,12 @@ public class FrmLoginFXML implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        FuncaoCampo.mascaraTexto(dsLogin, 15);
+        FuncaoCampo.mascaraTexto(dsSenha, 6);
     }
 
     public void iniciaTela() {
-
+        
     }
 
     @FXML
@@ -45,7 +47,7 @@ public class FrmLoginFXML implements Initializable {
                 return;
             }
 
-            String where = " WHERE $dsLogin$ = '" + dsLogin.getText().toLowerCase()+ "' AND $dsSenha$ = '" + dsSenha.getText() + "'";
+            String where = " WHERE $dsLogin$ = '" + dsLogin.getText().toLowerCase() + "' AND $dsSenha$ = '" + dsSenha.getText() + "'";
             ArrayList<Object> userArray = dao.getAllWhere(new Usuario(), where);
             if (userArray.isEmpty()) {
                 Alerta.AlertaError("Acesso Negado!", "Usuário não existe ou senha incorreta.");
@@ -54,7 +56,7 @@ public class FrmLoginFXML implements Initializable {
             Usuario usuario = (Usuario) userArray.get(0);
             FrmMenuFXML.usuarioAtivo = usuario.getCdUsuario();
             Tela tela = new Tela();
-            tela.abrirMenu();            
+            tela.abrirMenu();
             stage.close();
         } catch (Exception ex) {
             Alerta.AlertaError("Erro!", ex.toString());

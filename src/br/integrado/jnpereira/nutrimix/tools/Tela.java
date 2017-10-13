@@ -38,6 +38,7 @@ public class Tela {
     final public static String[] CAD_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadVendaFXML.fxml", "Venda"};
     final public static String[] CON_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConParcelaFXML.fxml", "Consulta Parcelas"};
     final public static String[] LOGIN = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmLoginFXML.fxml", "Login"};
+    final public static String[] CAD_ALTSENHA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAltSenhaFXML.fxml", "Alteração de Senha"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
@@ -52,7 +53,7 @@ public class Tela {
         stage.initStyle(StageStyle.UTILITY);
         stage.show();
     }
-    
+
     public void abrirMenu() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(MENU[0]));
         Parent root = (Parent) loader.load();
@@ -93,6 +94,38 @@ public class Tela {
                 return;
             }
         } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println(ex.toString());
+            Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
+        }
+    }
+
+    public void abrirTelaModalComStage(Stage stagePai, String[] tela) {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(tela[0]));
+            Parent root = (Parent) loader.load();
+            Object controler = loader.getController();
+            controler.getClass().getDeclaredField("stage").set(controler, stage);
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.initOwner(stagePai);
+            stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+            stage.setTitle(tela[1]);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.resizableProperty().setValue(Boolean.FALSE);
+            stage.centerOnScreen();
+            stage.show();
+            Method method;
+            try {
+                method = controler.getClass().getMethod("iniciaTela");
+                method.invoke(controler);
+            } catch (Exception ex) {
+                Alerta.AlertaError("Erro!", "Erro ao chamar metodo inicia tela.\n" + ex.toString());
+                ex.printStackTrace();
+                return;
+            }
+        } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println(ex.toString());
             Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());

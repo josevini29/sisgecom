@@ -11,12 +11,12 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="251.0" prefWidth="270.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmLoginFXML">
    <children>
-      <TextField fx:id="dsLogin" layoutX="54.0" layoutY="64.0" prefHeight="30.0" prefWidth="155.0">
+      <TextField fx:id="dsLogin" layoutX="54.0" layoutY="64.0" prefHeight="30.0" prefWidth="155.0" text="admin">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <PasswordField fx:id="dsSenha" layoutX="54.0" layoutY="125.0" prefHeight="30.0" prefWidth="155.0" />
+      <PasswordField fx:id="dsSenha" layoutX="54.0" layoutY="125.0" prefHeight="30.0" prefWidth="155.0" text="123456" />
       <Label layoutX="54.0" layoutY="46.0" text="Login" />
       <Label layoutX="54.0" layoutY="105.0" text="Senha" />
       <Button layoutX="24.0" layoutY="192.0" mnemonicParsing="false" onAction="#login" prefHeight="29.0" prefWidth="94.0" text="Logar">

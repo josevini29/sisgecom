@@ -197,6 +197,12 @@ public class FrmMenuFXML implements Initializable {
         Tela tela = new Tela();
         tela.abrirTelaModal(stage, Tela.CAD_VENDA);
     }
+    
+    @FXML
+    public void abrirCadAltSenha(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModalComStage(stage, Tela.CAD_ALTSENHA);
+    }
 
     public Stage getStage() {
         return stage;
