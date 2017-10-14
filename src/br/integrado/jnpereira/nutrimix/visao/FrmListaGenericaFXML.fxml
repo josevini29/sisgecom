@@ -11,7 +11,6 @@
 
 <AnchorPane id="AnchorPane" prefHeight="359.0" prefWidth="606.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmListaGenericaFXML">
    <children>
-      <TableView fx:id="gridGenerica" layoutX="14.0" layoutY="68.0" prefHeight="234.0" prefWidth="580.0" />
       <TextField id="campo" fx:id="codGenerico" alignment="CENTER" layoutX="14.0" layoutY="32.0" prefHeight="28.0" prefWidth="86.0">
          <font>
             <Font size="12.0" />
@@ -22,7 +21,17 @@
             <Font size="12.0" />
          </font>
       </TextField>
-      <Button layoutX="384.0" layoutY="316.0" mnemonicParsing="false" onAction="#ok" prefHeight="29.0" prefWidth="99.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Ok">
+      <Button layoutX="507.0" layoutY="33.0" maxHeight="28.0" maxWidth="86.0" mnemonicParsing="false" onAction="#pesquisar" prefHeight="28.0" prefWidth="86.0">
+         <graphic>
+            <ImageView fitHeight="17.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/lista.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <TableView fx:id="gridGenerica" layoutX="14.0" layoutY="68.0" prefHeight="234.0" prefWidth="580.0" />
+      <Button layoutX="384.0" layoutY="316.0" mnemonicParsing="false" onAction="#ok" prefHeight="29.0" prefWidth="99.0" text="Ok">
          <font>
             <Font size="12.0" />
          </font>
@@ -34,7 +43,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="493.0" layoutY="316.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="29.0" prefWidth="99.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Cancelar">
+      <Button layoutX="493.0" layoutY="316.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="29.0" prefWidth="99.0" text="Cancelar">
          <font>
             <Font size="12.0" />
          </font>
@@ -42,15 +51,6 @@
             <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../icon/limpar.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
-      <Button layoutX="507.0" layoutY="33.0" maxHeight="28.0" maxWidth="86.0" mnemonicParsing="false" onAction="#pesquisar" prefHeight="28.0" prefWidth="86.0">
-         <graphic>
-            <ImageView fitHeight="17.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icon/lista.png" />
                </image>
             </ImageView>
          </graphic>

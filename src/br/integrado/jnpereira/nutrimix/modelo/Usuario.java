@@ -1,5 +1,6 @@
 package br.integrado.jnpereira.nutrimix.modelo;
 
+import br.integrado.jnpereira.nutrimix.dao.AutoIncrement;
 import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Id;
 import br.integrado.jnpereira.nutrimix.dao.Tabela;
@@ -9,6 +10,7 @@ import java.util.Date;
 public class Usuario {
 
     @Id
+    @AutoIncrement
     @Coluna(nome = "cd_usuario")
     private Integer cdUsuario;
     @Coluna(nome = "cd_perfil")

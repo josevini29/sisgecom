@@ -9,6 +9,7 @@ import br.integrado.jnpereira.nutrimix.tools.Charts;
 import br.integrado.jnpereira.nutrimix.tools.Relogio;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
 import br.integrado.jnpereira.nutrimix.tools.ButtonAtend;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -202,6 +203,36 @@ public class FrmMenuFXML implements Initializable {
     public void abrirCadAltSenha(ActionEvent event) {
         Tela tela = new Tela();
         tela.abrirTelaModalComStage(stage, Tela.CAD_ALTSENHA);
+    }
+    
+    @FXML
+    public void abrirCadUsuario(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModal(stage, Tela.CAD_USUARIO);
+    }
+    
+    @FXML
+    public void abrirCadPerfil(ActionEvent event) {
+        Tela tela = new Tela();
+        //tela.abrirTelaModal(stage, Tela.CAD_PERFIL);
+    }
+    
+    @FXML
+    public void logoff(ActionEvent event) throws IOException {
+        Tela tela = new Tela();
+        Stage stageLogin = new Stage();
+        tela.abrirLogin(stageLogin);
+        stageLogin.setOnCloseRequest((WindowEvent t) -> {
+            t.consume();
+            stageLogin.close();
+            System.exit(0);
+        });
+        stage.close();
+    }
+    
+    @FXML
+    public void sair(ActionEvent event) {
+        System.exit(0);
     }
 
     public Stage getStage() {

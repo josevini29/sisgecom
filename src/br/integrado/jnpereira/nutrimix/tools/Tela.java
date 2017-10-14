@@ -5,6 +5,7 @@ import br.integrado.jnpereira.nutrimix.controle.FrmListaPessoaFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmListaAjustEstoqFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmLoginFXML;
+import br.integrado.jnpereira.nutrimix.dao.Senha;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import javafx.fxml.FXMLLoader;
@@ -19,26 +20,45 @@ import javafx.stage.WindowEvent;
 public class Tela {
 
     final public static String[] MENU = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmMenuFXML.fxml", "SISGECOM - Sistema de Gerenciamento Comercial"};
+    @Senha
     final public static String[] CAD_BANCO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadBancoFXML.fxml", "Cadastro de Banco"};
+    @Senha
     final public static String[] CAD_GRUPO_PRODUTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadGrupoProdFXML.fxml", "Cadastro de Grupo de Produtos"};
+    @Senha
     final public static String[] CAD_TIPO_DESPESA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadTipoDespesaFXML.fxml", "Cadastro de Tipo de Despesa"};
+    @Senha
     final public static String[] CAD_UNID_PADRAO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadUnidPadraoFXML.fxml", "Cadastro de Unidade Padrão"};
+    @Senha
     final public static String[] CAD_ESTADO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadEstadoFXML.fxml", "Cadastro de Estado"};
+    @Senha
     final public static String[] CAD_FORMA_PAGTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadFormaPagtoFXML.fxml", "Cadastro de Forma de Pagamento"};
+    @Senha
     final public static String[] CAD_CONDICAO_PAGTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadCondicaoPagtoFXML.fxml", "Cadastro de Condição de Pagamento"};
+    @Senha
     final public static String[] CAD_PRECO_PROD = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadPrecoProdFXML.fxml", "Cadastro de Preço Produto"};
+    @Senha
     final public static String[] CAD_CIDADE = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadCidadeFXML.fxml", "Cadastro de Cidade"};
+    @Senha
     final public static String[] CAD_PRODUTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadProdutoFXML.fxml", "Cadastro de Produto"};
+    @Senha
     final public static String[] CAD_AJUSTPROD = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAjustEstoqFXML.fxml", "Ajuste de Estoque"};
+    @Senha
     final public static String[] CAD_CLIENTE = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadClienteFXML.fxml", "Cadastro de Cliente"};
+    @Senha
     final public static String[] CAD_FORNE = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadFornecedorFXML.fxml", "Cadastro de Fornecedor"};
+    @Senha
     final public static String[] CAD_FUNC = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadFuncionarioFXML.fxml", "Cadastro de Funcionário"};
+    @Senha
     final public static String[] CON_MOVTO_ESTOQ = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConAjustEstoqFXML.fxml", "Consulta Movimento de Estoque"};
+    @Senha
     final public static String[] CAD_ATEND = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAtendimentoFXML.fxml", "Atendimento a Mesa"};
+    @Senha
     final public static String[] CAD_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadVendaFXML.fxml", "Venda"};
     final public static String[] CON_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConParcelaFXML.fxml", "Consulta Parcelas"};
     final public static String[] LOGIN = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmLoginFXML.fxml", "Login"};
     final public static String[] CAD_ALTSENHA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAltSenhaFXML.fxml", "Alteração de Senha"};
+    @Senha
+    final public static String[] CAD_USUARIO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadUsuarioFXML.fxml", "Cadastro de Usuário"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));

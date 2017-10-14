@@ -11,7 +11,6 @@ import br.integrado.jnpereira.nutrimix.modelo.AtendimentoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Cliente;
-import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;

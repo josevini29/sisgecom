@@ -54,6 +54,10 @@ public class FrmLoginFXML implements Initializable {
                 return;
             }
             Usuario usuario = (Usuario) userArray.get(0);
+            if (!usuario.getInAtivo()) {
+                Alerta.AlertaError("Acesso Negado!", "Usuário inativo.");
+                return;
+            }
             FrmMenuFXML.usuarioAtivo = usuario.getCdUsuario();
             Tela tela = new Tela();
             tela.abrirMenu();
