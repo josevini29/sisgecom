@@ -402,7 +402,7 @@ public class Dao extends Conexao {
                 valido = false;
             } else if (!field.getType().getSimpleName().toLowerCase().equals("string")
                     && !field.getType().getSimpleName().toLowerCase().equals("date")) {
-                if (Double.parseDouble(field.get(obj).toString()) == 0) {
+                if (Double.parseDouble(field.get(obj).toString()) < 0) {
                     valido = false;
                 }
             }

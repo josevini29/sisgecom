@@ -92,20 +92,20 @@
                               <Image url="@../icon/logo_welcome.png" />
                            </image>
                         </ImageView>
-                        <Label layoutX="86.0" layoutY="14.0" styleClass="label_welcome" text="Seja bem Vindo, Jose Vinicius Nunes Pereira!" />
+                        <Label fx:id="lblUsuario" layoutX="86.0" layoutY="14.0" styleClass="label_welcome" text="Seja bem Vindo, Nome do Usuário!" />
                         <Label fx:id="lblRelogio" layoutX="86.0" layoutY="38.0" text="loading..." textFill="WHITE" />
                      </children>
                   </AnchorPane>
                   <GridPane prefHeight="67.0" prefWidth="546.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="130.0" prefWidth="130.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <MenuButton fx:id="btnUser" mnemonicParsing="false" prefHeight="28.0" prefWidth="141.0" text="Jose Vinicius" textAlignment="CENTER" GridPane.columnIndex="1">
+                        <MenuButton fx:id="btnUser" mnemonicParsing="false" prefHeight="28.0" prefWidth="116.0" text="Usuário" textAlignment="CENTER" GridPane.columnIndex="1">
                            <graphic>
                               <ImageView fitHeight="19.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

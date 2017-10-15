@@ -19,12 +19,6 @@ public class Conexao {
     private final String USER = "postgres";
     private final String PASSWORD = "root";
 
-    /*//MySQL
-    private final String DRIVER = "com.mysql.jdbc.Driver";
-    private final String URL = "jdbc:mysql://localhost:3306/topicosbd";
-    private final String SCHEMA = "topicosbd";
-    private final String USER = "root";
-    private final String PASSWORD = "root";*/
     private static Connection Conexao;
     private Statement statement;
     private boolean AUTO_COMMIT = true;
