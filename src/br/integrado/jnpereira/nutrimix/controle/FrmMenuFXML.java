@@ -214,7 +214,7 @@ public class FrmMenuFXML implements Initializable {
     @FXML
     public void abrirCadPerfil(ActionEvent event) {
         Tela tela = new Tela();
-        //tela.abrirTelaModal(stage, Tela.CAD_PERFIL);
+        tela.abrirTelaModal(stage, Tela.CAD_PERFIL);
     }
     
     @FXML

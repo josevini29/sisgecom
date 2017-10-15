@@ -5,19 +5,27 @@ import br.integrado.jnpereira.nutrimix.controle.FrmListaPessoaFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmListaAjustEstoqFXML;
 import br.integrado.jnpereira.nutrimix.controle.FrmLoginFXML;
+import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.dao.Senha;
+import br.integrado.jnpereira.nutrimix.modelo.Perfil;
+import br.integrado.jnpereira.nutrimix.modelo.PerfilTela;
+import br.integrado.jnpereira.nutrimix.modelo.Usuario;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class Tela {
+
+    Dao dao = new Dao();
 
     final public static String[] MENU = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmMenuFXML.fxml", "SISGECOM - Sistema de Gerenciamento Comercial"};
     @Senha
@@ -39,7 +47,7 @@ public class Tela {
     @Senha
     final public static String[] CAD_CIDADE = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadCidadeFXML.fxml", "Cadastro de Cidade"};
     @Senha
-    final public static String[] CAD_PRODUTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadProdutoFXML.fxml", "Cadastro de Produto"};
+    public static String[] CAD_PRODUTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadProdutoFXML.fxml", "Cadastro de Produto"};
     @Senha
     final public static String[] CAD_AJUSTPROD = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAjustEstoqFXML.fxml", "Ajuste de Estoque"};
     @Senha
@@ -59,6 +67,8 @@ public class Tela {
     final public static String[] CAD_ALTSENHA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAltSenhaFXML.fxml", "Alteração de Senha"};
     @Senha
     final public static String[] CAD_USUARIO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadUsuarioFXML.fxml", "Cadastro de Usuário"};
+    @Senha
+    final public static String[] CAD_PERFIL = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadPerfilFXML.fxml", "Cadastro de Pefil"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
@@ -69,8 +79,8 @@ public class Tela {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+        stage.resizableProperty().setValue(Boolean.FALSE);
         stage.setTitle(LOGIN[1]);
-        stage.initStyle(StageStyle.UTILITY);
         stage.show();
     }
 
@@ -91,6 +101,9 @@ public class Tela {
 
     public void abrirTelaModal(Stage stagePai, String[] tela) {
         try {
+            if (!validaAcesso(tela)) {
+                return;
+            }
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(tela[0]));
             Parent root = (Parent) loader.load();
@@ -122,6 +135,9 @@ public class Tela {
 
     public void abrirTelaModalComStage(Stage stagePai, String[] tela) {
         try {
+            if (!validaAcesso(tela)) {
+                return;
+            }
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(tela[0]));
             Parent root = (Parent) loader.load();
@@ -154,6 +170,10 @@ public class Tela {
 
     public void abrirTelaModalComParam(Stage stagePai, String[] tela, Object param) {
         try {
+            if (!validaAcesso(tela)) {
+                return;
+            }
+
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(tela[0]));
             Parent root = (Parent) loader.load();
@@ -260,6 +280,45 @@ public class Tela {
             Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
         }
         return null;
+    }
+
+    private boolean validaAcesso(String[] telaArray) {
+        if (FrmMenuFXML.usuarioAtivo == 0){ //Admin pula a validação
+            return true;
+        }
+        String cdTela = null;
+        for (Field field : this.getClass().getDeclaredFields()) {
+            if (field.isAnnotationPresent(Senha.class)) {
+                try {
+                    if (telaArray.equals(field.get(new Object()))) {
+                        cdTela = field.getName();
+                        break;
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        if (cdTela != null) {
+            Usuario usuario = new Usuario();
+            try {
+                usuario.setCdUsuario(FrmMenuFXML.usuarioAtivo);
+                dao.get(usuario);
+            } catch (Exception ex) {
+                Alerta.AlertaError("Erro!", "Erro ao validar acesso a tela.\n" + ex.toString());
+                return false;
+            }
+            PerfilTela perfilTela = new PerfilTela();
+            perfilTela.setCdPerfil(usuario.getCdPerfil());
+            perfilTela.setCdTela(cdTela);
+            try {
+                dao.get(perfilTela);
+            } catch (Exception ex) {
+                Alerta.AlertaError("Acesso Negado!", "Usuário não tem acesso a está tela.");
+                return false;
+            }
+        }
+        return true;
     }
 
 }

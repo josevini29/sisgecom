@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="painel" prefHeight="494.0" prefWidth="901.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmCadPerfilFXML">
+   <children>
+      <TextField fx:id="cdPerfil" alignment="CENTER" cache="true" layoutX="16.0" layoutY="40.0" prefHeight="28.0" prefWidth="58.0" styleClass="codigo">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Button layoutX="76.0" layoutY="40.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" onAction="#pesquisarPerfil" prefHeight="27.0" prefWidth="28.0">
+         <graphic>
+            <ImageView fitHeight="17.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/lista.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <TextField fx:id="dsPerfil" layoutX="110.0" layoutY="40.0" prefHeight="30.0" prefWidth="244.0">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <ListView fx:id="lvTela" layoutX="16.0" layoutY="111.0" prefHeight="320.0" prefWidth="415.0" style="-fx-font-weight: bold;" />
+      <Button accessibleHelp="Excluir Endereço" layoutX="440.0" layoutY="246.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" onAction="#addAcesso" prefHeight="27.0" prefWidth="28.0" style="-fx-padding: 0px;">
+         <graphic>
+            <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/seta_direita.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button accessibleHelp="Excluir Endereço" layoutX="440.0" layoutY="284.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" onAction="#remAcesso" prefHeight="27.0" prefWidth="28.0" style="-fx-padding: 0px;">
+         <graphic>
+            <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/seta_esquerda.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <ListView fx:id="lvTelaAcesso" layoutX="476.0" layoutY="111.0" prefHeight="320.0" prefWidth="415.0" style="-fx-font-weight: bold;" />
+      <Label layoutX="16.0" layoutY="91.0" styleClass="label_titulo" text="Telas" />
+      <Label layoutX="477.0" layoutY="91.0" styleClass="label_titulo" text="Telas com Acesso" />
+      <Button layoutX="16.0" layoutY="444.0" mnemonicParsing="false" onAction="#salvar" prefHeight="26.0" prefWidth="82.0" text="Salvar">
+         <font>
+            <Font size="12.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/salvar.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="113.0" layoutY="444.0" mnemonicParsing="false" onAction="#limpar" prefHeight="28.0" prefWidth="88.0" text="Limpar">
+         <font>
+            <Font size="12.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/limpar.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Label layoutX="16.0" layoutY="24.0" text="Cód. Perfil" />
+      <Label layoutX="110.0" layoutY="24.0" text="Descrição do Perfil" />
+   </children>
+</AnchorPane>
