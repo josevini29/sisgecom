@@ -1,5 +1,10 @@
 package br.integrado.jnpereira.nutrimix.tools;
 
+import static br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML.usuarioAtivo;
+import br.integrado.jnpereira.nutrimix.dao.Dao;
+import br.integrado.jnpereira.nutrimix.modelo.Funcionario;
+import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
+import br.integrado.jnpereira.nutrimix.modelo.Usuario;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.InputMismatchException;
@@ -7,7 +12,28 @@ import java.util.InputMismatchException;
 public class Numero {
 
     public static String getCadastro(int cdUsercad, Date dtCadastro) {
-        return "Usuário: " + cdUsercad + " - São Longuinho  Data Cadastro: " + Data.AmericaToBrasil(dtCadastro);
+        String nome = "<Nome não Encontrado>";
+        try {
+            Usuario usuario = new Usuario();
+            Dao dao = new Dao();
+            usuario.setCdUsuario(cdUsercad);
+            dao.get(usuario);
+            if (usuario.getCdFuncionario() == null) {
+                nome = usuario.getDsLogin().toUpperCase();
+            } else {
+                Funcionario func = new Funcionario();
+                func.setCdFuncionario(usuario.getCdFuncionario());
+                dao.get(func);
+                Pessoa pessoa = new Pessoa();
+                pessoa.setCdPessoa(func.getCdPessoa());
+                dao.get(pessoa);
+                nome = pessoa.getDsPessoa();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro!", "Erro ao buscar usuário do cadastro.");
+        }
+        return "Usuário: " + cdUsercad + " - " + nome + "  Data Cadastro: " + Data.AmericaToBrasilSemHora(dtCadastro);
     }
 
     public static String doubleToR$(Double valor) {
@@ -38,7 +64,7 @@ public class Numero {
         return cpfNum.substring(0, 2) + "." + cpfNum.substring(2, 5) + "."
                 + cpfNum.substring(5, 8) + "/" + cpfNum.substring(8, 12) + "-" + cpfNum.substring(12, 14);
     }
-    
+
     public static String NumeroToPIS(String cpfNum) {
         return cpfNum.substring(0, 3) + "." + cpfNum.substring(3, 8) + "."
                 + cpfNum.substring(8, 10) + "-" + cpfNum.substring(10, 11);

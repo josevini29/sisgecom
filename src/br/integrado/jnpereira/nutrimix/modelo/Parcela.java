@@ -23,7 +23,9 @@ public class Parcela {
     private Double vlMulta;
     @Coluna(nome = "vl_desconto")
     private Double vlDesconto;
-
+    @Coluna(nome="in_paga")
+    private Boolean inPaga;
+    
     public Integer getCdConta() {
         return cdConta;
     }
@@ -70,6 +72,14 @@ public class Parcela {
 
     public void setVlDesconto(Double vlDesconto) {
         this.vlDesconto = vlDesconto;
+    }
+
+    public Boolean getInPaga() {
+        return inPaga;
+    }
+
+    public void setInPaga(Boolean inPaga) {
+        this.inPaga = inPaga;
     }
     
 }

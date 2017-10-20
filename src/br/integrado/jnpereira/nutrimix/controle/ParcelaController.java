@@ -24,10 +24,10 @@ public class ParcelaController {
 
     public void gerarParcelas(ContasPagarReceber conta) throws Exception {
         dao.autoCommit(false);
-        CondicaoPagto condicao  = new CondicaoPagto();
+        CondicaoPagto condicao = new CondicaoPagto();
         condicao.setCdCondicao(conta.getCdCondicao());
         dao.get(condicao);
-        for (Parcela parcela: getParcelas(condicao, conta.getVlConta())){
+        for (Parcela parcela : getParcelas(condicao, conta.getVlConta())) {
             parcela.setCdConta(conta.getCdConta());
             dao.save(parcela);
         }
@@ -47,16 +47,16 @@ public class ParcelaController {
                 data = dataMaisDias(data, condicao.getNrIntervalo());
                 parcela.setDtVencto(data);
             }
-            
+
             if (nrParcela == condicao.getQtParcelas()) {
                 parcela.setVlParcela(Double.parseDouble(dfs.format(vlParcela + vlSobra).replace(",", ".")));
             } else {
                 parcela.setVlParcela(Double.parseDouble(dfs.format(vlParcela).replace(",", ".")));
             }
-
+            parcela.setInPaga(false);
             parcela.setVlMulta(0.00);
             parcela.setVlDesconto(0.00);
-            parcelas.add(parcela);            
+            parcelas.add(parcela);
         }
         return parcelas;
     }

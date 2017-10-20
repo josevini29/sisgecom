@@ -11,6 +11,7 @@ import br.integrado.jnpereira.nutrimix.modelo.AtendimentoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Cliente;
+import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
@@ -363,6 +364,17 @@ public class FrmCadVendaFXML implements Initializable {
         }
 
         try {
+            CondicaoPagto cond = new CondicaoPagto();
+            cond.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
+            dao.get(cond);
+            if (!cond.getInEntrada() || cond.getQtParcelas() > 1 || cond.getNrIntervalo() > 0) {
+                if (cdCliente.getText().equals("")) {
+                    Alerta.AlertaError("Campo inválido!", "Caso não seja venda com pagamento no ato, cliente é obrigatório.");
+                    cdCliente.requestFocus();
+                    return;
+                }
+            }
+
             dao.autoCommit(false);
             VendaCompra venda = new VendaCompra();
             venda.setTpMovto("S");
@@ -412,7 +424,7 @@ public class FrmCadVendaFXML implements Initializable {
                     dao.update(atendimento);
                 }
             }
-            
+
             ContasPagarReceber conta = new ContasPagarReceber();
             conta.setTpMovto("E");
             conta.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
@@ -421,7 +433,7 @@ public class FrmCadVendaFXML implements Initializable {
             conta.setVlConta(Double.parseDouble(vlTotalVenda.getText()));
             conta.setStConta("1");
             dao.save(conta);
-            
+
             ParcelaController parcela = new ParcelaController();
             parcela.gerarParcelas(conta);
 

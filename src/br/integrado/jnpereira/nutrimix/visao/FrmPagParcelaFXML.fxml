@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="356.0" prefWidth="707.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmConParcelaFXML">
+   <children>
+      <AnchorPane layoutX="14.0" layoutY="104.0" prefHeight="229.0" prefWidth="656.0" styleClass="anchor">
+         <children>
+            <ScrollPane layoutX="4.0" layoutY="26.0" prefHeight="195.0" prefWidth="673.0" styleClass="transparente">
+               <content>
+                  <AnchorPane fx:id="painelProd" minHeight="0.0" minWidth="0.0" prefHeight="41.0" prefWidth="662.0">
+                     <children>
+                        <TextField fx:id="cdParcela" alignment="CENTER" editable="false" layoutX="14.0" layoutY="2.0" prefHeight="30.0" prefWidth="52.0" styleClass="texto_estatico_center">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="dtVencto" editable="false" layoutX="75.0" layoutY="2.0" prefHeight="30.0" prefWidth="112.0" styleClass="texto_estatico_center">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="vlParcela" alignment="CENTER_RIGHT" editable="false" layoutX="197.0" layoutY="2.0" prefHeight="30.0" prefWidth="74.0" styleClass="texto_estatico_center">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="vlAdicional" alignment="CENTER_RIGHT" layoutX="278.0" layoutY="2.0" prefHeight="30.0" prefWidth="75.0" styleClass="numero_editavel">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="vlMulta" alignment="CENTER_RIGHT" layoutX="361.0" layoutY="2.0" prefHeight="30.0" prefWidth="75.0" styleClass="numero_editavel">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="btnEstornar" accessibleHelp="Excluir Endereço" layoutX="556.0" layoutY="2.0" maxHeight="30.0" maxWidth="108.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="97.0" style="-fx-padding: 0px;" text="Estornar">
+                           <graphic>
+                              <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/excluir.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="btnPagar" layoutX="446.0" layoutY="2.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="97.0" text="Pagar">
+                           <graphic>
+                              <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/entrada_dinheiro.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
+            <Label layoutX="284.0" layoutY="12.0" text="Vl. Adicional" />
+            <Label layoutX="203.0" layoutY="12.0" text="Vl. Parcela" />
+            <Label layoutX="20.0" layoutY="12.0" text="Parcela" />
+            <Label layoutX="81.0" layoutY="12.0" text="Dt. Vencimento" />
+            <Label layoutX="367.0" layoutY="12.0" text="Vl. Multa" />
+         </children>
+      </AnchorPane>
+      <Label layoutX="14.0" layoutY="84.0" styleClass="label_titulo" text="Parcelas">
+         <font>
+            <Font name="System Bold" size="11.0" />
+         </font>
+      </Label>
+      <TextField fx:id="cdTitulo" alignment="CENTER" editable="false" layoutX="14.0" layoutY="37.0" prefHeight="30.0" prefWidth="65.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="dsTitulo" editable="false" layoutX="86.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="15.0" layoutY="22.0" text="Título" />
+      <Label layoutX="87.0" layoutY="23.0" text="Tipo Título" />
+      <TextField fx:id="dtTitulo" editable="false" layoutX="206.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="207.0" layoutY="23.0" text="Dt. Título" />
+      <TextField fx:id="vlTotal" editable="false" layoutX="325.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="326.0" layoutY="23.0" text="Vl. Total" />
+      <TextField fx:id="vlPago" editable="false" layoutX="443.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="444.0" layoutY="23.0" text="Vl. Total Paga" />
+   </children>
+</AnchorPane>

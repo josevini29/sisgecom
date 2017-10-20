@@ -166,7 +166,7 @@
                                       <content>
                                         <AnchorPane fx:id="paneAtend" style="-fx-padding: 0 0 15 0;">
                                              <children>
-                                                <Button alignment="TOP_CENTER" contentDisplay="BOTTOM" graphicTextGap="20.0" layoutX="16.0" layoutY="14.0" maxHeight="102.0" maxWidth="97.0" minHeight="102.0" minWidth="97.0" mnemonicParsing="false" prefHeight="102.0" prefWidth="97.0" text="Mesa 01" textAlignment="CENTER">
+                                                <Button alignment="TOP_CENTER" contentDisplay="BOTTOM" graphicTextGap="20.0" layoutX="16.0" layoutY="14.0" maxHeight="102.0" maxWidth="97.0" minHeight="102.0" minWidth="97.0" mnemonicParsing="false" prefHeight="102.0" prefWidth="97.0" text="Mesa 01" textAlignment="CENTER" visible="false">
                                                    <graphic>
                                                       <ImageView fitHeight="43.0" fitWidth="96.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                                                          <image>
@@ -175,7 +175,7 @@
                                                       </ImageView>
                                                    </graphic>
                                                 </Button>
-                                                <Button alignment="BOTTOM_CENTER" layoutX="16.0" layoutY="116.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="97.0" text="Acerto">
+                                                <Button alignment="BOTTOM_CENTER" layoutX="16.0" layoutY="116.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="97.0" text="Acerto" visible="false">
                                                    <graphic>
                                                       <ImageView fitHeight="17.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
