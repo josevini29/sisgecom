@@ -66,6 +66,8 @@ public class Tela {
     final public static String[] CAD_USUARIO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadUsuarioFXML.fxml", "Cadastro de Usuário"};
     @Senha
     final public static String[] CAD_PERFIL = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadPerfilFXML.fxml", "Cadastro de Pefil"};
+    @Senha
+    final public static String[] CON_CONTA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConContasFXML.fxml", "Consulta de Contas a Pagar/Receber"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
@@ -280,7 +282,7 @@ public class Tela {
     }
 
     private boolean validaAcesso(String[] telaArray) {
-        if (FrmMenuFXML.usuarioAtivo == 0){ //Admin pula a validação
+        if (FrmMenuFXML.usuarioAtivo == 0) { //Admin pula a validação
             return true;
         }
         String cdTela = null;

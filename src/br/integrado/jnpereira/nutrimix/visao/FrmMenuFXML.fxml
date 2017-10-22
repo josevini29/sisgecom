@@ -75,6 +75,11 @@
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadCondicaoPagto" text="Condição de Pagamento" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Contas">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#abrirConContas" text="Conta a Receber" />
+                    </items>
+                  </Menu>
                   <Menu mnemonicParsing="false" text="Usuário">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#abrirCadUsuario" text="Usuário" />

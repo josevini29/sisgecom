@@ -250,6 +250,12 @@ public class FrmMenuFXML implements Initializable {
         tela.abrirTelaModal(stage, Tela.CAD_PERFIL);
     }
     
+     @FXML
+    public void abrirConContas(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModal(stage, Tela.CON_CONTA);
+    }
+    
     @FXML
     public void logoff(ActionEvent event) throws IOException {
         Tela tela = new Tela();
