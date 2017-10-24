@@ -402,4 +402,14 @@ public class TrataCombo {
         }
         return null;
     }
+    
+    public static String getTpEntradaSaida(String tpMovto) {
+        switch (tpMovto) {
+            case "E":
+                return "Entrada";                
+            case "S":
+                return "Saída";                     
+        }
+        return null;
+    }
 }

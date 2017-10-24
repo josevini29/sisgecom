@@ -29,7 +29,7 @@ import javafx.scene.control.TextField;
  *
  * @author Jose Vinicius
  */
-public class FrmConContasFXML implements Initializable {
+public class FrmConContasReceberFXML implements Initializable {
 
     @FXML
     TextField cdCliente;
@@ -77,6 +77,7 @@ public class FrmConContasFXML implements Initializable {
                 } else if (conta.getCdMovto() != null && conta.getTpMovto().equals("S")) {
                     grid.setTpConta(TrataCombo.getTpConta(1));
                 }
+                grid.setTpMovto(TrataCombo.getTpEntradaSaida(conta.getTpMovto()));
                 grid.setTpSituacao(TrataCombo.getTpSitConta(Integer.parseInt(conta.getStConta())));
                 grid.setVlConta(Numero.doubleToReal(conta.getVlConta(), 2));
                 contaArray.add(grid);
@@ -114,6 +115,9 @@ public class FrmConContasFXML implements Initializable {
         @Coluna(nome = "Tipo Conta")
         @Style(css = "-fx-alignment: CENTER;")
         private String tpConta;
+        @Coluna(nome = "Saída/Entrada")
+        @Style(css = "-fx-alignment: CENTER;")
+        private String tpMovto;
         @Coluna(nome = "Situação")
         @Style(css = "-fx-alignment: CENTER;")
         private String tpSituacao;
@@ -175,6 +179,14 @@ public class FrmConContasFXML implements Initializable {
 
         public void setVlConta(String vlConta) {
             this.vlConta = vlConta;
+        }
+
+        public String getTpMovto() {
+            return tpMovto;
+        }
+
+        public void setTpMovto(String tpMovto) {
+            this.tpMovto = tpMovto;
         }
 
 

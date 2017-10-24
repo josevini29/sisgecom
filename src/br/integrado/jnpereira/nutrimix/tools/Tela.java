@@ -67,7 +67,9 @@ public class Tela {
     @Senha
     final public static String[] CAD_PERFIL = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadPerfilFXML.fxml", "Cadastro de Pefil"};
     @Senha
-    final public static String[] CON_CONTA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConContasFXML.fxml", "Consulta de Contas a Pagar/Receber"};
+    final public static String[] CON_CONTA_RECEBER = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConContasReceberFXML.fxml", "Consulta de Contas a Receber"};
+    @Senha
+    final public static String[] CON_CONTA_PAGAR = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConContasPagarFXML.fxml", "Consulta de Contas a Pagar"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));

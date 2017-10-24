@@ -77,7 +77,8 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="Contas">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#abrirConContas" text="Conta a Receber" />
+                      <MenuItem mnemonicParsing="false" onAction="#abrirConContasReceber" text="Contas a Receber" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirConContasPagar" text="Contas a Pagar" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Usuário">
