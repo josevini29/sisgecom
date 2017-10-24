@@ -427,6 +427,7 @@ public class FrmCadVendaFXML implements Initializable {
 
             ContasPagarReceber conta = new ContasPagarReceber();
             conta.setTpMovto("E");
+            conta.setDtMovto(Data.getAgora());
             conta.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
             conta.setCdForma(TrataCombo.getValueComboTpFormaPagto(tpFormaPagto));
             conta.setCdMovto(venda.getCdMovto());

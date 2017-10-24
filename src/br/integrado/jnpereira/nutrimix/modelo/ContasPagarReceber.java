@@ -4,6 +4,7 @@ import br.integrado.jnpereira.nutrimix.dao.AutoIncrement;
 import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Id;
 import br.integrado.jnpereira.nutrimix.dao.Tabela;
+import java.util.Date;
 
 @Tabela(nome = "contas_pagar_receber")
 public class ContasPagarReceber {
@@ -12,6 +13,8 @@ public class ContasPagarReceber {
     @AutoIncrement
     @Coluna(nome = "cd_conta")
     private Integer cdConta;
+    @Coluna(nome = "dt_movto")
+    private Date dtMovto;
     @Coluna(nome = "tp_movto")
     private String tpMovto;
     @Coluna(nome = "cd_condicao")
@@ -90,7 +93,13 @@ public class ContasPagarReceber {
     public void setStConta(String stConta) {
         this.stConta = stConta;
     }
-    
-    
+
+    public Date getDtMovto() {
+        return dtMovto;
+    }
+
+    public void setDtMovto(Date dtMovto) {
+        this.dtMovto = dtMovto;
+    }
 
 }
