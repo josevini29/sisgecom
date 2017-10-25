@@ -382,34 +382,60 @@ public class TrataCombo {
     public static String getTpConta(int tpConta) {
         switch (tpConta) {
             case 1:
-                return "Compra";                
+                return "Compra";
             case 2:
-                return "Venda";                     
+                return "Venda";
             case 3:
-                return "Despesa";                
+                return "Despesa";
         }
         return null;
     }
-    
+
     public static String getTpSitConta(int tpConta) {
         switch (tpConta) {
             case 1:
-                return "Pendente";                
+                return "Pendente";
             case 2:
-                return "Paga";                     
+                return "Paga";
             case 3:
-                return "Cancelada";                
+                return "Cancelada";
         }
         return null;
     }
-    
+
     public static String getTpEntradaSaida(String tpMovto) {
         switch (tpMovto) {
             case "E":
-                return "Entrada";                
+                return "Entrada";
             case "S":
-                return "Saída";                     
+                return "Saída";
         }
         return null;
+    }
+
+    public static void setValueComboSitConta(ChoiceBox combo, Integer selecionado) {
+        combo.getItems().clear();
+        combo.setItems(FXCollections.observableArrayList("", getTpSitConta(1), getTpSitConta(2), getTpSitConta(3)));
+        if (selecionado != null) {
+            SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+            if (selecionado != null) {
+                model.select(selecionado);
+            }
+        }
+    }
+
+    public static Integer getValueComboSitConta(ChoiceBox combo) {
+        SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+
+        switch (model.getSelectedIndex()) {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return 3;
+            default:
+                return null;
+        }
     }
 }

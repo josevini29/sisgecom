@@ -253,13 +253,13 @@ public class FrmMenuFXML implements Initializable {
      @FXML
     public void abrirConContasReceber(ActionEvent event) {
         Tela tela = new Tela();
-        tela.abrirTelaModal(stage, Tela.CON_CONTA_RECEBER);
+        tela.abrirTelaModalComStage(stage, Tela.CON_CONTA_RECEBER);
     }
     
     @FXML
     public void abrirConContasPagar(ActionEvent event) {
         Tela tela = new Tela();
-        tela.abrirTelaModal(stage, Tela.CON_CONTA_PAGAR);
+        tela.abrirTelaModalComStage(stage, Tela.CON_CONTA_PAGAR);
     }
     
     @FXML
