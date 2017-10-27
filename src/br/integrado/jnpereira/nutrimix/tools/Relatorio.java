@@ -135,6 +135,7 @@ public class Relatorio {
 
             //Venda Produto
             PdfPTable infoProd = new PdfPTable(3);
+
             infoProd.getDefaultCell().setBorder(PdfPCell.NO_BORDER); // Aqui eu tiro a borda  
             infoProd.setLockedWidth(true);
             infoProd.setTotalWidth(larWight);
@@ -142,6 +143,7 @@ public class Relatorio {
             infoProd.addCell(new Paragraph("Preço", getFont(2.1f)));
             infoProd.addCell(new Paragraph("Total", getFont(2.1f)));
 
+            double vlTotalProd = 0;
             ArrayList<Object> prods = dao.getAllWhere(new VendaCompraProduto(), "WHERE $cdMovto$ = " + venda.getCdMovto() + " ORDER BY $cdProduto$ ASC");
             for (Object obj : prods) {
                 VendaCompraProduto prodVenda = (VendaCompraProduto) obj;
@@ -151,7 +153,11 @@ public class Relatorio {
                 infoProd.addCell(new Paragraph(prod.getCdProduto() + ": " + prod.getDsProduto(), getFont(2.1f)));
                 infoProd.addCell(new Paragraph(Numero.doubleToReal(prodVenda.getQtUnitario(), 4) + " X " + Numero.doubleToR$(prodVenda.getVlUnitario()), getFont(2.1f)));
                 infoProd.addCell(new Paragraph(Numero.doubleToR$(prodVenda.getQtUnitario() * prodVenda.getVlUnitario()), getFont(2.1f)));
+                vlTotalProd += prodVenda.getQtUnitario() * prodVenda.getVlUnitario();
             }
+            infoProd.addCell(new Paragraph("", getFont(2.5f)));
+            infoProd.addCell(new Paragraph("Total: ", getFont(2.5f)));
+            infoProd.addCell(new Paragraph(Numero.doubleToR$(vlTotalProd), getFont(2.5f)));            
             document.add(infoProd);
             //Fecha e abre o PDF
             document.close();
