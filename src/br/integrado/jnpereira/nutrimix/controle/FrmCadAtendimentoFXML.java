@@ -152,6 +152,13 @@ public class FrmCadAtendimentoFXML implements Initializable {
                         return;
                     }
 
+                    if (!prod.getInVenda()) {
+                        Alerta.AlertaError("Inválido", "Produto não permitido em venda.");
+                        atendHit.cdProduto.requestFocus();
+                        inAntiLoop = true;
+                        return;
+                    }
+
                     for (AtendProdHit movtoHit : listAtendProd) {
                         if (movtoHit.cdProduto.getText().equals(atendHit.cdProduto.getText())
                                 && !movtoHit.equals(atendHit)) {

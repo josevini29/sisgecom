@@ -127,6 +127,13 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                         inAntiLoop = true;
                         return;
                     }
+                    
+                    if (!prod.getInEstoque()) {
+                        Alerta.AlertaError("Inválido", "Produto sem permissão para movimento de estoque.");
+                        movto.cdProduto.requestFocus();
+                        inAntiLoop = true;
+                        return;
+                    }
 
                     for (AjusteMovtoHit movtoHit : listMovto) {
                         if (movtoHit.cdProduto.getText().equals(movto.cdProduto.getText())

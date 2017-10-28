@@ -1,8 +1,10 @@
 package br.integrado.jnpereira.nutrimix.tools;
 
+import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
+import br.integrado.jnpereira.nutrimix.modelo.Usuario;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
 import com.itextpdf.text.*;
@@ -25,7 +27,8 @@ public class Relatorio {
 
     public static void main(String[] args) {
         Relatorio relatorio = new Relatorio();
-        relatorio.gerarReciboVenda(5);
+        //relatorio.gerarReciboVenda(5);
+        relatorio.gerarRelatorioEstoque();
     }
 
     private void abrirPDF(String dsCaminho) throws IOException {
@@ -157,7 +160,7 @@ public class Relatorio {
             }
             infoProd.addCell(new Paragraph("", getFont(2.5f)));
             infoProd.addCell(new Paragraph("Total: ", getFont(2.5f)));
-            infoProd.addCell(new Paragraph(Numero.doubleToR$(vlTotalProd), getFont(2.5f)));            
+            infoProd.addCell(new Paragraph(Numero.doubleToR$(vlTotalProd), getFont(2.5f)));
             document.add(infoProd);
             //Fecha e abre o PDF
             document.close();
@@ -165,6 +168,98 @@ public class Relatorio {
         } catch (Exception ex) {
             Alerta.AlertaError("Erro ao gerar recibo!", ex.toString());
         }
+    }
 
+    public void gerarRelatorioEstoque() {
+        try {
+            Document document = new Document();
+            document.setPageSize(PageSize.A4);
+
+            String dsCaminho = dsDiretorio + "relatorio_estoque" + getDtEmissao();
+            PdfWriter.getInstance(document, new FileOutputStream(dsCaminho));
+            document.open();
+
+            //Cabeçalho
+            Paragraph dsRelatorio = new Paragraph("Relatório de Estoque", getFont(14));
+            dsRelatorio.setAlignment("center");
+            dsRelatorio.setLeading(15);
+            document.add(dsRelatorio);
+            document.add(getLinha(0));
+            Usuario usuario = new Usuario();
+            usuario.setCdUsuario(FrmMenuFXML.usuarioAtivo);
+            dao.get(usuario);
+            Paragraph infoRelatorio = new Paragraph("Emitido por: " + usuario.getDsLogin() + " Dt. Emissão: " + Data.AmericaToBrasil(Data.getAgora()), getFont(9));
+            infoRelatorio.setLeading(15);
+            document.add(infoRelatorio);
+            document.add(getLinha(0));
+            
+            
+
+            PdfPTable infoProduto = new PdfPTable(5);
+            infoProduto.getDefaultCell().setBorder(PdfPCell.NO_BORDER); // Aqui eu tiro a borda
+            infoProduto.setTotalWidth(new float[]{200, 80, 80, 80, 100});
+            infoProduto.setLockedWidth(true);
+
+            PdfPCell dsProduto = new PdfPCell(new Paragraph("Produto", getFont(8)));
+            dsProduto.setPadding(3);
+            infoProduto.addCell(dsProduto);
+
+            PdfPCell qtEstoqMin = new PdfPCell(new Paragraph("Qt. Estq. Mín", getFont(8)));
+            qtEstoqMin.setPadding(3);
+            infoProduto.addCell(qtEstoqMin);
+
+            PdfPCell qtEstoq = new PdfPCell(new Paragraph("Qt. Estoque", getFont(8)));
+            qtEstoq.setPadding(3);            
+            infoProduto.addCell(qtEstoq);
+
+            PdfPCell vlCustoMedio = new PdfPCell(new Paragraph("Vl. Custo Médio", getFont(8)));
+            vlCustoMedio.setPadding(3);            
+            infoProduto.addCell(vlCustoMedio);
+            
+            PdfPCell nrCont = new PdfPCell(new Paragraph("Contagem", getFont(8)));
+            nrCont.setPadding(3);            
+            infoProduto.addCell(nrCont);
+
+            ArrayList<Object> prods = dao.getAllWhere(new Produto(), "ORDER BY $cdProduto$ ASC");
+            for (Object obj : prods) {
+                Produto prod = (Produto) obj;
+                dsProduto = new PdfPCell(new Paragraph(prod.getCdProduto() + ". " + prod.getDsProduto(), getFont(8)));
+                dsProduto.setPadding(1.5f);
+                dsProduto.setBorder(PdfPCell.NO_BORDER);
+                infoProduto.addCell(dsProduto);
+
+                qtEstoqMin = new PdfPCell(new Paragraph(Numero.doubleToReal(prod.getQtEstoqMin(), 2), getFont(8)));
+                qtEstoqMin.setPadding(1.5f);
+                qtEstoqMin.setBorder(PdfPCell.NO_BORDER);
+                qtEstoqMin.setHorizontalAlignment(1);
+                infoProduto.addCell(qtEstoqMin);
+
+                qtEstoq = new PdfPCell(new Paragraph(Numero.doubleToReal(prod.getQtEstqAtual(), 2), getFont(8)));
+                qtEstoq.setPadding(1.5f);
+                qtEstoq.setBorder(PdfPCell.NO_BORDER);
+                qtEstoq.setHorizontalAlignment(1);
+                infoProduto.addCell(qtEstoq);
+
+                vlCustoMedio = new PdfPCell(new Paragraph(Numero.doubleToR$(prod.getVlCustoMedio()), getFont(8)));
+                vlCustoMedio.setPadding(1.5f);
+                vlCustoMedio.setBorder(PdfPCell.NO_BORDER);
+                vlCustoMedio.setHorizontalAlignment(1);
+                infoProduto.addCell(vlCustoMedio);
+                
+                nrCont = new PdfPCell(new Paragraph("_________________", getFont(8)));
+                nrCont.setPadding(1.5f);
+                nrCont.setBorder(PdfPCell.NO_BORDER);
+                nrCont.setHorizontalAlignment(1);
+                infoProduto.addCell(nrCont);
+
+            }
+
+            document.add(infoProduto);
+
+            document.close();
+            abrirPDF(dsCaminho);
+        } catch (Exception ex) {
+            Alerta.AlertaError("Erro ao gerar relatório!", ex.toString());
+        }
     }
 }

@@ -247,6 +247,12 @@ public class FrmCadVendaFXML implements Initializable {
                         inAntiLoop = true;
                         return;
                     }
+                    if (!prod.getInVenda()) {
+                        Alerta.AlertaError("Inválido", "Produto não permitido em venda.");
+                        vendaHit.cdProduto.requestFocus();
+                        inAntiLoop = true;
+                        return;
+                    }
 
                     for (VendaProdHit movtoHit : listVendaProd) {
                         if (movtoHit.cdProduto.getText().equals(vendaHit.cdProduto.getText())
