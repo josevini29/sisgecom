@@ -14,6 +14,7 @@ public class IconButtonHit {
     public final static Object[] ICON_REFRESH = new Object[]{"refresh.png", 23.0, 21.0};
     public final static Object[] ICON_MESA = new Object[]{"mesa.png", 43.0, 96.0};
     public final static Object[] ICON_DINHEIRO = new Object[]{"dinheiro.png", 17.0, 23.0};
+    public final static Object[] ICON_REPORT = new Object[]{"report.png", 17.0, 23.0};
 
     public static void setIcon(Button button, Object[] imagem) {
         String dsCaminhoImage = (String) imagem[0];

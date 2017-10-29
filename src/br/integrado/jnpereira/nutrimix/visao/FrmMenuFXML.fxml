@@ -87,6 +87,11 @@
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadPerfil" text="Perfil" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Relatórios">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#abrirRelEstoqProd" text="Estoque Produto" />
+                    </items>
+                  </Menu>
               </menus>
             </MenuBar>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="140.0" prefWidth="546.0" GridPane.rowIndex="1">
