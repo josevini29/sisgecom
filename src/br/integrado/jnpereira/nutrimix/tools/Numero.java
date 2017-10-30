@@ -1,6 +1,6 @@
 package br.integrado.jnpereira.nutrimix.tools;
 
-import static br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML.usuarioAtivo;
+import static br.integrado.jnpereira.nutrimix.controle.MenuControl.usuarioAtivo;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.Funcionario;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;

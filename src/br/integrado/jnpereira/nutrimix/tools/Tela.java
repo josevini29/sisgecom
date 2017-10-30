@@ -1,10 +1,10 @@
 package br.integrado.jnpereira.nutrimix.tools;
 
-import br.integrado.jnpereira.nutrimix.controle.FrmListaGenericaFXML;
-import br.integrado.jnpereira.nutrimix.controle.FrmListaPessoaFXML;
-import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
-import br.integrado.jnpereira.nutrimix.controle.FrmListaAjustEstoqFXML;
-import br.integrado.jnpereira.nutrimix.controle.FrmLoginFXML;
+import br.integrado.jnpereira.nutrimix.controle.ListaGenericaControl;
+import br.integrado.jnpereira.nutrimix.controle.ListaPessoaControl;
+import br.integrado.jnpereira.nutrimix.controle.MenuControl;
+import br.integrado.jnpereira.nutrimix.controle.ListaAjustEstoqControl;
+import br.integrado.jnpereira.nutrimix.controle.LoginControl;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.dao.Senha;
 import br.integrado.jnpereira.nutrimix.modelo.PerfilTela;
@@ -75,7 +75,7 @@ public class Tela {
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
         Parent root = (Parent) loader.load();
-        FrmLoginFXML controler = (FrmLoginFXML) loader.getController();
+        LoginControl controler = (LoginControl) loader.getController();
         controler.setStage(stage);
         controler.iniciaTela();
         Scene scene = new Scene(root);
@@ -89,7 +89,7 @@ public class Tela {
     public void abrirMenu() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(MENU[0]));
         Parent root = (Parent) loader.load();
-        FrmMenuFXML controler = (FrmMenuFXML) loader.getController();
+        MenuControl controler = (MenuControl) loader.getController();
         Stage stage = new Stage();
         controler.setStage(stage);
         controler.iniciaTela();
@@ -212,7 +212,7 @@ public class Tela {
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaGenericaFXML.fxml"));
             Parent root = (Parent) loader.load();
-            FrmListaGenericaFXML controler = (FrmListaGenericaFXML) loader.getController();
+            ListaGenericaControl controler = (ListaGenericaControl) loader.getController();
             controler.setClasse(obj);
             controler.setDsCampCod(dsCampCod);
             controler.setDsCampDes(dsCampDes);
@@ -241,7 +241,7 @@ public class Tela {
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaPessoaFXML.fxml"));
             Parent root = (Parent) loader.load();
-            FrmListaPessoaFXML controler = (FrmListaPessoaFXML) loader.getController();
+            ListaPessoaControl controler = (ListaPessoaControl) loader.getController();
             controler.setClasse(obj);
             controler.setStage(stage);
             controler.setInAtivo(inAtivo);
@@ -266,7 +266,7 @@ public class Tela {
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaAjustEstoqFXML.fxml"));
             Parent root = (Parent) loader.load();
-            FrmListaAjustEstoqFXML controler = (FrmListaAjustEstoqFXML) loader.getController();
+            ListaAjustEstoqControl controler = (ListaAjustEstoqControl) loader.getController();
             controler.setStage(stage);
             controler.iniciaTela();
             Scene scene = new Scene(root);
@@ -285,7 +285,7 @@ public class Tela {
     }
 
     private boolean validaAcesso(String[] telaArray) {
-        if (FrmMenuFXML.usuarioAtivo == 0) { //Admin pula a validação
+        if (MenuControl.usuarioAtivo == 0) { //Admin pula a validação
             return true;
         }
         String cdTela = null;
@@ -304,7 +304,7 @@ public class Tela {
         if (cdTela != null) {
             Usuario usuario = new Usuario();
             try {
-                usuario.setCdUsuario(FrmMenuFXML.usuarioAtivo);
+                usuario.setCdUsuario(MenuControl.usuarioAtivo);
                 dao.get(usuario);
             } catch (Exception ex) {
                 Alerta.AlertaError("Erro!", "Erro ao validar acesso a tela.\n" + ex.toString());

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="359.0" prefWidth="606.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmListaGenericaFXML">
+<AnchorPane id="AnchorPane" prefHeight="359.0" prefWidth="606.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.ListaGenericaControl">
    <children>
       <TextField id="campo" fx:id="codGenerico" alignment="CENTER" layoutX="14.0" layoutY="32.0" prefHeight="28.0" prefWidth="86.0">
          <font>

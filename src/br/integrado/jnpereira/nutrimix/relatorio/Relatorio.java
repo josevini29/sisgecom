@@ -1,6 +1,6 @@
 package br.integrado.jnpereira.nutrimix.relatorio;
 
-import br.integrado.jnpereira.nutrimix.controle.FrmMenuFXML;
+import br.integrado.jnpereira.nutrimix.controle.MenuControl;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.GrupoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
@@ -30,7 +30,7 @@ public class Relatorio {
     Dao dao = new Dao();
 
     public Paragraph getEmissao() {
-        Paragraph emissao = new Paragraph("SISGECOM (Version: " + FrmMenuFXML.version + ")", getFont(6));
+        Paragraph emissao = new Paragraph("SISGECOM (Version: " + MenuControl.version + ")", getFont(6));
         emissao.setAlignment(Element.ALIGN_RIGHT);
         emissao.setLeading(6);
         return emissao;
@@ -208,7 +208,7 @@ public class Relatorio {
             document.add(dsRelatorio);
             document.add(getLinhaSolida());
             Usuario usuario = new Usuario();
-            usuario.setCdUsuario(FrmMenuFXML.usuarioAtivo);
+            usuario.setCdUsuario(MenuControl.usuarioAtivo);
             dao.get(usuario);
             Paragraph infoRelatorio = new Paragraph("Emitido por: " + usuario.getDsLogin().toUpperCase() + " Dt. Emissão: " + Data.AmericaToBrasil(Data.getAgora()), getFont(7));
             //infoRelatorio.setLeading(15);

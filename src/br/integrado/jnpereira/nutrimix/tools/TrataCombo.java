@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SingleSelectionModel;
-import br.integrado.jnpereira.nutrimix.controle.ProdutoController;
+import br.integrado.jnpereira.nutrimix.controle.EstoqueControl;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.FormaPagto;
@@ -180,7 +180,7 @@ public class TrataCombo {
 
     public static void setValueComboTpAjustEstoq(ChoiceBox combo, Integer selecionado) {
         if (combo.getItems().isEmpty()) {
-            combo.setItems(FXCollections.observableArrayList(ProdutoController.getAllTipoAjuste()));
+            combo.setItems(FXCollections.observableArrayList(EstoqueControl.getAllTipoAjuste()));
         }
         if (selecionado != null) {
             SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
@@ -191,14 +191,14 @@ public class TrataCombo {
     public static Integer getValueComboTpAjustEstoq(ChoiceBox combo) {
         SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
         if (model.getSelectedIndex() > -1) {
-            return ProdutoController.getAllTipoAjuste().get(model.getSelectedIndex()).getCdTpAjuste();
+            return EstoqueControl.getAllTipoAjuste().get(model.getSelectedIndex()).getCdTpAjuste();
         }
         return null;
     }
 
     public static void setValueComboTpMovtoEstoque(ChoiceBox combo, Integer selecionado) {
         if (combo.getItems().isEmpty()) {
-            combo.setItems(FXCollections.observableArrayList(ProdutoController.getAllTipoMovtoEstoque()));
+            combo.setItems(FXCollections.observableArrayList(EstoqueControl.getAllTipoMovtoEstoque()));
         }
         if (selecionado != null) {
             SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
@@ -209,7 +209,7 @@ public class TrataCombo {
     public static Integer getValueComboTpMovtoEstoque(ChoiceBox combo) {
         SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
         if (model.getSelectedIndex() > -1) {
-            return ProdutoController.getAllTipoMovtoEstoque().get(model.getSelectedIndex()).getCdTpMovto();
+            return EstoqueControl.getAllTipoMovtoEstoque().get(model.getSelectedIndex()).getCdTpMovto();
         }
         return null;
     }

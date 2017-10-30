@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="painel" prefHeight="494.0" prefWidth="901.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.FrmCadPerfilFXML">
+<AnchorPane id="AnchorPane" fx:id="painel" prefHeight="494.0" prefWidth="901.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.PerfilControl">
    <children>
       <TextField fx:id="cdPerfil" alignment="CENTER" cache="true" layoutX="16.0" layoutY="40.0" prefHeight="28.0" prefWidth="58.0" styleClass="codigo">
          <font>
