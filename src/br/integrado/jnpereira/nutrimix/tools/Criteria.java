@@ -48,6 +48,17 @@ public class Criteria {
                     String proposicao = "$" + dsClasse + "." + campo + "$ " + (inNulo ? "IS " : "= ") + valor;
                     sql += proposicao;
                 }
+            } else if (field.getType().getSimpleName().toLowerCase().equals("boolean")) {
+                if (!String.valueOf(valor).equals("")) {
+                    if (!sql.equals("")) {
+                        sql += " AND ";
+                    }
+                    boolean inNulo = (valor == null);
+                    String valorBoo = (Boolean) valor ? "'T'" : "'F'";
+                    String dsClasse = (String) classe.getClass().getSimpleName();
+                    String proposicao = "$" + dsClasse + "." + campo + "$ " + (inNulo ? "IS " : "= ") + valorBoo;
+                    sql += proposicao;
+                }
             }
         }
     }

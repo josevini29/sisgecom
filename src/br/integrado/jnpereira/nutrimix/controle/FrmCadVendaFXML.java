@@ -13,8 +13,10 @@ import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Cliente;
 import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
+import br.integrado.jnpereira.nutrimix.relatorio.Relatorio;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
@@ -412,6 +414,16 @@ public class FrmCadVendaFXML implements Initializable {
                     vendaHit.atendProd.setQtPaga(qtPaga);
                     dao.update(vendaHit.atendProd);
                 }
+                //Gera movimento estoque
+                MovtoEstoque movtoEstoque = new MovtoEstoque();
+                movtoEstoque.setCdMovCompVend(venda.getCdMovto());
+                movtoEstoque.setTpMovto(ProdutoController.SAIDA);
+                movtoEstoque.setCdProduto(vendaProd.getCdProduto());
+                movtoEstoque.setDtMovto(Data.getAgora());
+                movtoEstoque.setQtMovto(vendaProd.getQtUnitario());
+                movtoEstoque.setInCancelado(false);
+                ProdutoController estq = new ProdutoController();
+                estq.geraMovtoEstoque(movtoEstoque);
             }
 
             if (atendimento != null) { //Encerra o atendimento
@@ -442,15 +454,19 @@ public class FrmCadVendaFXML implements Initializable {
             dao.save(conta);
 
             ParcelaController parcela = new ParcelaController();
-            parcela.gerarParcelas(conta);                        
+            parcela.gerarParcelas(conta);
 
             dao.commit();
+
+            Relatorio recibo = new Relatorio();
+            recibo.gerarReciboVenda(venda.getCdMovto());
         } catch (Exception ex) {
             ex.printStackTrace();
             dao.rollback();
             Alerta.AlertaError("Erro!", ex.getMessage());
             return;
         }
+
         if (Alerta.AlertaConfirmation("Confirmação", "Venda efetivada com sucesso.\nDeseja realizar uma nova venda?")) {
             param = null;
             limparTela();

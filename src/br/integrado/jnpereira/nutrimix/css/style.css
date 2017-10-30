@@ -12,6 +12,10 @@
     -fx-font-size: 13px;
 }
 
+.check-box {
+    -fx-font-weight: bold;
+}
+
 .button_refresh {
     -fx-font-weight: bold;
     -fx-font-size: 11px;

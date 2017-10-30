@@ -127,7 +127,7 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                         inAntiLoop = true;
                         return;
                     }
-                    
+
                     if (!prod.getInEstoque()) {
                         Alerta.AlertaError("Inválido", "Produto sem permissão para movimento de estoque.");
                         movto.cdProduto.requestFocus();
@@ -148,8 +148,8 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 }
 
                 movto.dsProduto.setText(prod.getDsProduto());
-                movto.qtEstoque.setText(prod.getQtEstqAtual().toString());
-                movto.vlItem.setText(prod.getVlCustoMedio().toString());
+                movto.qtEstoque.setText(Numero.doubleToReal(prod.getQtEstqAtual(), 3));
+                movto.vlItem.setText(Numero.doubleToReal(prod.getVlCustoMedio(), 3));
                 calculaTotal(movto);
             } catch (Exception ex) {
                 Alerta.AlertaError("Notificação", "Produto não encontrado!");
@@ -188,11 +188,10 @@ public class FrmCadAjustEstoqFXML implements Initializable {
     }
 
     public void calculaTotal(AjusteMovtoHit movto) {
-        DecimalFormat df = new DecimalFormat("0.00");
         if (!movto.qtAjuste.getText().equals("") && !movto.vlItem.getText().equals("")) {
             double qtAjust = Double.parseDouble(movto.qtAjuste.getText());
             double vlIte = Double.parseDouble(movto.vlItem.getText());
-            movto.vlTotalItem.setText(df.format(qtAjust * vlIte).replace(",", "."));
+            movto.vlTotalItem.setText(Numero.doubleToReal(qtAjust * vlIte, 2));
         } else {
             movto.vlTotalItem.setText("");
         }
@@ -326,11 +325,11 @@ public class FrmCadAjustEstoqFXML implements Initializable {
                 prod.setCdProduto(movEstoq.getCdProduto());
                 dao.get(prod);
                 dsProduto.setText(prod.getDsProduto());
-                qtEstoque.setText(movEstoq.getQtEstoque().toString());
-                qtAjuste.setText(movEstoq.getQtMovto().toString());
+                qtEstoque.setText(Numero.doubleToReal(movEstoq.getQtEstoque(), 3));
+                qtAjuste.setText(Numero.doubleToReal(movEstoq.getQtMovto(), 3));
                 qtAjuste.setEditable(false);
-                vlItem.setText(movEstoq.getVlCustoMedio().toString());
-                vlTotalItem.setText(String.valueOf(movEstoq.getQtMovto() * movEstoq.getVlCustoMedio()));
+                vlItem.setText(Numero.doubleToReal(movEstoq.getVlCustoMedio(), 3));
+                vlTotalItem.setText(Numero.doubleToReal(movEstoq.getQtMovto() * movEstoq.getVlCustoMedio(), 2));
                 inCancelado.setSelected(movEstoq.getInCancelado());
 
                 AjusteMovtoHit ajusteHit = new AjusteMovtoHit();
@@ -449,6 +448,20 @@ public class FrmCadAjustEstoqFXML implements Initializable {
 
         ajusteMovto.qtAjuste.textProperty().addListener((ObservableValue<? extends String> obs, String velho, String novo) -> {
             calculaTotal(ajusteMovto);
+        });
+
+        ajusteMovto.qtAjuste.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!ajusteMovto.qtAjuste.getText().equals("")) {
+                    Double valor = Double.parseDouble(ajusteMovto.qtAjuste.getText());
+                    if (valor <= 0) {
+                        Alerta.AlertaError("Campo inválido", "Ajuste deve ser maior que 0.00!");
+                        ajusteMovto.qtAjuste.requestFocus();
+                        return;
+                    }
+                    ajusteMovto.qtAjuste.setText(Numero.doubleToReal(valor, 2));
+                }
+            }
         });
 
         ajusteMovto.btnAdd.setOnAction((ActionEvent event) -> {

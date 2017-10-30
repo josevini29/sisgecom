@@ -22,6 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -38,6 +39,8 @@ public class FrmConAjustEstoqFXML implements Initializable {
     TextField dtFim;
     @FXML
     ChoiceBox tpMovto;
+    @FXML
+    CheckBox inMovCancel;
 
     @FXML
     TableView<ClasseGenerica> gridMovto;
@@ -175,6 +178,9 @@ public class FrmConAjustEstoqFXML implements Initializable {
         try {
             Criteria criterio = new Criteria(new MovtoEstoque());
             criterio.AddAnd("cdProduto", cdProduto.getText(), false);
+            if (!inMovCancel.isSelected()) {
+                criterio.AddAnd("inCancelado", false, false);
+            }
             criterio.AddAndBetweenDate("dtMovto", dtInicio.getText(), dtFim.getText());
 
             if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) != null) {
@@ -213,6 +219,7 @@ public class FrmConAjustEstoqFXML implements Initializable {
                 classeGenerica.setDtMovto(new CustomDate(movto.getDtMovto().getTime()));
                 classeGenerica.setQtMovto(movto.getQtMovto());
                 classeGenerica.setQtEstoq(movto.getQtEstoque());
+                classeGenerica.setInCancel(movto.getInCancelado() ? "Sim" : "Não");
                 valoresArray.add(classeGenerica);
             }
         } catch (Exception ex) {
@@ -247,6 +254,9 @@ public class FrmConAjustEstoqFXML implements Initializable {
         @Coluna(nome = "Qt. Estoq.")
         @Style(css = "-fx-alignment: CENTER;")
         private Double qtEstoq;
+        @Coluna(nome = "Cancelado")
+        @Style(css = "-fx-alignment: CENTER;")
+        private String inCancel;
 
         @Override
         public Integer getCdProduto() {
@@ -309,6 +319,14 @@ public class FrmConAjustEstoqFXML implements Initializable {
 
         public void setQtEstoq(Double qtEstoq) {
             this.qtEstoq = qtEstoq;
+        }
+
+        public String getInCancel() {
+            return inCancel;
+        }
+
+        public void setInCancel(String inCancel) {
+            this.inCancel = inCancel;
         }
 
     }
