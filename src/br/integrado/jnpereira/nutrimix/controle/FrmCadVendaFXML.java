@@ -442,7 +442,7 @@ public class FrmCadVendaFXML implements Initializable {
             dao.save(conta);
 
             ParcelaController parcela = new ParcelaController();
-            parcela.gerarParcelas(conta);
+            parcela.gerarParcelas(conta);                        
 
             dao.commit();
         } catch (Exception ex) {

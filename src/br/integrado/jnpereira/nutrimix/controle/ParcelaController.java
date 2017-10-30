@@ -31,6 +31,8 @@ public class ParcelaController {
             parcela.setCdConta(conta.getCdConta());
             dao.save(parcela);
         }
+        
+        //Pagar ultima parcela
     }
 
     public ArrayList<Parcela> getParcelas(CondicaoPagto condicao, Double vlTotal) {

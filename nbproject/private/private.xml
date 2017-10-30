@@ -3,14 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/dao/Conexao.java</file>
+            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/relatorio/TelaRelatorio.java</file>
             <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmConContasReceberFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmCadProdutoFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmListaGenericaFXML.java</file>
             <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmCadVendaFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/tools/TrataCombo.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmMenuFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/tools/Relatorio.java</file>
+            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/relatorio/Relatorio.java</file>
         </group>
     </open-files>
 </project-private>
