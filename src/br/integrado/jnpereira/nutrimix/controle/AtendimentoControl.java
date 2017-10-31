@@ -158,6 +158,10 @@ public class AtendimentoControl implements Initializable {
                         inAntiLoop = true;
                         return;
                     }
+                    
+                    if (prod.getQtEstqAtual() <= 0){
+                        Alerta.AlertaWarning("Aviso!", "Produto sem estoque ou estoque negativo, favor verificar!");
+                    }
 
                     for (AtendProdHit movtoHit : listAtendProd) {
                         if (movtoHit.cdProduto.getText().equals(atendHit.cdProduto.getText())

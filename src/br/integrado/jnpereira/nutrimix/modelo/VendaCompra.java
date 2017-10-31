@@ -36,6 +36,8 @@ public class VendaCompra {
     private Date dtAtend;
     @Coluna(nome="vl_total")
     private Double vlTotal;
+    @Coluna(nome="cd_pedido")
+    private Integer cdPedido;
     @Coluna(nome="in_cancelado")
     private Boolean inCancelado;
 
@@ -149,5 +151,13 @@ public class VendaCompra {
 
     public void setVlTotal(Double vlTotal) {
         this.vlTotal = vlTotal;
+    }
+
+    public Integer getCdPedido() {
+        return cdPedido;
+    }
+
+    public void setCdPedido(Integer cdPedido) {
+        this.cdPedido = cdPedido;
     }
 }

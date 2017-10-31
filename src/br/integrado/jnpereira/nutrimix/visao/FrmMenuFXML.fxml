@@ -62,6 +62,12 @@
                     <MenuItem mnemonicParsing="false" onAction="#abrirCadBanco" text="Banco" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Compra">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#abrirCadCompra" text="Nova Compra" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirConCompra" text="Pedido de Compra" />
+                    </items>
+                  </Menu>
                   <Menu mnemonicParsing="false" text="Venda">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#abrirCadVenda" text="Nova Venda" />

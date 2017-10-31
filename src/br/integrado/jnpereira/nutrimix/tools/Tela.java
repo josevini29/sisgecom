@@ -59,6 +59,8 @@ public class Tela {
     final public static String[] CAD_ATEND = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAtendimentoFXML.fxml", "Atendimento a Mesa"};
     @Senha
     final public static String[] CAD_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadVendaFXML.fxml", "Venda"};
+    @Senha
+    final public static String[] CAD_COMPRA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadCompraFXML.fxml", "Compra"};
     final public static String[] CON_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConParcelaFXML.fxml", "Consulta Parcelas"};
     final public static String[] LOGIN = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmLoginFXML.fxml", "Login"};
     final public static String[] CAD_ALTSENHA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAltSenhaFXML.fxml", "Alteração de Senha"};

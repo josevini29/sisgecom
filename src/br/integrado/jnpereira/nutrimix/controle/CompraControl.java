@@ -6,14 +6,14 @@
 package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.dao.Dao;
-import br.integrado.jnpereira.nutrimix.modelo.Atendimento;
-import br.integrado.jnpereira.nutrimix.modelo.AtendimentoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
-import br.integrado.jnpereira.nutrimix.modelo.Cliente;
 import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.Fornecedor;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
+import br.integrado.jnpereira.nutrimix.modelo.Pedido;
+import br.integrado.jnpereira.nutrimix.modelo.PedidoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.relatorio.Relatorio;
@@ -26,6 +26,7 @@ import br.integrado.jnpereira.nutrimix.tools.Tela;
 import br.integrado.jnpereira.nutrimix.tools.TrataCombo;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
@@ -34,7 +35,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -43,18 +43,24 @@ import javafx.stage.Stage;
  *
  * @author Jose Vinicius
  */
-public class VendaControl implements Initializable {
+public class CompraControl implements Initializable {
 
     @FXML
     AnchorPane painel;
     @FXML
-    TextField cdCliente;
+    TextField nrNotaFiscal;
     @FXML
-    TextField dsCliente;
+    TextField cdSerie;
+    @FXML
+    TextField dtEmissao;
+    @FXML
+    TextField nrPedido;
+    @FXML
+    TextField cdForne;
+    @FXML
+    TextField dsForne;
     @FXML
     TextField nrCpfCnpj;
-    @FXML
-    Label lblAtendimento;
     @FXML
     TextField vlTotalProds;
     @FXML
@@ -68,7 +74,7 @@ public class VendaControl implements Initializable {
     @FXML
     TextField vlFrete;
     @FXML
-    TextField vlTotalVenda;
+    TextField vlTotalCompra;
 
     @FXML
     AnchorPane painelProd;
@@ -94,24 +100,27 @@ public class VendaControl implements Initializable {
 
     private final Dao dao = new Dao();
     private Pessoa pessoa;
-    private Cliente cliente;
-    private Atendimento atendimento;
+    private Fornecedor fornecedor;
+    private Pedido pedido;
 
-    ArrayList<VendaProdHit> listVendaProd = new ArrayList<>();
+    ArrayList<CompraProdHit> listCompraProd = new ArrayList<>();
     double LayoutY;
     boolean inAntiLoop = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FuncaoCampo.mascaraNumeroInteiro(cdCliente);
+        FuncaoCampo.mascaraNumeroInteiro(cdForne);
+        FuncaoCampo.mascaraNumeroInteiro(nrNotaFiscal);
         TrataCombo.setValueComboTpCondicaoPagto(tpCondPagto, 1);
         TrataCombo.setValueComboTpFormaPagto(tpFormaPagto, 1);
         FuncaoCampo.mascaraNumeroDecimal(vlDesconto);
         FuncaoCampo.mascaraNumeroDecimal(vlAdicional);
         FuncaoCampo.mascaraNumeroDecimal(vlFrete);
-        cdCliente.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+        FuncaoCampo.mascaraTexto(cdSerie, 10);
+        FuncaoCampo.mascaraData(dtEmissao);
+        cdForne.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
-                validaCodigoCliente();
+                validaCodigoForne();
             }
         });
         vlAdicional.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
@@ -141,29 +150,46 @@ public class VendaControl implements Initializable {
                 calculaTotalProd();
             }
         });
+        dtEmissao.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!dtEmissao.getText().equals("")) {
+                    try {
+                        Data.autoComplete(dtEmissao);
+                        Date dataInicio = Data.StringToDate(dtEmissao.getText());
+                        if (dataInicio.after(new Date())) {
+                            Alerta.AlertaError("Campo inválido", "Dt. Emissão não pode ser maior que a data atual.");
+                            dtEmissao.requestFocus();
+                            return;
+                        }
+                    } catch (Exception ex) {
+                        Alerta.AlertaError("Campo inválido", ex.getMessage());
+                        dtEmissao.requestFocus();
+                    }
+                }
+            }
+        });
     }
 
     public void iniciaTela() {
         if (param != null) {
-            atendimento = (Atendimento) param;
-            lblAtendimento.setText("Atendimento: " + atendimento.getCdAtend() + " - Data: " + Data.AmericaToBrasil(atendimento.getDtCadastro()));
+            pedido = (Pedido) param;
         }
-        atualizaVendaProd();
+        atualizaCompraProd();
     }
 
     @FXML
-    public void pesquisarCliente() {
+    public void pesquisarFornecedor() {
         Tela tela = new Tela();
-        String valor = tela.abrirListaPessoa(new Cliente(), true);
+        String valor = tela.abrirListaPessoa(new Fornecedor(), true);
         if (valor != null) {
-            cdCliente.setText(valor);
-            validaCodigoCliente();
+            cdForne.setText(valor);
+            validaCodigoForne();
         }
     }
 
     @FXML
     public void visualizarParcelas() {
-        Double vlTotal = Double.parseDouble(vlTotalVenda.getText());
+        Double vlTotal = Double.parseDouble(vlTotalCompra.getText());
         if (vlTotal > 0 && TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto) != null) {
             ContasPagarReceber conta = new ContasPagarReceber();
             conta.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
@@ -173,9 +199,9 @@ public class VendaControl implements Initializable {
         }
     }
 
-    public void abrirListaProduto(VendaProdHit movto) {
-        if (movto.atendProd != null) {
-            Alerta.AlertaError("Não permitido!", "Altere o item no atendimento.");
+    public void abrirListaProduto(CompraProdHit movto) {
+        if (movto.pedidoProd != null) {
+            Alerta.AlertaError("Não permitido!", "Altere o item no pedido.");
             return;
         }
 
@@ -187,31 +213,31 @@ public class VendaControl implements Initializable {
         }
     }
 
-    private void validaCodigoCliente() {
-        if (!cdCliente.getText().equals("")) {
+    private void validaCodigoForne() {
+        if (!cdForne.getText().equals("")) {
             boolean vInBusca = true;
-            if (cliente != null) {
-                if (cliente.getCdCliente() == Integer.parseInt(cdCliente.getText())) {
+            if (fornecedor != null) {
+                if (fornecedor.getCdFornecedor() == Integer.parseInt(cdForne.getText())) {
                     vInBusca = false;
                 }
             }
             if (vInBusca) {
                 try {
-                    cliente = new Cliente();
-                    cliente.setCdCliente(Integer.parseInt(cdCliente.getText()));
-                    dao.get(cliente);
-                    if (!cliente.getInAtivo()) {
-                        Alerta.AlertaError("Cliente inválido!", "Cliente está inativo.");
-                        cliente = null;
-                        dsCliente.setText("");
+                    fornecedor = new Fornecedor();
+                    fornecedor.setCdFornecedor(Integer.parseInt(cdForne.getText()));
+                    dao.get(fornecedor);
+                    if (!fornecedor.getInAtivo()) {
+                        Alerta.AlertaError("Fornecedor inválido!", "Fornecedor está inativo.");
+                        fornecedor = null;
+                        dsForne.setText("");
                         nrCpfCnpj.setText("");
-                        cdCliente.requestFocus();
+                        cdForne.requestFocus();
                         return;
                     }
                     pessoa = new Pessoa();
-                    pessoa.setCdPessoa(cliente.getCdPessoa());
+                    pessoa.setCdPessoa(fornecedor.getCdPessoa());
                     dao.get(pessoa);
-                    dsCliente.setText(pessoa.getDsPessoa());
+                    dsForne.setText(pessoa.getDsPessoa());
                     if (pessoa.getTpPessoa().equals("F")) {
                         nrCpfCnpj.setText(Numero.NumeroToCPF(pessoa.getNrCpfCnpj()));
                     } else {
@@ -219,84 +245,69 @@ public class VendaControl implements Initializable {
                     }
                 } catch (Exception ex) {
                     Alerta.AlertaError("Notificação", ex.getMessage());
-                    cliente = null;
+                    fornecedor = null;
                     pessoa = null;
-                    dsCliente.setText("");
+                    dsForne.setText("");
                     nrCpfCnpj.setText("");
-                    cdCliente.requestFocus();
+                    cdForne.requestFocus();
                 }
             }
         } else {
-            cliente = null;
+            fornecedor = null;
             pessoa = null;
-            dsCliente.setText("");
+            dsForne.setText("");
             nrCpfCnpj.setText("");
         }
     }
 
-    private void validaCodigoProduto(VendaProdHit vendaHit) {
-        if (!vendaHit.cdProduto.getText().equals("")) {
+    private void validaCodigoProduto(CompraProdHit compraHit) {
+        if (!compraHit.cdProduto.getText().equals("")) {
             try {
                 Produto prod = new Produto();
-                prod.setCdProduto(Integer.parseInt(vendaHit.cdProduto.getText()));
+                prod.setCdProduto(Integer.parseInt(compraHit.cdProduto.getText()));
                 dao.get(prod);
 
                 if (inAntiLoop) {
                     inAntiLoop = false;
                     if (!prod.getInAtivo()) {
                         Alerta.AlertaError("Inválido", "Produto está inativo.");
-                        vendaHit.cdProduto.requestFocus();
-                        inAntiLoop = true;
-                        return;
-                    }
-                    if (!prod.getInVenda()) {
-                        Alerta.AlertaError("Inválido", "Produto não permitido em venda.");
-                        vendaHit.cdProduto.requestFocus();
+                        compraHit.cdProduto.requestFocus();
                         inAntiLoop = true;
                         return;
                     }
 
-                    for (VendaProdHit movtoHit : listVendaProd) {
-                        if (movtoHit.cdProduto.getText().equals(vendaHit.cdProduto.getText())
-                                && !movtoHit.equals(vendaHit)) {
+                    for (CompraProdHit movtoHit : listCompraProd) {
+                        if (movtoHit.cdProduto.getText().equals(compraHit.cdProduto.getText())
+                                && !movtoHit.equals(compraHit)) {
                             Alerta.AlertaError("Inválido", "Produto já está na lista");
-                            vendaHit.cdProduto.requestFocus();
+                            compraHit.cdProduto.requestFocus();
                             inAntiLoop = true;
                             return;
                         }
                     }
-
-                    EstoqueControl prodController = new EstoqueControl();
-                    Double vlPreco = prodController.getUltimoPreco(prod.getCdProduto());
-                    if (vlPreco == null) {
-                        inAntiLoop = true;
-                        Alerta.AlertaError("Notificação", "Produto: " + prod.getCdProduto() + " sem preço cadastrado.");
-                        vendaHit.cdProduto.requestFocus();
-                        return;
-                    }
-                    vendaHit.vlUnitario.setText(Numero.doubleToReal(vlPreco, 2));
-
                     inAntiLoop = true;
                 }
 
-                vendaHit.dsProduto.setText(prod.getDsProduto());
+                compraHit.dsProduto.setText(prod.getDsProduto());
 
-                if (atendimento != null) {
-                    AtendimentoProduto atendProd = new AtendimentoProduto();
-                    atendProd.setCdAtend(atendimento.getCdAtend());
-                    atendProd.setDtAtend(atendimento.getDtAtend());
-                    atendProd.setCdProduto(prod.getCdProduto());
+                if (pedido != null) {
+                    PedidoProduto pedidoProd = new PedidoProduto();
+                    pedidoProd.setCdPedido(pedido.getCdPedido());
+                    pedidoProd.setCdProduto(prod.getCdProduto());
                     try {
-                        dao.get(atendProd);
-                        if (atendProd.getQtProduto() == atendProd.getQtPaga()) {
-                            Alerta.AlertaError("Notificação", "Produto: " + prod.getCdProduto() + " está como pago no atendimento.");
-                            vendaHit.cdProduto.requestFocus();
+                        dao.get(pedidoProd);
+                        if (pedidoProd.getQtProduto() == pedidoProd.getQtEntregue()) {
+                            Alerta.AlertaError("Notificação", "Produto: " + prod.getCdProduto() + " está como totalmente entregue no pedido.");
+                            compraHit.cdProduto.requestFocus();
                             return;
                         }
-                        vendaHit.atendProd = atendProd;
-                        vendaHit.qtUnitario.setText(Numero.doubleToReal(atendProd.getQtProduto() - atendProd.getQtPaga(), 2));
-                        vendaHit.cdProduto.setEditable(false);
-                        vendaHit.cdProduto.getStyleClass().addAll("texto_estatico_center");
+                        compraHit.pedidoProd = pedidoProd;
+                        compraHit.qtUnitario.setText(Numero.doubleToReal(pedidoProd.getQtProduto() - pedidoProd.getQtEntregue(), 2));
+                        compraHit.vlUnitario.setText(Numero.doubleToReal(pedidoProd.getVlUnitario(), 2));
+                        compraHit.vlUnitario.setEditable(false);
+                        compraHit.vlUnitario.getStyleClass().addAll("numero_estatico");
+                        compraHit.cdProduto.setEditable(false);
+                        compraHit.cdProduto.getStyleClass().addAll("texto_estatico_center");
                     } catch (Exception ex) {
                     }
                 }
@@ -305,27 +316,27 @@ public class VendaControl implements Initializable {
             } catch (Exception ex) {
                 inAntiLoop = true;
                 Alerta.AlertaError("Notificação", ex.getMessage());
-                vendaHit.cdProduto.requestFocus();
+                compraHit.cdProduto.requestFocus();
             }
         } else {
-            vendaHit.dsProduto.setText("");
+            compraHit.dsProduto.setText("");
         }
     }
 
     public void calculaTotalProd() {
         Double totalProd = 0.00;
         Double total = 0.00;
-        for (VendaProdHit vendaHit : listVendaProd) {
+        for (CompraProdHit compraHit : listCompraProd) {
             double vlUnit = 0.00;
-            if (!vendaHit.vlUnitario.getText().equals("")) {
-                vlUnit = Double.parseDouble(vendaHit.vlUnitario.getText());
+            if (!compraHit.vlUnitario.getText().equals("")) {
+                vlUnit = Double.parseDouble(compraHit.vlUnitario.getText());
             }
             double qtUnit = 0.00;
-            if (!vendaHit.qtUnitario.getText().equals("")) {
-                qtUnit = Double.parseDouble(vendaHit.qtUnitario.getText());
+            if (!compraHit.qtUnitario.getText().equals("")) {
+                qtUnit = Double.parseDouble(compraHit.qtUnitario.getText());
             }
             totalProd += qtUnit * vlUnit;
-            vendaHit.vlTotalProd.setText(Numero.doubleToReal(qtUnit * vlUnit, 2));
+            compraHit.vlTotalProd.setText(Numero.doubleToReal(qtUnit * vlUnit, 2));
         }
         double vVlDesconto = 0.00;
         if (!vlDesconto.getText().equals("")) {
@@ -341,20 +352,32 @@ public class VendaControl implements Initializable {
         }
         vlTotalProds.setText(Numero.doubleToReal(totalProd, 2));
         total += (totalProd + vVlDesconto + vVlAdicional + vVlFrete);
-        vlTotalVenda.setText(Numero.doubleToReal(total, 2));
+        vlTotalCompra.setText(Numero.doubleToReal(total, 2));
     }
 
     @FXML
     public void salvar() {
-        for (VendaProdHit vendaHit : listVendaProd) {
-            if (vendaHit.cdProduto.getText().equals("")) {
+        if (cdForne.getText().equals("")) {
+            Alerta.AlertaError("Campo inválido!", "Fornecedor é obrigatório.");
+            tpCondPagto.requestFocus();
+            return;
+        }
+
+        if ((nrNotaFiscal.getText().equals("") && !cdSerie.getText().equals(""))
+                || (!nrNotaFiscal.getText().equals("") && cdSerie.getText().equals(""))) {
+            Alerta.AlertaError("Campo inválido!", "Caso tenha nota fiscal, Nª da Nota e Série são obrigatórios.");
+            return;
+        }
+
+        for (CompraProdHit compraHit : listCompraProd) {
+            if (compraHit.cdProduto.getText().equals("")) {
                 Alerta.AlertaError("Campo inválido!", "Código do produto é obrigatório.");
-                vendaHit.cdProduto.requestFocus();
+                compraHit.cdProduto.requestFocus();
                 return;
             }
-            if (vendaHit.qtUnitario.getText().equals("")) {
-                Alerta.AlertaError("Campo inválido!", "Quantidade da venda é obrigatório.");
-                vendaHit.qtUnitario.requestFocus();
+            if (compraHit.qtUnitario.getText().equals("")) {
+                Alerta.AlertaError("Campo inválido!", "Quantidade da compra é obrigatório.");
+                compraHit.qtUnitario.requestFocus();
                 return;
             }
         }
@@ -375,81 +398,77 @@ public class VendaControl implements Initializable {
             CondicaoPagto cond = new CondicaoPagto();
             cond.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
             dao.get(cond);
-            if (!cond.getInEntrada() || cond.getQtParcelas() > 1 || cond.getNrIntervalo() > 0) {
-                if (cdCliente.getText().equals("")) {
-                    Alerta.AlertaError("Campo inválido!", "Caso não seja venda com pagamento no ato, cliente é obrigatório.");
-                    cdCliente.requestFocus();
-                    return;
-                }
-            }
 
             dao.autoCommit(false);
-            VendaCompra venda = new VendaCompra();
-            venda.setTpMovto("S");
-            venda.setCdPessoa(pessoa != null ? pessoa.getCdPessoa() : null);
-            venda.setVlDesconto(!vlDesconto.getText().equals("") ? Double.parseDouble(vlDesconto.getText()) : 0.0);
-            venda.setVlAdicional(!vlAdicional.getText().equals("") ? Double.parseDouble(vlAdicional.getText()) : 0.0);
-            venda.setVlFrete(!vlFrete.getText().equals("") ? Double.parseDouble(vlFrete.getText()) : 0.0);
-            venda.setCdUserCad(MenuControl.usuarioAtivo);
-            venda.setDtCadastro(Data.getAgora());
-            if (atendimento != null) {
-                venda.setCdAtend(atendimento.getCdAtend());
-                venda.setDtAtend(atendimento.getDtAtend());
+            VendaCompra compra = new VendaCompra();
+            compra.setTpMovto(EstoqueControl.ENTRADA);
+            compra.setCdPessoa(pessoa.getCdPessoa());
+            compra.setNrNota(!nrNotaFiscal.getText().equals("") ? Integer.parseInt(nrNotaFiscal.getText()) : null);
+            compra.setCdSerie(!cdSerie.getText().equals("") ? cdSerie.getText() : null);
+            compra.setCdPedido(!nrPedido.getText().equals("") ? Integer.parseInt(nrPedido.getText()) : null);
+            compra.setVlDesconto(!vlDesconto.getText().equals("") ? Double.parseDouble(vlDesconto.getText()) : 0.0);
+            compra.setVlAdicional(!vlAdicional.getText().equals("") ? Double.parseDouble(vlAdicional.getText()) : 0.0);
+            compra.setVlFrete(!vlFrete.getText().equals("") ? Double.parseDouble(vlFrete.getText()) : 0.0);
+            compra.setCdUserCad(MenuControl.usuarioAtivo);
+            compra.setDtCadastro(Data.getAgora());
+            if (pedido != null) {
+                compra.setCdPedido(pedido.getCdPedido());
             }
-            venda.setVlTotal(Double.parseDouble(vlTotalVenda.getText()));
-            venda.setInCancelado(false);
+            compra.setVlTotal(Double.parseDouble(vlTotalCompra.getText()));
+            compra.setInCancelado(false);
 
-            dao.save(venda);
+            dao.save(compra);
 
-            for (VendaProdHit vendaHit : listVendaProd) { //baixa do produto de um atendimento
-                VendaCompraProduto vendaProd = new VendaCompraProduto();
-                Double qtVenda = Double.parseDouble(vendaHit.qtUnitario.getText());
-                vendaProd.setCdMovto(venda.getCdMovto());
-                vendaProd.setCdProduto(Integer.parseInt(vendaHit.cdProduto.getText()));
-                vendaProd.setQtUnitario(qtVenda);
-                vendaProd.setVlUnitario(Double.parseDouble(vendaHit.vlUnitario.getText()));
-                dao.save(vendaProd);
-                if (vendaHit.atendProd != null) {
-                    Double qtPaga = vendaHit.atendProd.getQtPaga() + qtVenda;
-                    vendaHit.atendProd.setQtPaga(qtPaga);
-                    dao.update(vendaHit.atendProd);
+            for (CompraProdHit compraHit : listCompraProd) { //baixa do produto de um pedido
+                VendaCompraProduto compraProd = new VendaCompraProduto();
+                Double qtCompra = Double.parseDouble(compraHit.qtUnitario.getText());
+                compraProd.setCdMovto(compra.getCdMovto());
+                compraProd.setCdProduto(Integer.parseInt(compraHit.cdProduto.getText()));
+                compraProd.setQtUnitario(qtCompra);
+                compraProd.setVlUnitario(Double.parseDouble(compraHit.vlUnitario.getText()));
+                dao.save(compraProd);
+                if (compraHit.pedidoProd != null) {
+                    Double qtEntregue = compraHit.pedidoProd.getQtEntregue() + qtCompra;
+                    compraHit.pedidoProd.setQtEntregue(qtEntregue);
+                    dao.update(compraHit.pedidoProd);
                 }
                 //Gera movimento estoque
                 MovtoEstoque movtoEstoque = new MovtoEstoque();
-                movtoEstoque.setCdMovCompVend(venda.getCdMovto());
-                movtoEstoque.setTpMovto(EstoqueControl.SAIDA);
-                movtoEstoque.setCdProduto(vendaProd.getCdProduto());
+                movtoEstoque.setCdMovCompVend(compra.getCdMovto());
+                movtoEstoque.setTpMovto(EstoqueControl.ENTRADA);
+                movtoEstoque.setCdProduto(compraProd.getCdProduto());
                 movtoEstoque.setDtMovto(Data.getAgora());
-                movtoEstoque.setQtMovto(vendaProd.getQtUnitario());
+                movtoEstoque.setQtMovto(compraProd.getQtUnitario());
+                movtoEstoque.setVlItem(compraProd.getVlUnitario());
                 movtoEstoque.setInCancelado(false);
                 EstoqueControl estq = new EstoqueControl();
                 estq.geraMovtoEstoque(movtoEstoque);
             }
 
-            if (atendimento != null) { //Encerra o atendimento
-                String where = "WHERE $cdAtend$ = " + atendimento.getCdAtend() + " AND $dtAtend$ = '" + Data.BrasilToAmericaSemHora(atendimento.getDtAtend()) + "'";
-                ArrayList<Object> atendProds = dao.getAllWhere(new AtendimentoProduto(), where);
+            if (pedido != null) { //Encerra o pedido
+                String where = "WHERE $cdPedido$ = " + pedido.getCdPedido();
+                ArrayList<Object> pedidoProds = dao.getAllWhere(new PedidoProduto(), where);
                 boolean vInEncerrado = true;
-                for (Object obj : atendProds) {
-                    AtendimentoProduto atendProd = (AtendimentoProduto) obj;
-                    if (atendProd.getQtProduto() > atendProd.getQtPaga()) {
+                for (Object obj : pedidoProds) {
+                    PedidoProduto pedidoProd = (PedidoProduto) obj;
+                    if (pedidoProd.getQtProduto() > pedidoProd.getQtEntregue()) {
                         vInEncerrado = false;
                     }
                 }
 
                 if (vInEncerrado) {
-                    atendimento.setStAtend("2");
-                    dao.update(atendimento);
+                    pedido.setStPedido("2");
+                    dao.update(pedido);
                 }
             }
 
             ContasPagarReceber conta = new ContasPagarReceber();
-            conta.setTpMovto("E");
+            conta.setTpMovto("S");
             conta.setDtMovto(Data.getAgora());
             conta.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
             conta.setCdForma(TrataCombo.getValueComboTpFormaPagto(tpFormaPagto));
-            conta.setCdMovto(venda.getCdMovto());
-            conta.setVlConta(Double.parseDouble(vlTotalVenda.getText()));
+            conta.setCdMovto(compra.getCdMovto());
+            conta.setVlConta(Double.parseDouble(vlTotalCompra.getText()));
             conta.setStConta("1");
             dao.save(conta);
 
@@ -458,8 +477,6 @@ public class VendaControl implements Initializable {
 
             dao.commit();
 
-            Relatorio recibo = new Relatorio();
-            recibo.gerarReciboVenda(venda.getCdMovto());
         } catch (Exception ex) {
             ex.printStackTrace();
             dao.rollback();
@@ -467,7 +484,7 @@ public class VendaControl implements Initializable {
             return;
         }
 
-        if (Alerta.AlertaConfirmation("Confirmação", "Venda efetivada com sucesso.\nDeseja realizar uma nova venda?")) {
+        if (Alerta.AlertaConfirmation("Confirmação", "Compra efetivada com sucesso.\nDeseja realizar uma nova compra?")) {
             param = null;
             limparTela();
         } else {
@@ -481,51 +498,41 @@ public class VendaControl implements Initializable {
     }
 
     private void limparTela() {
-        atendimento = null;
-        cliente = null;
+        pedido = null;
+        fornecedor = null;
         pessoa = null;
-        listVendaProd = new ArrayList<>();
+        listCompraProd = new ArrayList<>();
         FuncaoCampo.limparCampos(painel);
-        lblAtendimento.setText("");
         iniciaTela();
     }
 
-    public void atualizaVendaProd() {
+    public void atualizaCompraProd() {
         try {
-            ArrayList<Object> atendsProd = new ArrayList<>();
-            if (atendimento != null) {
-                String where = "WHERE $cdAtend$ = " + atendimento.getCdAtend()
-                        + " AND $dtAtend$ = '" + Data.BrasilToAmericaSemHora(atendimento.getDtAtend()) + "' ORDER BY $cdProduto$ ASC";
-                atendsProd = dao.getAllWhere(new AtendimentoProduto(), where);
-                listVendaProd.clear();
+            ArrayList<Object> pedidosProd = new ArrayList<>();
+            if (pedido != null) {
+                String where = "WHERE $cdPedido$ = " + pedido.getCdPedido() + "' ORDER BY $cdProduto$ ASC";
+                pedidosProd = dao.getAllWhere(new PedidoProduto(), where);
+                listCompraProd.clear();
             }
-            if (atendsProd.isEmpty()) {
-                VendaProdHit vendaHit = new VendaProdHit();
-                listVendaProd.add(vendaHit);
+            if (pedidosProd.isEmpty()) {
+                CompraProdHit compraHit = new CompraProdHit();
+                listCompraProd.add(compraHit);
             }
-            for (Object obj : atendsProd) {
-                AtendimentoProduto vendaProd = (AtendimentoProduto) obj;
+            for (Object obj : pedidosProd) {
+                PedidoProduto pedidoProd = (PedidoProduto) obj;
                 boolean vInAdd = true;
-                if (vendaProd.getQtProduto() > vendaProd.getQtPaga()) {
-                    VendaProdHit vendaHit = new VendaProdHit();
-                    vendaHit.cdProduto.setText(vendaProd.getCdProduto().toString());
+                if (pedidoProd.getQtProduto() > pedidoProd.getQtEntregue()) {
+                    CompraProdHit compraHit = new CompraProdHit();
+                    compraHit.cdProduto.setText(pedidoProd.getCdProduto().toString());
                     Produto produto = new Produto();
-                    produto.setCdProduto(vendaProd.getCdProduto());
+                    produto.setCdProduto(pedidoProd.getCdProduto());
                     dao.get(produto);
-                    vendaHit.dsProduto.setText(produto.getDsProduto());
-                    vendaHit.qtUnitario.setText(Numero.doubleToReal(vendaProd.getQtProduto() - vendaProd.getQtPaga(), 2));
-                    vendaHit.atendProd = vendaProd;
-                    EstoqueControl prodController = new EstoqueControl();
-                    Double vlPreco = prodController.getUltimoPreco(produto.getCdProduto());
-                    if (vlPreco == null) {
-                        inAntiLoop = true;
-                        vInAdd = false;
-                        Alerta.AlertaError("Não permitido", "Produto: " + produto.getCdProduto() + " sem preço cadastrado.");
-                        stage.close();
-                    }
-                    vendaHit.vlUnitario.setText(Numero.doubleToReal(vlPreco, 2));
+                    compraHit.dsProduto.setText(produto.getDsProduto());
+                    compraHit.qtUnitario.setText(Numero.doubleToReal(pedidoProd.getQtProduto() - pedidoProd.getQtEntregue(), 2));
+                    compraHit.pedidoProd = pedidoProd;
+                    compraHit.vlUnitario.setText(Numero.doubleToReal(pedidoProd.getVlUnitario(), 2));
                     if (vInAdd) {
-                        listVendaProd.add(vendaHit);
+                        listCompraProd.add(compraHit);
                     }
                 }
             }
@@ -539,13 +546,15 @@ public class VendaControl implements Initializable {
     public void atualizaLista() {
         LayoutY = cdProduto.getLayoutY();
         painelProd.getChildren().clear();
-        Iterator it = listVendaProd.iterator();
+        Iterator it = listCompraProd.iterator();
         for (int i = 0; it.hasNext(); i++) {
-            VendaProdHit b = (VendaProdHit) it.next();
+            CompraProdHit b = (CompraProdHit) it.next();
             b.cdProduto.setEditable(cdProduto.isEditable());
-            if (b.atendProd != null) {
+            if (b.pedidoProd != null) {
                 b.cdProduto.setEditable(false);
                 b.cdProduto.getStyleClass().addAll("texto_estatico_center");
+                b.vlUnitario.setEditable(false);
+                b.vlUnitario.getStyleClass().addAll("numero_estatico");
             }
             b.cdProduto.setPrefHeight(cdProduto.getHeight());
             b.cdProduto.setPrefWidth(cdProduto.getWidth());
@@ -564,7 +573,7 @@ public class VendaControl implements Initializable {
             b.qtUnitario.setLayoutX(qtUnitario.getLayoutX());
             b.qtUnitario.setLayoutY(LayoutY);
             b.qtUnitario.getStyleClass().addAll(this.qtUnitario.getStyleClass());
-            //if (b.atendProd != null) {
+            //if (b.pedidoProd != null) {
             //b.qtUnitario.setEditable(false);
             //b.qtUnitario.getStyleClass().addAll("numero_estatico");
             //}
@@ -604,62 +613,78 @@ public class VendaControl implements Initializable {
             painelProd.getChildren().add(b.btnAdd);
             painelProd.getChildren().add(b.btnRem);
             LayoutY += (cdProduto.getHeight() + 5);
-            addValidacao(b, i, listVendaProd.size());
+            addValidacao(b, i, listCompraProd.size());
         }
         painelProd.setPrefHeight(LayoutY + 10);
     }
 
-    public void addValidacao(VendaProdHit vendaProdHit, int posicao, int total) {
-        FuncaoCampo.mascaraNumeroInteiro(vendaProdHit.cdProduto);
-        FuncaoCampo.mascaraNumeroDecimal(vendaProdHit.qtUnitario);
+    public void addValidacao(CompraProdHit compraProdHit, int posicao, int total) {
+        FuncaoCampo.mascaraNumeroInteiro(compraProdHit.cdProduto);
+        FuncaoCampo.mascaraNumeroDecimal(compraProdHit.qtUnitario);
+        FuncaoCampo.mascaraNumeroDecimal(compraProdHit.vlUnitario);
 
-        vendaProdHit.cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+        compraProdHit.cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
-                validaCodigoProduto(vendaProdHit);
+                validaCodigoProduto(compraProdHit);
             }
         });
 
-        vendaProdHit.btnPesqProd.setOnAction((ActionEvent event) -> {
-            abrirListaProduto(vendaProdHit);
+        compraProdHit.btnPesqProd.setOnAction((ActionEvent event) -> {
+            abrirListaProduto(compraProdHit);
         });
 
-        vendaProdHit.qtUnitario.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+        compraProdHit.qtUnitario.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
-                if (!vendaProdHit.qtUnitario.getText().equals("")) {
-                    Double valor = Double.parseDouble(vendaProdHit.qtUnitario.getText());
+                if (!compraProdHit.qtUnitario.getText().equals("")) {
+                    Double valor = Double.parseDouble(compraProdHit.qtUnitario.getText());
                     if (valor <= 0) {
-                        Alerta.AlertaError("Campo inválido", "Venda deve ser maior que 0.00!");
-                        vendaProdHit.qtUnitario.requestFocus();
+                        Alerta.AlertaError("Campo inválido", "Compra deve ser maior que 0.00!");
+                        compraProdHit.qtUnitario.requestFocus();
                         return;
                     }
-                    vendaProdHit.qtUnitario.setText(Numero.doubleToReal(valor, 2));
+                    compraProdHit.qtUnitario.setText(Numero.doubleToReal(valor, 2));
                 }
                 calculaTotalProd();
             }
         });
 
-        vendaProdHit.btnAdd.setOnAction((ActionEvent event) -> {
-            VendaProdHit b = new VendaProdHit();
-            listVendaProd.add(posicao + 1, b);
+        compraProdHit.vlUnitario.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!compraProdHit.vlUnitario.getText().equals("")) {
+                    Double valor = Double.parseDouble(compraProdHit.vlUnitario.getText());
+                    if (valor <= 0) {
+                        Alerta.AlertaError("Campo inválido", "Valor do produto deve ser maior que 0.00!");
+                        compraProdHit.vlUnitario.requestFocus();
+                        return;
+                    }
+                    compraProdHit.vlUnitario.setText(Numero.doubleToReal(valor, 2));
+                }
+                calculaTotalProd();
+            }
+        });
+
+        compraProdHit.btnAdd.setOnAction((ActionEvent event) -> {
+            CompraProdHit b = new CompraProdHit();
+            listCompraProd.add(posicao + 1, b);
             atualizaLista();
         });
 
-        vendaProdHit.btnRem.setOnAction((ActionEvent event) -> {
+        compraProdHit.btnRem.setOnAction((ActionEvent event) -> {
 
             if (total == 1) {
-                VendaProdHit b = new VendaProdHit();
-                listVendaProd.add(b);
+                CompraProdHit b = new CompraProdHit();
+                listCompraProd.add(b);
             }
 
-            listVendaProd.remove(vendaProdHit);
+            listCompraProd.remove(compraProdHit);
             calculaTotalProd();
             atualizaLista();
         });
     }
 
-    public class VendaProdHit {
+    public class CompraProdHit {
 
-        AtendimentoProduto atendProd;
+        PedidoProduto pedidoProd;
         TextField cdProduto = new TextField();
         Button btnPesqProd = new Button();
         TextField dsProduto = new TextField();
