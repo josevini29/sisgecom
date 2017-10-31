@@ -3,14 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/relatorio/TelaRelatorio.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/modelo/Produto.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmCadAjustEstoqFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmConContasReceberFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmCadVendaFXML.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/relatorio/Relatorio.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/ProdutoController.java</file>
-            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/FrmConAjustEstoqFXML.java</file>
+            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/MenuControl.java</file>
+            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/controle/VendaControl.java</file>
+            <file>file:/C:/Users/Jose%20Vinicius/Documents/NetBeansProjects/SISGECOM/src/br/integrado/jnpereira/nutrimix/tools/Tela.java</file>
         </group>
     </open-files>
 </project-private>

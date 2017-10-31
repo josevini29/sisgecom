@@ -9,39 +9,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="251.0" prefWidth="270.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.LoginControl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="329.0" prefWidth="318.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.LoginControl">
    <children>
-      <TextField fx:id="dsLogin" layoutX="54.0" layoutY="64.0" prefHeight="30.0" prefWidth="155.0" text="admin">
+      <TextField fx:id="dsLogin" layoutX="46.0" layoutY="167.0" prefHeight="30.0" prefWidth="229.0" promptText="Login" text="admin">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <PasswordField fx:id="dsSenha" layoutX="54.0" layoutY="125.0" prefHeight="30.0" prefWidth="155.0" text="123456" />
-      <Label layoutX="54.0" layoutY="46.0" text="Login" />
-      <Label layoutX="54.0" layoutY="105.0" text="Senha" />
-      <Button layoutX="24.0" layoutY="192.0" mnemonicParsing="false" onAction="#login" prefHeight="29.0" prefWidth="94.0" text="Logar">
+      <PasswordField fx:id="dsSenha" layoutX="46.0" layoutY="207.0" prefHeight="30.0" prefWidth="229.0" promptText="Senha" text="123456" />
+      <Button layoutX="46.0" layoutY="245.0" mnemonicParsing="false" onAction="#login" prefHeight="35.0" prefWidth="229.0" styleClass="btn_entrar" text="Entrar">
          <font>
             <Font size="13.0" />
          </font>
-         <graphic>
-            <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icon/login.png" />
-               </image>
-            </ImageView>
-         </graphic>
       </Button>
-      <Button graphicTextGap="10.0" layoutX="147.0" layoutY="192.0" mnemonicParsing="false" onAction="#sair" prefHeight="28.0" prefWidth="94.0" text="Sair">
-         <font>
-            <Font size="13.0" />
-         </font>
-         <graphic>
-            <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icon/sair.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
+      <ImageView fitHeight="105.0" fitWidth="203.0" layoutX="57.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../icon/logo_transp.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="177.0" layoutY="299.0" text="Esqueceu a senha?" />
    </children>
 </AnchorPane>

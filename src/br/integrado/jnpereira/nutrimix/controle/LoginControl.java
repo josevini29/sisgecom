@@ -68,11 +68,6 @@ public class LoginControl implements Initializable {
         }
     }
 
-    @FXML
-    public void sair() {
-        System.exit(0);
-    }
-
     public Stage getStage() {
         return stage;
     }
