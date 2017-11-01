@@ -25,10 +25,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
 public class ProdutoControl implements Initializable {
-    
+
     Dao dao = new Dao();
     Produto produto;
-    
+
     @FXML
     AnchorPane painel;
     @FXML
@@ -65,7 +65,7 @@ public class ProdutoControl implements Initializable {
     CheckBox inVenda;
     @FXML
     Label lblCadastro;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FuncaoCampo.mascaraNumeroInteiro(cdProduto);
@@ -80,57 +80,78 @@ public class ProdutoControl implements Initializable {
                 validaCodigoProduto();
             }
         });
-        
+
         cdGrupoProd.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 validaCodigoGrupoProd();
             }
         });
-        
+
         cdUnidPad.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 validaCodigoUnidPad();
             }
         });
-        
+
         cdUnidPadComp.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 validaCodigoUnidPadComp();
             }
         });
+        qtConversao.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!qtConversao.getText().equals("")) {
+                    Double valor = Double.parseDouble(qtConversao.getText());
+                    if (valor <= 0) {
+                        Alerta.AlertaError("Campo inválido", "Conversão deve ser maior que 0.00!");
+                        qtConversao.requestFocus();
+                        return;
+                    }
+                    qtConversao.setText(Numero.doubleToReal(valor, 2));
+                }
+            }
+        });
+        qtEstoqMin.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!qtEstoqMin.getText().equals("")) {
+                    Double valor = Double.parseDouble(qtEstoqMin.getText());
+                    qtEstoqMin.setText(Numero.doubleToReal(valor, 2));
+                }
+            }
+        });
     }
-    
+
     public void iniciaTela() {
-        
+
     }
-    
+
     @FXML
     public void salvarProduto() {
         if (dsProduto.getText().equals("")) {
             Alerta.AlertaError("Campo inválido", "Campo descrição do produto é obrigatório.");
             return;
         }
-        
+
         if (cdGrupoProd.getText().equals("")) {
             Alerta.AlertaError("Campo inválido", "Grupo do produto é obrigatório.");
             return;
         }
-        
+
         if (cdUnidPad.getText().equals("")) {
             Alerta.AlertaError("Campo inválido", "Unidade Padrão do produto é obrigatório.");
             return;
         }
-        
+
         if (cdUnidPadComp.getText().equals("")) {
             Alerta.AlertaError("Campo inválido", "Unidade Padrão de Compra do produto é obrigatório.");
             return;
         }
-        
+
         if (qtConversao.getText().equals("")) {
             Alerta.AlertaError("Campo inválido", "Qt. Conversão do produto é obrigatório.");
             return;
         }
-        
+
         if (qtEstoqMin.getText().equals("")) {
             Alerta.AlertaError("Campo inválido", "Qt. Estoque Mínimo do produto é obrigatório.");
             return;
@@ -185,12 +206,12 @@ public class ProdutoControl implements Initializable {
         }
         Alerta.AlertaInfo("Concluído", "Produto salvo com sucesso!");
     }
-    
+
     @FXML
     public void limparProduto() {
         limparTela();
     }
-    
+
     @FXML
     public void pesquisarProduto() {
         Tela tela = new Tela();
@@ -201,46 +222,46 @@ public class ProdutoControl implements Initializable {
             validaCodigoProduto();
         }
     }
-    
+
     private void validaCodigoProduto() {
         if (!cdProduto.getText().equals("") & produto == null) {
             try {
                 produto = new Produto();
                 produto.setCdProduto(Integer.parseInt(cdProduto.getText()));
                 dao.get(produto);
-                
+
                 dsProduto.setText(produto.getDsProduto());
                 inAtivo.setSelected(produto.getInAtivo());
-                
+
                 GrupoProduto grupoProd = new GrupoProduto();
                 grupoProd.setCdGrupo(produto.getCdGrupo());
                 dao.get(grupoProd);
                 cdGrupoProd.setText(String.valueOf(grupoProd.getCdGrupo()));
                 dsGrupoProd.setText(grupoProd.getDsGrupo());
-                
+
                 UnidadePadrao unidPad = new UnidadePadrao();
                 unidPad.setCdUnidadePadrao(produto.getCdUndPadrao());
                 dao.get(unidPad);
                 cdUnidPad.setText(unidPad.getCdUnidadePadrao());
                 dsUnidPad.setText(unidPad.getDsUnidadePadrao());
-                
+
                 UnidadePadrao unidPadComp = new UnidadePadrao();
                 unidPadComp.setCdUnidadePadrao(produto.getCdUndPadraoCompra());
                 dao.get(unidPadComp);
                 cdUnidPadComp.setText(unidPadComp.getCdUnidadePadrao());
                 dsUnidPadComp.setText(unidPadComp.getDsUnidadePadrao());
-                
+
                 qtConversao.setText(Numero.doubleToReal(produto.getQtConversao(), 2));
                 qtEstoqMin.setText(Numero.doubleToReal(produto.getQtEstoqMin(), 2));
                 qtEstoqAtual.setText(Numero.doubleToReal(produto.getQtEstqAtual(), 5));
                 vlCustoMedio.setText(Numero.doubleToReal(produto.getVlCustoMedio(), 3));
-                
+
                 inEstoque.setSelected(produto.getInEstoque());
                 inConsumo.setSelected(produto.getInConsumo());
                 inVenda.setSelected(produto.getInVenda());
-                
+
                 lblCadastro.setText(Numero.getCadastro(produto.getCdUsuario(), produto.getDtCadastro()));
-                
+
                 cdProduto.setEditable(false);
             } catch (Exception ex) {
                 Alerta.AlertaError("Notificação", ex.getMessage());
@@ -249,7 +270,7 @@ public class ProdutoControl implements Initializable {
             }
         }
     }
-    
+
     private void validaCodigoGrupoProd() {
         if (!cdGrupoProd.getText().equals("")) {
             try {
@@ -264,7 +285,7 @@ public class ProdutoControl implements Initializable {
             }
         }
     }
-    
+
     private void validaCodigoUnidPad() {
         if (!cdUnidPad.getText().equals("")) {
             try {
@@ -279,7 +300,7 @@ public class ProdutoControl implements Initializable {
             }
         }
     }
-    
+
     private void validaCodigoUnidPadComp() {
         if (!cdUnidPadComp.getText().equals("")) {
             try {
@@ -294,7 +315,7 @@ public class ProdutoControl implements Initializable {
             }
         }
     }
-    
+
     private void limparTela() {
         produto = null;
         FuncaoCampo.limparCampos(painel);
@@ -302,7 +323,7 @@ public class ProdutoControl implements Initializable {
         cdProduto.setEditable(true);
         lblCadastro.setText("");
     }
-    
+
     @FXML
     public void pesquisarGrupo() {
         Tela tela = new Tela();
@@ -312,7 +333,7 @@ public class ProdutoControl implements Initializable {
             validaCodigoGrupoProd();
         }
     }
-    
+
     @FXML
     public void pesquisarUndPad() {
         Tela tela = new Tela();
@@ -322,7 +343,7 @@ public class ProdutoControl implements Initializable {
             validaCodigoUnidPad();
         }
     }
-    
+
     @FXML
     public void pesquisarUndPadCompra() {
         Tela tela = new Tela();
@@ -332,5 +353,5 @@ public class ProdutoControl implements Initializable {
             validaCodigoUnidPadComp();
         }
     }
-    
+
 }

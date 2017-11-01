@@ -42,6 +42,7 @@ public class ButtonAtend extends Thread {
         qtLinha = (int) (tela.width / (spaceWidth + btnAtendWidth));
         layoutY = spaceHeight;
         layoutX = spaceWidth;
+        dao.autoCommit(false);
     }
     
     public Node getLabelError(String dsError) {

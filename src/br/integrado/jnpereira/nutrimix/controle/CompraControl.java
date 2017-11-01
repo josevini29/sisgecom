@@ -424,7 +424,10 @@ public class CompraControl implements Initializable {
                 Double qtCompra = Double.parseDouble(compraHit.qtUnitario.getText());
                 compraProd.setCdMovto(compra.getCdMovto());
                 compraProd.setCdProduto(Integer.parseInt(compraHit.cdProduto.getText()));
-                compraProd.setQtUnitario(qtCompra);
+                Produto prod = new Produto();
+                prod.setCdProduto(compraProd.getCdProduto());
+                dao.get(prod);
+                compraProd.setQtUnitario(qtCompra * prod.getQtConversao()); //Conversão conforme cadastro
                 compraProd.setVlUnitario(Double.parseDouble(compraHit.vlUnitario.getText()));
                 dao.save(compraProd);
                 if (compraHit.pedidoProd != null) {

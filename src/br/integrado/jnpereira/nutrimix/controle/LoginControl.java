@@ -31,7 +31,7 @@ public class LoginControl implements Initializable {
     }
 
     public void iniciaTela() {
-        
+
     }
 
     @FXML
@@ -66,6 +66,11 @@ public class LoginControl implements Initializable {
             Alerta.AlertaError("Erro!", ex.toString());
             System.exit(0);
         }
+    }
+    
+    @FXML
+    public void esquecerSenha(){
+        Alerta.AlertaInfo("Aviso!", "Caso tenha perdido sua senha, contate o admin.");
     }
 
     public Stage getStage() {

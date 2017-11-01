@@ -48,6 +48,14 @@ public class PrecoProdControl implements Initializable {
                 validaCodigo();
             }
         });
+        vlPreco.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!vlPreco.getText().equals("")) {
+                    Double valor = Double.parseDouble(vlPreco.getText());
+                    vlPreco.setText(Numero.doubleToReal(valor, 2));
+                }
+            }
+        });
     }
 
     private void validaCodigo() {

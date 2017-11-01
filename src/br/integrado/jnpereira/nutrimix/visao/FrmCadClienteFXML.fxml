@@ -264,7 +264,7 @@
             <Label layoutX="418.0" layoutY="1.0" text="Telefone" />
          </children>
       </AnchorPane>
-      <Button layoutX="29.0" layoutY="604.0" mnemonicParsing="false" onAction="#salvar" prefHeight="26.0" prefWidth="82.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
+      <Button layoutX="29.0" layoutY="604.0" mnemonicParsing="false" onAction="#salvar" prefHeight="26.0" prefWidth="82.0" text="Salvar">
          <font>
             <Font size="12.0" />
          </font>
@@ -276,7 +276,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="126.0" layoutY="604.0" mnemonicParsing="false" onAction="#limpar" prefHeight="28.0" prefWidth="88.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Limpar">
+      <Button layoutX="126.0" layoutY="604.0" mnemonicParsing="false" onAction="#limpar" prefHeight="28.0" prefWidth="88.0" text="Limpar">
          <font>
             <Font size="12.0" />
          </font>
