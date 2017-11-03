@@ -1,13 +1,15 @@
 package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.dao.Dao;
+import br.integrado.jnpereira.nutrimix.modelo.Fornecedor;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import br.integrado.jnpereira.nutrimix.modelo.Atendimento;
-import br.integrado.jnpereira.nutrimix.modelo.AtendimentoProduto;
+import br.integrado.jnpereira.nutrimix.modelo.Pedido;
+import br.integrado.jnpereira.nutrimix.modelo.PedidoProduto;
+import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
@@ -27,18 +29,22 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class AtendimentoControl implements Initializable {
+public class PedidoCompraControl implements Initializable {
 
     @FXML
     AnchorPane anchor;
     @FXML
-    TextField cdAtend;
+    TextField cdPedido;
     @FXML
-    TextField dtAtend;
+    ChoiceBox stPedido;
     @FXML
-    TextField nrMesa;
+    TextField cdForne;
     @FXML
-    ChoiceBox tpSituacao;
+    TextField dsForne;
+    @FXML
+    TextField nrCpfCnpj;
+    @FXML
+    TextField vlTotalPedido;
     @FXML
     Label lblCadastro;
 
@@ -53,77 +59,79 @@ public class AtendimentoControl implements Initializable {
     @FXML
     TextField qtProduto;
     @FXML
-    TextField qtPaga;
+    TextField vlProduto;
+    @FXML
+    TextField dtPrevEntrega;
+    @FXML
+    TextField qtEntregue;
+    @FXML
+    TextField vlTotalProd;
     @FXML
     Button btnAdd;
     @FXML
     Button btnRem;
-    @FXML
-    Label lblCadProd;
 
     public Stage stage;
     public Object param;
-    double LayoutYAtend;
-    ArrayList<AtendProdHit> listAtendProd = new ArrayList<>();
+    double LayoutY;
+    ArrayList<PedidoProdHit> listPedidoProd = new ArrayList<>();
     Dao dao = new Dao();
-    Atendimento atendimento;
+    Pedido pedido;
+    Fornecedor fornecedor;
     boolean inAntiLoop = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FuncaoCampo.mascaraNumeroInteiro(cdAtend);
-        FuncaoCampo.mascaraNumeroInteiro(nrMesa);
-        FuncaoCampo.mascaraData(dtAtend);
-        TrataCombo.setValueComboStAtendimento(tpSituacao, "1");
-        tpSituacao.setDisable(true);
-        cdAtend.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+        FuncaoCampo.mascaraNumeroInteiro(cdPedido);
+        FuncaoCampo.mascaraNumeroInteiro(cdForne);
+        TrataCombo.setValueComboStAtendimento(stPedido, "1");
+        stPedido.setDisable(true);
+        cdPedido.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
-                validaCodigoAtendimento();
+                validaCodigoPedido();
             }
         });
-        dtAtend.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+        cdForne.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
-                validaCodigoAtendimento();
+                validaCodigoForne();
             }
         });
+
     }
 
     public void iniciaTela() {
         if (param != null) {
-            Atendimento atend = (Atendimento) param;
-            cdAtend.setText(atend.getCdAtend().toString());
-            dtAtend.setText(Data.AmericaToBrasilSemHora(atend.getDtAtend()));
-            validaCodigoAtendimento();
+            Pedido ped = (Pedido) param;
+            cdPedido.setText(ped.getCdPedido().toString());
+            validaCodigoPedido();
         } else {
-            atualizaAtendProd();
+            atualizaPedidoProd();
         }
-
     }
 
-    private void validaCodigoAtendimento() {
-        if (!cdAtend.getText().equals("") & !dtAtend.getText().equals("") & atendimento == null) {
+    private void validaCodigoPedido() {
+        if (!cdPedido.getText().equals("") & pedido == null) {
             try {
-                atendimento = new Atendimento();
-                atendimento.setCdAtend(Integer.parseInt(cdAtend.getText()));
-                atendimento.setDtAtend(Data.StringToDate(dtAtend.getText()));
-                dao.get(atendimento);
-                nrMesa.setText(atendimento.getNrMesa().toString());
-                TrataCombo.setValueComboStAtendimento(tpSituacao, atendimento.getStAtend());
-                tpSituacao.setDisable(false);
-                lblCadastro.setText(Numero.getCadastro(atendimento.getCdUserCad(), atendimento.getDtCadastro()));
-                cdAtend.setEditable(false);
-                dtAtend.setEditable(false);
-                atualizaAtendProd();
+                pedido = new Pedido();
+                pedido.setCdPedido(Integer.parseInt(cdPedido.getText()));
+                dao.get(pedido);
+                cdForne.setText(pedido.getCdFornecedor().toString());
+                validaCodigoForne();
+                TrataCombo.setValueComboStAtendimento(stPedido, pedido.getStPedido());
+                stPedido.setDisable(false);
+                lblCadastro.setText(Numero.getCadastro(pedido.getCdUserCad(), pedido.getDtCadastro()));
+                cdPedido.setEditable(false);
+                atualizaPedidoProd();
             } catch (Exception ex) {
                 Alerta.AlertaError("Notificação", ex.getMessage());
-                atendimento = null;
-                dtAtend.requestFocus();
+                pedido = null;
+                cdPedido.requestFocus();
             }
         }
     }
 
-    public void abrirListaProduto(AtendProdHit movto) {
-        if (movto.atendProd != null) {
+    public void abrirListaProduto(PedidoProdHit movto) {
+        if (movto.pedidoProd != null) {
             Alerta.AlertaError("Não permitido!", "Não é possível alterar um produto já efetivado.");
             return;
         }
@@ -135,39 +143,93 @@ public class AtendimentoControl implements Initializable {
             validaCodigoProduto(movto);
         }
     }
+    
+    @FXML
+    public void pesquisarPedidoCompra() {
+        Tela tela = new Tela();
+        String valor = tela.abrirListaPedidoCompra();
+        if (valor != null) {
+            cdPedido.setText(valor);
+            validaCodigoPedido();
+        }
+    }
 
-    private void validaCodigoProduto(AtendProdHit atendHit) {
-        if (!atendHit.cdProduto.getText().equals("")) {
+    @FXML
+    public void pesquisarFornecedor() {
+        Tela tela = new Tela();
+        String valor = tela.abrirListaPessoa(new Fornecedor(), true);
+        if (valor != null) {
+            cdForne.setText(valor);
+            validaCodigoForne();
+        }
+    }
+
+    private void validaCodigoForne() {
+        if (!cdForne.getText().equals("")) {
+            boolean vInBusca = true;
+            if (fornecedor != null) {
+                if (fornecedor.getCdFornecedor() == Integer.parseInt(cdForne.getText())) {
+                    vInBusca = false;
+                }
+            }
+            if (vInBusca) {
+                try {
+                    fornecedor = new Fornecedor();
+                    fornecedor.setCdFornecedor(Integer.parseInt(cdForne.getText()));
+                    dao.get(fornecedor);
+                    if (!fornecedor.getInAtivo()) {
+                        Alerta.AlertaError("Fornecedor inválido!", "Fornecedor está inativo.");
+                        fornecedor = null;
+                        dsForne.setText("");
+                        nrCpfCnpj.setText("");
+                        cdForne.requestFocus();
+                        return;
+                    }
+                    Pessoa pessoa = new Pessoa();
+                    pessoa.setCdPessoa(fornecedor.getCdPessoa());
+                    dao.get(pessoa);
+                    dsForne.setText(pessoa.getDsPessoa());
+                    if (pessoa.getTpPessoa().equals("F")) {
+                        nrCpfCnpj.setText(Numero.NumeroToCPF(pessoa.getNrCpfCnpj()));
+                    } else {
+                        nrCpfCnpj.setText(Numero.NumeroToCNPJ(pessoa.getNrCpfCnpj()));
+                    }
+                } catch (Exception ex) {
+                    Alerta.AlertaError("Notificação", ex.getMessage());
+                    fornecedor = null;
+                    dsForne.setText("");
+                    nrCpfCnpj.setText("");
+                    cdForne.requestFocus();
+                }
+            }
+        } else {
+            fornecedor = null;
+            dsForne.setText("");
+            nrCpfCnpj.setText("");
+        }
+    }
+
+    private void validaCodigoProduto(PedidoProdHit pedidoHit) {
+        if (!pedidoHit.cdProduto.getText().equals("")) {
             try {
                 Produto prod = new Produto();
-                prod.setCdProduto(Integer.parseInt(atendHit.cdProduto.getText()));
+                prod.setCdProduto(Integer.parseInt(pedidoHit.cdProduto.getText()));
                 dao.get(prod);
 
-                if (atendHit.atendProd == null & inAntiLoop) {
+                if (pedidoHit.pedidoProd == null & inAntiLoop) {
                     inAntiLoop = false;
                     if (!prod.getInAtivo()) {
                         Alerta.AlertaError("Inválido", "Produto está inativo.");
-                        atendHit.cdProduto.requestFocus();
+                        pedidoHit.cdProduto.requestFocus();
                         inAntiLoop = true;
                         return;
                     }
 
-                    if (!prod.getInVenda()) {
-                        Alerta.AlertaError("Inválido", "Produto não permitido em venda.");
-                        atendHit.cdProduto.requestFocus();
-                        inAntiLoop = true;
-                        return;
-                    }
-                    
-                    if (prod.getQtEstqAtual() <= 0){
-                        Alerta.AlertaWarning("Aviso!", "Produto sem estoque ou estoque negativo, favor verificar!");
-                    }
-
-                    for (AtendProdHit movtoHit : listAtendProd) {
-                        if (movtoHit.cdProduto.getText().equals(atendHit.cdProduto.getText())
-                                && !movtoHit.equals(atendHit)) {
+                    for (PedidoProdHit movtoHit : listPedidoProd) {
+                        if (movtoHit.cdProduto.getText().equals(pedidoHit.cdProduto.getText())
+                                && !movtoHit.equals(pedidoHit)) {
                             Alerta.AlertaError("Inválido", "Produto já está na lista");
-                            atendHit.cdProduto.requestFocus();
+                            pedidoHit.cdProduto.requestFocus();
                             inAntiLoop = true;
                             return;
                         }
@@ -175,13 +237,13 @@ public class AtendimentoControl implements Initializable {
                     inAntiLoop = true;
                 }
 
-                atendHit.dsProduto.setText(prod.getDsProduto());
+                pedidoHit.dsProduto.setText(prod.getDsProduto());
             } catch (Exception ex) {
                 Alerta.AlertaError("Notificação", "Produto não encontrado!");
-                atendHit.cdProduto.requestFocus();
+                pedidoHit.cdProduto.requestFocus();
             }
         } else {
-            atendHit.dsProduto.setText("");
+            pedidoHit.dsProduto.setText("");
         }
     }
 
@@ -191,46 +253,46 @@ public class AtendimentoControl implements Initializable {
     }
 
     private void limparTela() {
-        atendimento = null;
-        listAtendProd = new ArrayList<>();
+        pedido = null;
+        fornecedor = null;
+        listPedidoProd = new ArrayList<>();
         FuncaoCampo.limparCampos(anchor);
         lblCadastro.setText("");
-        cdAtend.setEditable(true);
-        dtAtend.setEditable(true);
-        TrataCombo.setValueComboStAtendimento(tpSituacao, "1");
-        tpSituacao.setDisable(true);
+        cdPedido.setEditable(true);
+        TrataCombo.setValueComboStAtendimento(stPedido, "1");
+        stPedido.setDisable(true);
         iniciaTela();
     }
 
     @FXML
     public void salvar() {
-        if (atendimento != null) {
-            if (atendimento.getStAtend().equals("2")) {
-                Alerta.AlertaError("Não autorizado", "Atendimento já encerrado, não permitido alterações.");
+        if (pedido != null) {
+            if (pedido.getStPedido().equals("2")) {
+                Alerta.AlertaError("Não autorizado", "Pedido já encerrado, não permitido alterações.");
                 return;
             }
 
-            if (atendimento.getStAtend().equals("3")) {
-                Alerta.AlertaError("Não autorizado", "Atendimento já cancelado, não permitido alterações.");
+            if (pedido.getStPedido().equals("3")) {
+                Alerta.AlertaError("Não autorizado", "Pedido já cancelado, não permitido alterações.");
                 return;
             }
 
-            if (TrataCombo.getValueComboStAtendimento(tpSituacao).equals("3")) { //Cancelamento
-                for (AtendProdHit atendHit : listAtendProd) {
-                    if (atendHit.atendProd != null) {
-                        if (atendHit.atendProd.getQtPaga() > 0) {
-                            Alerta.AlertaError("Não autorizado", "Atendimento já contém produtos pagos, não permitido cancelamento.");
+            if (TrataCombo.getValueComboStAtendimento(stPedido).equals("3")) { //Cancelamento
+                for (PedidoProdHit pedidoHit : listPedidoProd) {
+                    if (pedidoHit.pedidoProd != null) {
+                        if (pedidoHit.pedidoProd.getQtEntregue() > 0) {
+                            Alerta.AlertaError("Não autorizado", "Pedido já contém produtos entregues, não permitido cancelamento.");
                             return;
                         }
                     }
                 }
                 try {
                     dao.autoCommit(false);
-                    dao.get(atendimento);
-                    atendimento.setStAtend("3");
-                    dao.update(atendimento);
+                    dao.get(pedido);
+                    pedido.setStPedido("3");
+                    dao.update(pedido);
                     dao.commit();
-                    Alerta.AlertaInfo("Concluído", "Atendimento Cancelado!");
+                    Alerta.AlertaInfo("Concluído", "Pedido Cancelado!");
                     return;
                 } catch (Exception ex) {
                     Alerta.AlertaError("Erro!", ex.getMessage());
@@ -239,157 +301,178 @@ public class AtendimentoControl implements Initializable {
             }
         }
 
-        if (TrataCombo.getValueComboStAtendimento(tpSituacao).equals("2")) {
-            Alerta.AlertaError("Não autorizado", "Não permitido encerrar um atendimento nesta tela.");
+        if (TrataCombo.getValueComboStAtendimento(stPedido).equals("2")) {
+            Alerta.AlertaError("Não autorizado", "Não permitido encerrar um pedido nesta tela.");
             return;
         }
 
-        if (nrMesa.getText().equals("")) {
-            Alerta.AlertaError("Campo inválido", "Nª da Mesa é obrigatório");
-            nrMesa.requestFocus();
+        if (cdForne.getText().equals("")) {
+            Alerta.AlertaError("Campo inválido", "Fornecedor é obrigatório");
+            cdForne.requestFocus();
             return;
         }
 
-        try {
-            boolean vInValidaMesa = false;
-            if (atendimento == null) {
-                vInValidaMesa = true;
-            } else {
-                if (!atendimento.getNrMesa().toString().equals(nrMesa.getText())) {
-                    vInValidaMesa = true;
-                }
-            }
-            if (vInValidaMesa) {
-                String where = " WHERE $nrMesa$ = " + nrMesa.getText() + " AND $stAtend$ = '1'";
-                long qtMesas = dao.getCountWhere(new Atendimento(), where);
-                if (qtMesas > 0) {
-                    Alerta.AlertaError("Campo inválido!", "Já existe atendimento pendente para a Mesa: " + nrMesa.getText());
-                    nrMesa.requestFocus();
-                    return;
-                }
-            }
-
-        } catch (Exception ex) {
-            Alerta.AlertaError("Erro!", ex.getMessage());
-            return;
-        }
-
-        for (AtendProdHit atendHit : listAtendProd) {
-            if (atendHit.cdProduto.getText().equals("")) {
+        for (PedidoProdHit pedidoHit : listPedidoProd) {
+            if (pedidoHit.cdProduto.getText().equals("")) {
                 Alerta.AlertaError("Campo inválido", "Código do produto é obrigatório");
-                atendHit.cdProduto.requestFocus();
+                pedidoHit.cdProduto.requestFocus();
                 return;
             }
 
-            if (atendHit.qtProduto.getText().equals("")) {
-                Alerta.AlertaError("Campo inválido", "Quantidade do atendimento é obrigatório.");
-                atendHit.qtProduto.requestFocus();
+            if (pedidoHit.qtProduto.getText().equals("")) {
+                Alerta.AlertaError("Campo inválido", "Quantidade do pedido é obrigatório.");
+                pedidoHit.qtProduto.requestFocus();
                 return;
             } else {
-                double vlProduto = Double.parseDouble(atendHit.qtProduto.getText());
-                if (vlProduto <= 0) {
-                    Alerta.AlertaError("Campo inválido", "Quantidade do atendimento deve ser maior que 0.");
-                    atendHit.qtProduto.requestFocus();
+                double qtProduto = Double.parseDouble(pedidoHit.qtProduto.getText());
+                if (qtProduto <= 0) {
+                    Alerta.AlertaError("Campo inválido", "Quantidade do pedido deve ser maior que 0.");
+                    pedidoHit.qtProduto.requestFocus();
                     return;
                 }
 
-                double vlPaga = (atendHit.qtPaga.getText().equals("") ? 0.0 : Double.parseDouble(atendHit.qtPaga.getText()));
-                if (vlProduto < vlPaga) {
-                    Alerta.AlertaError("Campo inválido", "Quantidade do atendimento menor que quantidade paga.");
-                    atendHit.qtProduto.requestFocus();
+                double qtEntregue = (pedidoHit.vlProduto.getText().equals("") ? 0.0 : Double.parseDouble(pedidoHit.vlProduto.getText()));
+                if (qtProduto < qtEntregue) {
+                    Alerta.AlertaError("Campo inválido", "Quantidade do pedido menor que quantidade entregue.");
+                    pedidoHit.qtProduto.requestFocus();
                     return;
                 }
+            }
+
+            if (pedidoHit.vlProduto.getText().equals("")) {
+                Alerta.AlertaError("Campo inválido", "Valor do produto é obrigatório");
+                pedidoHit.vlProduto.requestFocus();
+                return;
+            }
+
+            if (pedidoHit.dtPrevEntrega.getText().equals("")) {
+                Alerta.AlertaError("Campo inválido", "Data de previsão de entrega do produto é obrigatório");
+                pedidoHit.dtPrevEntrega.requestFocus();
+                return;
             }
 
         }
         try {
             dao.autoCommit(false);
-            if (atendimento == null) {
-                atendimento = new Atendimento();
-                atendimento.setDtAtend(Data.getAgora());
-                String where = "WHERE $dtAtend$ = '" + Data.BrasilToAmericaSemHora(atendimento.getDtAtend()) + "'";
-                Long cdAtendimento = dao.getCountWhere(new Atendimento(), where) + 1;
-                atendimento.setCdAtend(Integer.parseInt(cdAtendimento.toString()));
-                atendimento.setNrMesa(Integer.parseInt(nrMesa.getText()));
-                atendimento.setStAtend(TrataCombo.getValueComboStAtendimento(tpSituacao));
-                atendimento.setCdUserCad(MenuControl.usuarioAtivo);
-                atendimento.setDtCadastro(Data.getAgora());
-                dao.save(atendimento);
+            if (pedido == null) {
+                pedido = new Pedido();
+                pedido.setCdFornecedor(Integer.parseInt(cdForne.getText()));
+                pedido.setStPedido(TrataCombo.getValueComboStAtendimento(stPedido));
+                pedido.setCdUserCad(MenuControl.usuarioAtivo);
+                pedido.setDtCadastro(Data.getAgora());
+                dao.save(pedido);
             } else {
-                atendimento.setNrMesa(Integer.parseInt(nrMesa.getText()));
-                atendimento.setStAtend(TrataCombo.getValueComboStAtendimento(tpSituacao));
-                dao.update(atendimento);
+                pedido.setCdFornecedor(Integer.parseInt(cdForne.getText()));
+                pedido.setStPedido(TrataCombo.getValueComboStAtendimento(stPedido));
+                dao.update(pedido);
             }
 
-            for (AtendProdHit atendHit : listAtendProd) {
-                if (atendHit.atendProd == null) {
-                    AtendimentoProduto atendPrd = new AtendimentoProduto();
-                    atendPrd.setCdAtend(atendimento.getCdAtend());
-                    atendPrd.setDtAtend(atendimento.getDtAtend());
-                    atendPrd.setCdProduto(Integer.parseInt(atendHit.cdProduto.getText()));
-                    atendPrd.setQtProduto(Double.parseDouble(atendHit.qtProduto.getText()));
-                    atendPrd.setQtPaga(0.0);
-                    atendPrd.setCdUserCad(MenuControl.usuarioAtivo);
-                    atendPrd.setDtCadastro(Data.getAgora());
+            for (PedidoProdHit pedidoHit : listPedidoProd) {
+                if (pedidoHit.pedidoProd == null) {
+                    PedidoProduto atendPrd = new PedidoProduto();
+                    atendPrd.setCdPedido(pedido.getCdPedido());
+                    atendPrd.setCdProduto(Integer.parseInt(pedidoHit.cdProduto.getText()));
+                    atendPrd.setQtProduto(Double.parseDouble(pedidoHit.qtProduto.getText()));
+                    atendPrd.setVlUnitario(Double.parseDouble(pedidoHit.vlProduto.getText()));
+                    atendPrd.setDtPrevEntrega(Data.StringToDate(pedidoHit.dtPrevEntrega.getText()));
+                    atendPrd.setQtEntregue(0.0);
                     dao.save(atendPrd);
                 } else {
-                    if (atendHit.isExcluir) {
-                        dao.delete(atendHit.atendProd);
+                    if (pedidoHit.isExcluir) {
+                        dao.delete(pedidoHit.pedidoProd);
                     } else {
-                        Double vlProduto = Double.parseDouble(atendHit.qtProduto.getText());
-                        if (!vlProduto.equals(atendHit.atendProd.getQtProduto())) {
-                            atendHit.atendProd.setQtProduto(vlProduto);
-                            dao.update(atendHit.atendProd);
+                        boolean vInUpdate = false;
+                        Double qtProduto = Double.parseDouble(pedidoHit.qtProduto.getText());
+                        if (!qtProduto.equals(pedidoHit.pedidoProd.getQtProduto())) {
+                            pedidoHit.pedidoProd.setQtProduto(qtProduto);
+                            vInUpdate = true;
+                        }
+
+                        Double vlProduto = Double.parseDouble(pedidoHit.qtProduto.getText());
+                        if (!vlProduto.equals(pedidoHit.pedidoProd.getQtProduto())) {
+                            pedidoHit.pedidoProd.setVlUnitario(vlProduto);
+                            vInUpdate = true;
+                        }
+
+                        Date dtEntrega = Data.StringToDate(pedidoHit.dtPrevEntrega.getText());
+                        if (!dtEntrega.equals(pedidoHit.pedidoProd.getDtPrevEntrega())) {
+                            pedidoHit.pedidoProd.setDtPrevEntrega(dtEntrega);
+                            vInUpdate = true;
+                        }
+
+                        if (vInUpdate) {
+                            dao.update(pedidoHit.pedidoProd);
                         }
                     }
                 }
             }
 
             dao.commit();
-            Integer cod = atendimento.getCdAtend();
-            Date date = atendimento.getDtAtend();
+            Integer cod = pedido.getCdPedido();
             limpar();
-            cdAtend.setText(cod.toString());
-            dtAtend.setText(Data.AmericaToBrasilSemHora(date));
-            validaCodigoAtendimento();
+            cdPedido.setText(cod.toString());
+            validaCodigoPedido();
         } catch (Exception ex) {
             dao.rollback();
             Alerta.AlertaError("Erro!", ex.getMessage());
             return;
         }
-        Alerta.AlertaInfo("Concluído", "Atendimento salvo!");
+        Alerta.AlertaInfo("Concluído", "Pedido salvo!");
         if (param != null) {
             getStage().close();
         }
     }
 
-    public void atualizaAtendProd() {
+    private void calculaTotal() {
+        double vlTotal = 0.00;
+        for (PedidoProdHit pedidoHit : listPedidoProd) {
+            if (!pedidoHit.vlTotalProd.getText().equals("")) {
+                double valor = Double.parseDouble(pedidoHit.vlTotalProd.getText());
+                vlTotal += valor;
+            }
+        }
+        vlTotalPedido.setText(Numero.doubleToReal(vlTotal, 2));
+    }
+
+    private void calculaTotalProd(PedidoProdHit hit) {
+        if (!hit.qtProduto.getText().equals("") && !hit.vlProduto.getText().equals("")) {
+            double vQtProduto = Double.parseDouble(hit.qtProduto.getText());
+            double vVlProduto = Double.parseDouble(hit.vlProduto.getText());
+            hit.vlTotalProd.setText(Numero.doubleToReal(vQtProduto * vVlProduto, 2));
+        } else {
+            hit.vlTotalProd.setText("");
+        }
+    }
+
+    public void atualizaPedidoProd() {
         try {
-            ArrayList<Object> atends = new ArrayList<>();
-            if (atendimento != null) {
-                String where = "WHERE $cdAtend$ = " + atendimento.getCdAtend()
-                        + " AND $dtAtend$ = '" + Data.BrasilToAmericaSemHora(atendimento.getDtAtend()) + "' ORDER BY $cdProduto$ ASC";
-                atends = dao.getAllWhere(new AtendimentoProduto(), where);
-                listAtendProd.clear();
+            ArrayList<Object> prods = new ArrayList<>();
+            if (pedido != null) {
+                String where = "WHERE $cdPedido$ = " + pedido.getCdPedido() + " ORDER BY $cdProduto$ ASC";
+                prods = dao.getAllWhere(new PedidoProduto(), where);
+                listPedidoProd.clear();
             }
-            if (atends.isEmpty()) {
-                AtendProdHit atendHit = new AtendProdHit();
-                listAtendProd.add(atendHit);
+            if (prods.isEmpty()) {
+                PedidoProdHit pedidoHit = new PedidoProdHit();
+                listPedidoProd.add(pedidoHit);
             }
-            for (Object obj : atends) {
-                AtendimentoProduto atendProd = (AtendimentoProduto) obj;
-                AtendProdHit atendHit = new AtendProdHit();
-                atendHit.cdProduto.setText(atendProd.getCdProduto().toString());
+            for (Object obj : prods) {
+                PedidoProduto pedidoProd = (PedidoProduto) obj;
+                PedidoProdHit pedidoHit = new PedidoProdHit();
+                pedidoHit.cdProduto.setText(pedidoProd.getCdProduto().toString());
                 Produto produto = new Produto();
-                produto.setCdProduto(atendProd.getCdProduto());
+                produto.setCdProduto(pedidoProd.getCdProduto());
                 dao.get(produto);
-                atendHit.dsProduto.setText(produto.getDsProduto());
-                atendHit.qtProduto.setText(Numero.doubleToReal(atendProd.getQtProduto(), 2));
-                atendHit.qtPaga.setText(Numero.doubleToReal(atendProd.getQtPaga(), 2));
-                atendHit.lblCadProd.setText(Numero.getCadastro(atendProd.getCdUserCad(), atendProd.getDtCadastro()));
-                atendHit.atendProd = atendProd;
-                listAtendProd.add(atendHit);
+                pedidoHit.dsProduto.setText(produto.getDsProduto());
+                pedidoHit.qtProduto.setText(Numero.doubleToReal(pedidoProd.getQtProduto(), 2));
+                pedidoHit.vlProduto.setText(Numero.doubleToReal(pedidoProd.getVlUnitario(), 2));
+                pedidoHit.dtPrevEntrega.setText(Data.AmericaToBrasilSemHora(pedidoProd.getDtPrevEntrega()));
+                pedidoHit.qtEntregue.setText(Numero.doubleToReal(pedidoProd.getQtEntregue(), 2));
+                pedidoHit.vlTotalProd.setText(Numero.doubleToReal(pedidoProd.getQtProduto() * pedidoProd.getVlUnitario(), 2));
+                pedidoHit.pedidoProd = pedidoProd;
+                listPedidoProd.add(pedidoHit);
             }
+            calculaTotal();
         } catch (Exception ex) {
             Alerta.AlertaError("Erro!", "Erro ao iniciar tela.\n" + ex.toString());
         }
@@ -398,124 +481,177 @@ public class AtendimentoControl implements Initializable {
 
     public void atualizaLista() {
         int total = 0;
-        for (AtendProdHit b : listAtendProd) {
+        for (PedidoProdHit b : listPedidoProd) {
             if (!b.isExcluir) {
                 total++;
             }
         }
 
-        LayoutYAtend = cdProduto.getLayoutY();
+        LayoutY = cdProduto.getLayoutY();
         painel.getChildren().clear();
-        Iterator it = listAtendProd.iterator();
+        Iterator it = listPedidoProd.iterator();
         for (int i = 0; it.hasNext(); i++) {
-            AtendProdHit b = (AtendProdHit) it.next();
+            PedidoProdHit b = (PedidoProdHit) it.next();
             if (!b.isExcluir) {
                 b.cdProduto.setEditable(cdProduto.isEditable());
-                if (b.atendProd != null) {
+                if (b.pedidoProd != null) {
                     b.cdProduto.setEditable(false);
                 }
                 b.cdProduto.setPrefHeight(cdProduto.getHeight());
                 b.cdProduto.setPrefWidth(cdProduto.getWidth());
                 b.cdProduto.setLayoutX(cdProduto.getLayoutX());
-                b.cdProduto.setLayoutY(LayoutYAtend);
+                b.cdProduto.setLayoutY(LayoutY);
                 b.cdProduto.getStyleClass().addAll(this.cdProduto.getStyleClass());
                 b.dsProduto.setEditable(dsProduto.isEditable());
                 b.dsProduto.setPrefHeight(dsProduto.getHeight());
                 b.dsProduto.setPrefWidth(dsProduto.getWidth());
                 b.dsProduto.setLayoutX(dsProduto.getLayoutX());
-                b.dsProduto.setLayoutY(LayoutYAtend);
+                b.dsProduto.setLayoutY(LayoutY);
                 b.dsProduto.getStyleClass().addAll(this.dsProduto.getStyleClass());
                 b.qtProduto.setEditable(qtProduto.isEditable());
                 b.qtProduto.setPrefHeight(qtProduto.getHeight());
                 b.qtProduto.setPrefWidth(qtProduto.getWidth());
                 b.qtProduto.setLayoutX(qtProduto.getLayoutX());
-                b.qtProduto.setLayoutY(LayoutYAtend);
+                b.qtProduto.setLayoutY(LayoutY);
                 b.qtProduto.getStyleClass().addAll(this.qtProduto.getStyleClass());
-                b.qtPaga.setEditable(qtPaga.isEditable());
-                b.qtPaga.setPrefHeight(qtPaga.getHeight());
-                b.qtPaga.setPrefWidth(qtPaga.getWidth());
-                b.qtPaga.setLayoutX(qtPaga.getLayoutX());
-                b.qtPaga.setLayoutY(LayoutYAtend);
-                b.qtPaga.getStyleClass().addAll(this.qtPaga.getStyleClass());
-                b.lblCadProd.setPrefHeight(lblCadProd.getHeight());
-                b.lblCadProd.setPrefWidth(lblCadProd.getWidth());
-                b.lblCadProd.setLayoutX(lblCadProd.getLayoutX());
-                b.lblCadProd.setLayoutY(LayoutYAtend + 30);
-                b.lblCadProd.getStyleClass().addAll(this.lblCadProd.getStyleClass());
+                b.vlProduto.setEditable(vlProduto.isEditable());
+                b.vlProduto.setPrefHeight(vlProduto.getHeight());
+                b.vlProduto.setPrefWidth(vlProduto.getWidth());
+                b.vlProduto.setLayoutX(vlProduto.getLayoutX());
+                b.vlProduto.setLayoutY(LayoutY);
+                b.vlProduto.getStyleClass().addAll(this.vlProduto.getStyleClass());
+                b.dtPrevEntrega.setEditable(dtPrevEntrega.isEditable());
+                b.dtPrevEntrega.setPrefHeight(dtPrevEntrega.getHeight());
+                b.dtPrevEntrega.setPrefWidth(dtPrevEntrega.getWidth());
+                b.dtPrevEntrega.setLayoutX(dtPrevEntrega.getLayoutX());
+                b.dtPrevEntrega.setLayoutY(LayoutY);
+                b.dtPrevEntrega.getStyleClass().addAll(this.dtPrevEntrega.getStyleClass());
+                b.qtEntregue.setEditable(qtEntregue.isEditable());
+                b.qtEntregue.setPrefHeight(qtEntregue.getHeight());
+                b.qtEntregue.setPrefWidth(qtEntregue.getWidth());
+                b.qtEntregue.setLayoutX(qtEntregue.getLayoutX());
+                b.qtEntregue.setLayoutY(LayoutY);
+                b.qtEntregue.getStyleClass().addAll(this.qtEntregue.getStyleClass());
+                b.vlTotalProd.setEditable(vlTotalProd.isEditable());
+                b.vlTotalProd.setPrefHeight(vlTotalProd.getHeight());
+                b.vlTotalProd.setPrefWidth(vlTotalProd.getWidth());
+                b.vlTotalProd.setLayoutX(vlTotalProd.getLayoutX());
+                b.vlTotalProd.setLayoutY(LayoutY);
+                b.vlTotalProd.getStyleClass().addAll(this.vlTotalProd.getStyleClass());
                 b.btnPesqProd.setPrefHeight(btnPesqProd.getHeight());
                 b.btnPesqProd.setPrefWidth(btnPesqProd.getWidth());
                 b.btnPesqProd.setLayoutX(btnPesqProd.getLayoutX());
-                b.btnPesqProd.setLayoutY(LayoutYAtend);
+                b.btnPesqProd.setLayoutY(LayoutY);
                 IconButtonHit.setIcon(b.btnPesqProd, IconButtonHit.ICON_PESQUISA);
                 b.btnAdd.setPrefHeight(btnAdd.getHeight());
                 b.btnAdd.setPrefWidth(btnAdd.getWidth());
                 b.btnAdd.setLayoutX(btnAdd.getLayoutX());
-                b.btnAdd.setLayoutY(LayoutYAtend);
+                b.btnAdd.setLayoutY(LayoutY);
                 IconButtonHit.setIcon(b.btnAdd, IconButtonHit.ICON_ADD);
                 b.btnRem.setPrefHeight(btnRem.getHeight());
                 b.btnRem.setPrefWidth(btnRem.getWidth());
                 b.btnRem.setLayoutX(btnRem.getLayoutX());
-                b.btnRem.setLayoutY(LayoutYAtend);
+                b.btnRem.setLayoutY(LayoutY);
                 IconButtonHit.setIcon(b.btnRem, IconButtonHit.ICON_EXCLUIR);
                 painel.getChildren().add(b.cdProduto);
                 painel.getChildren().add(b.btnPesqProd);
                 painel.getChildren().add(b.dsProduto);
                 painel.getChildren().add(b.qtProduto);
-                painel.getChildren().add(b.qtPaga);
+                painel.getChildren().add(b.vlProduto);
+                painel.getChildren().add(b.dtPrevEntrega);
+                painel.getChildren().add(b.qtEntregue);
+                painel.getChildren().add(b.vlTotalProd);
                 painel.getChildren().add(b.btnAdd);
                 painel.getChildren().add(b.btnRem);
-                painel.getChildren().add(b.lblCadProd);
-                LayoutYAtend += (cdProduto.getHeight() + 17);
+                LayoutY += (cdProduto.getHeight() + 5);
             }
             addValidacao(b, i, total);
         }
-        painel.setPrefHeight(LayoutYAtend + 10);
+        painel.setPrefHeight(LayoutY + 10);
     }
 
-    public void addValidacao(AtendProdHit atendProdHit, int posicao, int total) {
-        FuncaoCampo.mascaraNumeroInteiro(atendProdHit.cdProduto);
-        FuncaoCampo.mascaraNumeroDecimal(atendProdHit.qtProduto);
+    public void addValidacao(PedidoProdHit pedidoProdHit, int posicao, int total) {
+        FuncaoCampo.mascaraNumeroInteiro(pedidoProdHit.cdProduto);
+        FuncaoCampo.mascaraNumeroDecimal(pedidoProdHit.qtProduto);
+        FuncaoCampo.mascaraNumeroDecimal(pedidoProdHit.vlProduto);
 
-        atendProdHit.cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+        pedidoProdHit.cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
-                validaCodigoProduto(atendProdHit);
+                validaCodigoProduto(pedidoProdHit);
             }
         });
 
-        atendProdHit.btnPesqProd.setOnAction((ActionEvent event) -> {
-            abrirListaProduto(atendProdHit);
+        pedidoProdHit.btnPesqProd.setOnAction((ActionEvent event) -> {
+            abrirListaProduto(pedidoProdHit);
         });
-        atendProdHit.qtProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+        pedidoProdHit.qtProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
-                if (!atendProdHit.qtProduto.getText().equals("")) {
-                    Double valor = Double.parseDouble(atendProdHit.qtProduto.getText());
-                    atendProdHit.qtProduto.setText(Numero.doubleToReal(valor, 2));
+                if (!pedidoProdHit.qtProduto.getText().equals("")) {
+                    Double valor = Double.parseDouble(pedidoProdHit.qtProduto.getText());
+                    if (valor <= 0.00) {
+                        Alerta.AlertaError("Campo inválido!", "Quantidade não pode ser igual ou menor que zero.");
+                        pedidoProdHit.qtProduto.requestFocus();
+                        return;
+                    }
+                    pedidoProdHit.qtProduto.setText(Numero.doubleToReal(valor, 2));
+                }
+            }
+            calculaTotalProd(pedidoProdHit);
+            calculaTotal();
+        });
+
+        pedidoProdHit.vlProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!pedidoProdHit.vlProduto.getText().equals("")) {
+                    Double valor = Double.parseDouble(pedidoProdHit.vlProduto.getText());
+                    pedidoProdHit.vlProduto.setText(Numero.doubleToReal(valor, 2));
+                }
+            }
+            calculaTotalProd(pedidoProdHit);
+            calculaTotal();
+        });
+
+        pedidoProdHit.dtPrevEntrega.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                if (!pedidoProdHit.dtPrevEntrega.getText().equals("")) {
+                    try {
+                        Data.autoComplete(pedidoProdHit.dtPrevEntrega);
+                        Date dataInicio = Data.StringToDate(pedidoProdHit.dtPrevEntrega.getText());
+                        if (dataInicio.before(new Date())) {
+                            Alerta.AlertaError("Campo inválido", "Data de Previsão de Entrega não pode ser menor que a data atual.");
+                            pedidoProdHit.dtPrevEntrega.requestFocus();
+                            return;
+                        }
+                    } catch (Exception ex) {
+                        Alerta.AlertaError("Campo inválido", ex.getMessage());
+                        pedidoProdHit.dtPrevEntrega.requestFocus();
+                    }
                 }
             }
         });
 
-        atendProdHit.btnAdd.setOnAction((ActionEvent event) -> {
-            AtendProdHit b = new AtendProdHit();
-            listAtendProd.add(posicao + 1, b);
+        pedidoProdHit.btnAdd.setOnAction((ActionEvent event) -> {
+            PedidoProdHit b = new PedidoProdHit();
+            listPedidoProd.add(posicao + 1, b);
             atualizaLista();
         });
 
-        atendProdHit.btnRem.setOnAction((ActionEvent event) -> {
-            if (atendProdHit.atendProd != null) {
-                if (atendProdHit.atendProd.getQtPaga() > 0) {
-                    Alerta.AlertaError("Negado!", "Não é possivel deletar um item com quantidade paga.");
+        pedidoProdHit.btnRem.setOnAction((ActionEvent event) -> {
+            if (pedidoProdHit.pedidoProd != null) {
+                if (pedidoProdHit.pedidoProd.getQtEntregue() > 0) {
+                    Alerta.AlertaError("Negado!", "Não é possivel deletar um item com quantidade entregue.");
                     return;
                 }
             }
 
             if (total == 1) {
-                AtendProdHit b = new AtendProdHit();
-                listAtendProd.add(b);
+                PedidoProdHit b = new PedidoProdHit();
+                listPedidoProd.add(b);
             }
-            if (atendProdHit.atendProd == null) {
-                listAtendProd.remove(atendProdHit);
+            if (pedidoProdHit.pedidoProd == null) {
+                listPedidoProd.remove(pedidoProdHit);
             } else {
-                listAtendProd.get(posicao).isExcluir = true;
+                listPedidoProd.get(posicao).isExcluir = true;
             }
             atualizaLista();
         });
@@ -529,17 +665,19 @@ public class AtendimentoControl implements Initializable {
         this.stage = stage;
     }
 
-    public class AtendProdHit {
+    public class PedidoProdHit {
 
-        AtendimentoProduto atendProd;
+        PedidoProduto pedidoProd;
         TextField cdProduto = new TextField();
         Button btnPesqProd = new Button();
         TextField dsProduto = new TextField();
         TextField qtProduto = new TextField();
-        TextField qtPaga = new TextField();
+        TextField vlProduto = new TextField();
+        TextField dtPrevEntrega = new TextField();
+        TextField qtEntregue = new TextField();
+        TextField vlTotalProd = new TextField();
         Button btnAdd = new Button();
         Button btnRem = new Button();
-        Label lblCadProd = new Label();
         public boolean isExcluir = false;
     }
 

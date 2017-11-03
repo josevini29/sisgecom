@@ -152,6 +152,10 @@
     -fx-alignment: center-right;
 }
 
+.texto_center {
+    -fx-alignment: center;
+}
+
 .btn_entrar {
     -fx-background-color: 
         #000000,

@@ -13,8 +13,6 @@ public class Pedido {
     @AutoIncrement
     @Coluna(nome="cd_pedido")
     private Integer cdPedido;
-    @Coluna(nome="dt_pedido")
-    private Date dtPedido;
     @Coluna(nome="st_pedido")
     private String stPedido;
     @Coluna(nome="cd_fornecedor")
@@ -30,14 +28,6 @@ public class Pedido {
 
     public void setCdPedido(Integer cdPedido) {
         this.cdPedido = cdPedido;
-    }
-
-    public Date getDtPedido() {
-        return dtPedido;
-    }
-
-    public void setDtPedido(Date dtPedido) {
-        this.dtPedido = dtPedido;
     }
 
     public String getStPedido() {

@@ -239,6 +239,12 @@ public class MenuControl implements Initializable {
     }
     
     @FXML
+    public void abrirCadPedidoCompra(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModalComParam(getStage(), Tela.CAD_PEDIDO_COMPRA, null);
+    }
+    
+    @FXML
     public void abrirConCompra(ActionEvent event) {
         Tela tela = new Tela();
         //tela.abrirTelaModal(stage, Tela.CON_COMPRA);

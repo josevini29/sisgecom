@@ -7,52 +7,63 @@ package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
+import br.integrado.jnpereira.nutrimix.modelo.Fornecedor;
+import br.integrado.jnpereira.nutrimix.modelo.Pedido;
+import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
+import br.integrado.jnpereira.nutrimix.tools.Criteria;
+import br.integrado.jnpereira.nutrimix.tools.CustomDateNoTime;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
-import br.integrado.jnpereira.nutrimix.tools.Numero;
+import br.integrado.jnpereira.nutrimix.tools.Tela;
+import br.integrado.jnpereira.nutrimix.tools.TrataCombo;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class ListaPessoaControl implements Initializable {
+public class ListaPedidoCompraControl implements Initializable {
 
     Dao dao = new Dao();
     ObservableList<ClasseGenerica> data;
 
     @FXML
-    TextField codGenerico;
+    TextField cdPedido;
     @FXML
-    TextField dsGenerico;
+    TextField cdForne;
+    @FXML
+    TextField dsForne;
+    @FXML
+    ChoiceBox stPedido;
     @FXML
     TableView<ClasseGenerica> gridGenerica;
-    @FXML
-    CheckBox checkAtivo;
-    @FXML
-    TextField nrCpfCnpj;
 
     private Stage stage;
-    private Object classe;
     private String dsRetorno = null;
-    private boolean inAtivo;
+    Fornecedor fornecedor;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         gridGenerica = ContruirTableView.Criar(gridGenerica, ClasseGenerica.class);
         gridGenerica.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TrataCombo.setValueComboStAtendimento(stPedido, null);
 
+        cdForne.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                validaCodigoForne();
+            }
+        });
         gridGenerica.setOnMousePressed((MouseEvent event) -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 ok();
@@ -63,46 +74,29 @@ public class ListaPessoaControl implements Initializable {
 
     public void atualizaGrid() {
         ArrayList<ClasseGenerica> valoresArray = new ArrayList<>();
-        String sql = new String();
-        switch (classe.getClass().getSimpleName().toLowerCase()) {
-            case "cliente":
-                getStage().setTitle("Lista de Clientes");
-                sql = "SELECT $Cliente.cdCliente$, $Pessoa.dsPessoa$, $Pessoa.nrCpfCnpj$, $Cliente.inAtivo$, $Pessoa.tpPessoa$ FROM &Cliente& "
-                        + " INNER JOIN &Pessoa& ON $Pessoa.cdPessoa$ = $Cliente.cdPessoa$ WHERE "
-                        + (!codGenerico.getText().equals("") ? "$Cliente.cdCliente$ = " + codGenerico.getText() + " AND " : "")
-                        + " UPPER($Pessoa.dsPessoa$) LIKE UPPER('%" + dsGenerico.getText() + "%') AND $Pessoa.nrCpfCnpj$ LIKE '%" + nrCpfCnpj.getText() + "%' "
-                        + (checkAtivo.isSelected() ? " AND $Cliente.inAtivo$ = 'T' " : "") + "ORDER BY $Cliente.cdCliente$ ASC;";
-                break;
-            case "fornecedor":
-                getStage().setTitle("Lista de Fornecedores");
-                sql = "SELECT $Fornecedor.cdFornecedor$, $Pessoa.dsPessoa$, $Pessoa.nrCpfCnpj$, $Fornecedor.inAtivo$, $Pessoa.tpPessoa$ FROM &Fornecedor& "
-                        + " INNER JOIN &Pessoa& ON $Pessoa.cdPessoa$ = $Fornecedor.cdPessoa$ WHERE "
-                        + (!codGenerico.getText().equals("") ? "$Fornecedor.cdFornecedor$ = " + codGenerico.getText() + " AND " : "")
-                        + " UPPER($Pessoa.dsPessoa$) LIKE UPPER('%" + dsGenerico.getText() + "%') AND $Pessoa.nrCpfCnpj$ LIKE '%" + nrCpfCnpj.getText() + "%' "
-                        + (checkAtivo.isSelected() ? " AND $Fornecedor.inAtivo$ = 'T' " : "") + "ORDER BY $Fornecedor.cdFornecedor$ ASC;";
-                break;
-            case "funcionario":
-                getStage().setTitle("Lista de Funcionários");
-                sql = "SELECT $Funcionario.cdFuncionario$, $Pessoa.dsPessoa$, $Pessoa.nrCpfCnpj$, CASE WHEN $Funcionario.dtDemissao$ IS NULL THEN 'T' ELSE 'F' END inAtivo, $Pessoa.tpPessoa$ FROM &Funcionario& "
-                        + " INNER JOIN &Pessoa& ON $Pessoa.cdPessoa$ = $Funcionario.cdPessoa$ WHERE "
-                        + (!codGenerico.getText().equals("") ? "$Funcionario.cdFuncionario$ = " + codGenerico.getText() + " AND " : "")
-                        + " UPPER($Pessoa.dsPessoa$) LIKE UPPER('%" + dsGenerico.getText() + "%') AND $Pessoa.nrCpfCnpj$ LIKE '%" + nrCpfCnpj.getText() + "%' "
-                        + (checkAtivo.isSelected() ? " AND $Funcionario.dtDemissao$ IS NULL " : "") + "ORDER BY $Funcionario.cdFuncionario$ ASC;";
-                break;
-        }
 
         try {
-            ResultSet rs = dao.execSQL(sql);
-            while (rs.next()) {
+            Criteria criteria = new Criteria(new Pedido());
+            criteria.AddAnd("cdPedido", cdPedido.getText(), false);
+            criteria.AddAnd("cdFornecedor", cdForne.getText(), false);
+            criteria.AddAnd("stPedido", TrataCombo.getValueComboStAtendimento(stPedido), false);
+            ArrayList<Object> peds = dao.getAllWhere(new Pedido(), criteria.getWhereSql());
+            for (Object obj : peds) {
+                Pedido ped = (Pedido) obj;
                 ClasseGenerica classeGenerica = new ClasseGenerica();
-                classeGenerica.setCodigo(rs.getString(1));
-                classeGenerica.setDescricao(rs.getString(2));
-                if (rs.getString(5).equals("F")) {
-                    classeGenerica.setCnpj(Numero.NumeroToCPF(rs.getString(3)));
-                } else {
-                    classeGenerica.setCnpj(Numero.NumeroToCNPJ(rs.getString(3)));
-                }
-                classeGenerica.setAtivo(rs.getBoolean(4) == true ? "Sim" : "Não");
+                classeGenerica.setCdPedido(ped.getCdPedido());
+                classeGenerica.setCdForne(ped.getCdFornecedor());
+
+                Fornecedor forne = new Fornecedor();
+                forne.setCdFornecedor(ped.getCdFornecedor());
+                dao.get(forne);
+                Pessoa pessoa = new Pessoa();
+                pessoa.setCdPessoa(forne.getCdPessoa());
+                dao.get(pessoa);
+                classeGenerica.setDsForne(pessoa.getDsPessoa());
+                
+                classeGenerica.setStPedido(TrataCombo.getTpSituacao(Integer.parseInt(ped.getStPedido())));
+                classeGenerica.setDtCadastro(new CustomDateNoTime(ped.getDtCadastro().getTime()));
                 valoresArray.add(classeGenerica);
             }
         } catch (Exception ex) {
@@ -121,7 +115,7 @@ public class ListaPessoaControl implements Initializable {
             Alerta.AlertaInfo("Aviso!", "Selecione um item.");
             return;
         }
-        setDsRetorno(generica.getCodigo());
+        setDsRetorno(generica.getCdPedido().toString());
         stage.close();
     }
 
@@ -136,21 +130,47 @@ public class ListaPessoaControl implements Initializable {
     }
 
     public void iniciaTela() {
-        if (isInAtivo()) {
-            checkAtivo.setSelected(true);
-            checkAtivo.setVisible(false);
-        }
-        FuncaoCampo.mascaraNumeroInteiro(codGenerico);
-        FuncaoCampo.mascaraNumeroInteiro(nrCpfCnpj);
+        FuncaoCampo.mascaraNumeroInteiro(cdPedido);
+        FuncaoCampo.mascaraNumeroInteiro(cdForne);
         atualizaGrid();
     }
 
-    public Object getClasse() {
-        return classe;
+    @FXML
+    public void pesquisarFornecedor() {
+        Tela tela = new Tela();
+        String valor = tela.abrirListaPessoa(new Fornecedor(), true);
+        if (valor != null) {
+            cdForne.setText(valor);
+            validaCodigoForne();
+        }
     }
 
-    public void setClasse(Object classe) {
-        this.classe = classe;
+    private void validaCodigoForne() {
+        if (!cdForne.getText().equals("")) {
+            boolean vInBusca = true;
+            if (fornecedor != null) {
+                if (fornecedor.getCdFornecedor() == Integer.parseInt(cdForne.getText())) {
+                    vInBusca = false;
+                }
+            }
+            if (vInBusca) {
+                try {
+                    fornecedor = new Fornecedor();
+                    fornecedor.setCdFornecedor(Integer.parseInt(cdForne.getText()));
+                    dao.get(fornecedor);
+                    Pessoa pessoa = new Pessoa();
+                    pessoa.setCdPessoa(fornecedor.getCdPessoa());
+                    dao.get(pessoa);
+                    dsForne.setText(pessoa.getDsPessoa());
+                } catch (Exception ex) {
+                    Alerta.AlertaError("Notificação", ex.getMessage());
+                    dsForne.setText("");
+                    cdForne.requestFocus();
+                }
+            }
+        } else {
+            dsForne.setText("");
+        }
     }
 
     public String getDsRetorno() {
@@ -169,59 +189,63 @@ public class ListaPessoaControl implements Initializable {
         this.stage = stage;
     }
 
-    public boolean isInAtivo() {
-        return inAtivo;
-    }
-
-    public void setInAtivo(boolean inAtivo) {
-        this.inAtivo = inAtivo;
-    }
-
     public class ClasseGenerica {
 
-        @Coluna(nome = "Código")
+        @Coluna(nome = "Pedido")
         @Style(css = "-fx-alignment: CENTER-RIGHT;")
-        private String codigo;
-        @Coluna(nome = "Descrição")
+        private Integer cdPedido;
+        @Coluna(nome = "Cód.Forne.")
+        @Style(css = "-fx-alignment: CENTER-RIGHT;")
+        private Integer cdForne;
+        @Coluna(nome = "Descrição Fornecedor")
         @Style(css = "-fx-alignment: CENTER-LEFT;")
-        private String descricao;
-        @Coluna(nome = "CPF/CNPJ")
+        private String dsForne;
+        @Coluna(nome = "Situação")
         @Style(css = "-fx-alignment: CENTER;")
-        private String cnpj;
-        @Coluna(nome = "Ativo?")
+        private String stPedido;
+        @Coluna(nome = "Data Pedido")
         @Style(css = "-fx-alignment: CENTER;")
-        private String ativo;
+        private CustomDateNoTime dtCadastro;
 
-        public String getCodigo() {
-            return codigo;
+        public Integer getCdPedido() {
+            return cdPedido;
         }
 
-        public void setCodigo(String codigo) {
-            this.codigo = codigo;
+        public void setCdPedido(Integer cdPedido) {
+            this.cdPedido = cdPedido;
         }
 
-        public String getDescricao() {
-            return descricao;
+        public Integer getCdForne() {
+            return cdForne;
         }
 
-        public void setDescricao(String descricao) {
-            this.descricao = descricao;
+        public void setCdForne(Integer cdForne) {
+            this.cdForne = cdForne;
         }
 
-        public String getCnpj() {
-            return cnpj;
+        public String getDsForne() {
+            return dsForne;
         }
 
-        public void setCnpj(String cnpj) {
-            this.cnpj = cnpj;
+        public void setDsForne(String dsForne) {
+            this.dsForne = dsForne;
         }
 
-        public String getAtivo() {
-            return ativo;
+        public String getStPedido() {
+            return stPedido;
         }
 
-        public void setAtivo(String ativo) {
-            this.ativo = ativo;
+        public void setStPedido(String stPedido) {
+            this.stPedido = stPedido;
         }
+
+        public CustomDateNoTime getDtCadastro() {
+            return dtCadastro;
+        }
+
+        public void setDtCadastro(CustomDateNoTime dtCadastro) {
+            this.dtCadastro = dtCadastro;
+        }
+
     }
 }

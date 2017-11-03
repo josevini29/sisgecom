@@ -27,12 +27,12 @@
             <Font size="12.0" />
          </font>
       </TextField>
-      <TextField fx:id="nrPedido" alignment="CENTER" cache="true" layoutX="310.0" layoutY="29.0" prefHeight="28.0" prefWidth="69.0" styleClass="codigo">
+      <TextField fx:id="cdPedido" alignment="CENTER" cache="true" layoutX="310.0" layoutY="29.0" prefHeight="28.0" prefWidth="69.0" styleClass="codigo">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <Button layoutX="383.0" layoutY="29.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0">
+      <Button layoutX="383.0" layoutY="29.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" onAction="#pesquisarPedidoCompra" prefHeight="27.0" prefWidth="28.0">
          <graphic>
             <ImageView fitHeight="17.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                <image>

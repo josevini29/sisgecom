@@ -10,29 +10,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="painel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="781.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.CompraControl">
+<AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="444.0" prefWidth="963.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.PedidoCompraControl">
    <children>
-      <TextField fx:id="nrNotaFiscal" alignment="CENTER" layoutX="30.0" layoutY="29.0" prefHeight="27.0" prefWidth="82.0" styleClass="numero_editavel">
+      <TextField fx:id="cdPedido" alignment="CENTER" cache="true" layoutX="32.0" layoutY="29.0" prefHeight="28.0" prefWidth="69.0" styleClass="codigo">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <TextField fx:id="cdSerie" alignment="CENTER" layoutX="126.0" layoutY="29.0" prefHeight="30.0" prefWidth="36.0">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <TextField fx:id="dtEmissao" alignment="CENTER" layoutX="176.0" layoutY="29.0" prefHeight="30.0" prefWidth="110.0">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <TextField fx:id="nrPedido" alignment="CENTER" cache="true" layoutX="310.0" layoutY="29.0" prefHeight="28.0" prefWidth="69.0" styleClass="codigo">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <Button layoutX="383.0" layoutY="29.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0">
+      <Button layoutX="105.0" layoutY="29.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" onAction="#pesquisarPedidoCompra" prefHeight="27.0" prefWidth="28.0">
          <graphic>
             <ImageView fitHeight="17.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -41,12 +26,13 @@
             </ImageView>
          </graphic>
       </Button>
-      <TextField fx:id="cdForne" alignment="CENTER" cache="true" layoutX="31.0" layoutY="82.0" prefHeight="28.0" prefWidth="58.0" styleClass="codigo">
+      <ChoiceBox fx:id="stPedido" layoutX="151.0" layoutY="29.0" prefHeight="30.0" prefWidth="150.0" />
+      <TextField fx:id="cdForne" alignment="CENTER" cache="true" layoutX="31.0" layoutY="89.0" prefHeight="28.0" prefWidth="58.0" styleClass="codigo">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <Button layoutX="91.0" layoutY="82.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" onAction="#pesquisarFornecedor" prefHeight="27.0" prefWidth="28.0">
+      <Button layoutX="91.0" layoutY="89.0" maxHeight="28.0" maxWidth="28.0" mnemonicParsing="false" onAction="#pesquisarFornecedor" prefHeight="27.0" prefWidth="28.0">
          <graphic>
             <ImageView fitHeight="17.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -55,23 +41,23 @@
             </ImageView>
          </graphic>
       </Button>
-      <TextField fx:id="dsForne" editable="false" layoutX="125.0" layoutY="83.0" prefHeight="30.0" prefWidth="330.0" styleClass="texto_estatico">
+      <TextField fx:id="dsForne" editable="false" layoutX="125.0" layoutY="90.0" prefHeight="30.0" prefWidth="330.0" styleClass="texto_estatico">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <TextField fx:id="nrCpfCnpj" alignment="CENTER" editable="false" layoutX="462.0" layoutY="83.0" prefHeight="30.0" prefWidth="153.0" styleClass="texto_estatico_center">
+      <TextField fx:id="nrCpfCnpj" alignment="CENTER" editable="false" layoutX="462.0" layoutY="90.0" prefHeight="30.0" prefWidth="153.0" styleClass="texto_estatico_center">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <Label layoutX="32.0" layoutY="68.0" text="Cód. Forne" />
-      <Label layoutX="126.0" layoutY="69.0" text="Nome do Fornecedor" />
-      <AnchorPane layoutX="27.0" layoutY="157.0" prefHeight="229.0" prefWidth="729.0" styleClass="anchor">
+      <Label layoutX="32.0" layoutY="75.0" text="Cód. Forne" />
+      <Label layoutX="126.0" layoutY="76.0" text="Nome do Fornecedor" />
+      <AnchorPane layoutX="27.0" layoutY="157.0" prefHeight="229.0" prefWidth="908.0" styleClass="anchor">
          <children>
-            <ScrollPane layoutX="4.0" layoutY="26.0" prefHeight="195.0" prefWidth="725.0" styleClass="transparente">
+            <ScrollPane layoutX="4.0" layoutY="26.0" prefHeight="195.0" prefWidth="908.0" styleClass="transparente">
               <content>
-                <AnchorPane fx:id="painelProd" minHeight="0.0" minWidth="0.0" prefHeight="41.0" prefWidth="705.0">
+                <AnchorPane fx:id="painel" minHeight="0.0" minWidth="0.0" prefHeight="41.0" prefWidth="891.0">
                      <children>
                         <TextField fx:id="cdProduto" alignment="CENTER" layoutX="14.0" layoutY="2.0" prefHeight="30.0" prefWidth="52.0" styleClass="codigo">
                            <font>
@@ -92,22 +78,32 @@
                               <Font size="12.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="qtUnitario" alignment="CENTER_RIGHT" layoutX="386.0" layoutY="3.0" prefHeight="30.0" prefWidth="74.0" styleClass="numero_editavel">
+                        <TextField fx:id="qtProduto" alignment="CENTER_RIGHT" layoutX="384.0" layoutY="3.0" prefHeight="30.0" prefWidth="74.0" styleClass="numero_editavel">
                            <font>
                               <Font size="12.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="vlUnitario" alignment="CENTER_RIGHT" layoutX="469.0" layoutY="3.0" prefHeight="30.0" prefWidth="75.0" styleClass="numero_editavel">
+                        <TextField fx:id="vlProduto" alignment="CENTER_RIGHT" layoutX="463.0" layoutY="3.0" prefHeight="30.0" prefWidth="75.0" styleClass="numero_editavel">
                            <font>
                               <Font size="12.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="vlTotalProd" alignment="CENTER_RIGHT" editable="false" layoutX="552.0" layoutY="2.0" prefHeight="30.0" prefWidth="75.0" styleClass="numero_estatico">
+                        <TextField fx:id="dtPrevEntrega" alignment="CENTER" layoutX="543.0" layoutY="3.0" prefHeight="30.0" prefWidth="110.0" styleClass="texto_center">
                            <font>
                               <Font size="12.0" />
                            </font>
                         </TextField>
-                        <Button fx:id="btnAdd" layoutX="635.0" layoutY="4.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0" style="-fx-padding: 0px;">
+                        <TextField fx:id="qtEntregue" alignment="CENTER_RIGHT" editable="false" layoutX="659.0" layoutY="3.0" prefHeight="30.0" prefWidth="75.0" styleClass="numero_estatico">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="vlTotalProd" alignment="CENTER_RIGHT" editable="false" layoutX="741.0" layoutY="2.0" prefHeight="30.0" prefWidth="75.0" styleClass="numero_estatico">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="btnAdd" layoutX="826.0" layoutY="4.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0" style="-fx-padding: 0px;">
                            <graphic>
                               <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -116,7 +112,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="btnRem" accessibleHelp="Excluir Endereço" layoutX="668.0" layoutY="4.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0" style="-fx-padding: 0px;">
+                        <Button fx:id="btnRem" accessibleHelp="Excluir Endereço" layoutX="859.0" layoutY="4.0" maxHeight="27.0" maxWidth="28.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="28.0" style="-fx-padding: 0px;">
                            <graphic>
                               <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -129,11 +125,13 @@
                   </AnchorPane>
               </content>
             </ScrollPane>
-            <Label layoutX="475.0" layoutY="12.0" text="Vl. Unitário" />
-            <Label layoutX="392.0" layoutY="12.0" text="Quantidade" />
+            <Label layoutX="469.0" layoutY="12.0" text="Vl. Unitário" />
+            <Label layoutX="390.0" layoutY="12.0" text="Quantidade" />
             <Label layoutX="20.0" layoutY="12.0" text="Cód. Prod." />
             <Label layoutX="114.0" layoutY="12.0" text="Descrição do Produto" />
-            <Label layoutX="558.0" layoutY="12.0" text="Vl. Total" />
+            <Label layoutX="747.0" layoutY="12.0" text="Vl. Total" />
+            <Label layoutX="665.0" layoutY="12.0" text="Qt. Entregue" />
+            <Label layoutX="549.0" layoutY="13.0" text="Dt. Prev. Entrega" />
          </children>
       </AnchorPane>
       <Label layoutX="30.0" layoutY="141.0" styleClass="label_titulo" text="Produtos">
@@ -141,54 +139,8 @@
             <Font name="System Bold" size="11.0" />
          </font>
       </Label>
-      <Label layoutX="463.0" layoutY="68.0" text="CPF/CNPJ" />
-      <TextField fx:id="vlTotalProds" alignment="CENTER_RIGHT" editable="false" layoutX="654.0" layoutY="397.0" prefHeight="30.0" prefWidth="100.0" styleClass="numero_estatico" text="0.00">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <Label layoutX="605.0" layoutY="403.0" styleClass="label_titulo" text="TOTAL: ">
-         <font>
-            <Font name="System Bold" size="11.0" />
-         </font>
-      </Label>
-      <ChoiceBox fx:id="tpFormaPagto" layoutX="27.0" layoutY="460.0" prefHeight="30.0" prefWidth="126.0" />
-      <Label layoutX="28.0" layoutY="442.0" text="Forma de Pagamento" />
-      <ChoiceBox fx:id="tpCondPagto" layoutX="159.0" layoutY="460.0" prefHeight="30.0" prefWidth="134.0" />
-      <Button layoutX="297.0" layoutY="460.0" mnemonicParsing="false" onAction="#visualizarParcelas" prefHeight="30.0" prefWidth="100.0" text="Parcelas">
-         <graphic>
-            <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icon/saida_dinheiro.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
-      <Label layoutX="160.0" layoutY="441.0" text="Condição de Pagamento" />
-      <TextField fx:id="vlDesconto" alignment="CENTER_RIGHT" layoutX="405.0" layoutY="460.0" prefHeight="30.0" prefWidth="70.0">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <Label layoutX="406.0" layoutY="444.0" text="Desconto" />
-      <TextField fx:id="vlAdicional" alignment="CENTER_RIGHT" layoutX="483.0" layoutY="460.0" prefHeight="30.0" prefWidth="70.0">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <Label layoutX="484.0" layoutY="443.0" text="Adicional" />
-      <TextField fx:id="vlFrete" alignment="CENTER_RIGHT" layoutX="560.0" layoutY="460.0" prefHeight="30.0" prefWidth="88.0">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <Label layoutX="561.0" layoutY="443.0" text="Frete" />
-      <TextField fx:id="vlTotalCompra" alignment="CENTER_RIGHT" editable="false" layoutX="658.0" layoutY="460.0" prefHeight="30.0" prefWidth="88.0" styleClass="numero_estatico">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <Button layoutX="29.0" layoutY="514.0" mnemonicParsing="false" onAction="#salvar" prefHeight="26.0" prefWidth="82.0" text="Salvar">
+      <Label layoutX="463.0" layoutY="75.0" text="CPF/CNPJ" />
+      <Button layoutX="30.0" layoutY="396.0" mnemonicParsing="false" onAction="#salvar" prefHeight="26.0" prefWidth="82.0" text="Salvar">
          <font>
             <Font size="12.0" />
          </font>
@@ -200,7 +152,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="126.0" layoutY="514.0" mnemonicParsing="false" onAction="#limpar" prefHeight="28.0" prefWidth="88.0" text="Limpar">
+      <Button layoutX="127.0" layoutY="396.0" mnemonicParsing="false" onAction="#limpar" prefHeight="28.0" prefWidth="88.0" text="Limpar">
          <font>
             <Font size="12.0" />
          </font>
@@ -212,10 +164,18 @@
             </ImageView>
          </graphic>
       </Button>
-      <Label layoutX="658.0" layoutY="444.0" text="Total Compra" />
-      <Label layoutX="31.0" layoutY="14.0" text="Nota Fiscal" />
-      <Label layoutX="177.0" layoutY="14.0" text="Data Emissão" />
-      <Label layoutX="127.0" layoutY="14.0" text="Série" />
-      <Label layoutX="311.0" layoutY="14.0" text="Pedido" />
+      <TextField fx:id="vlTotalPedido" alignment="CENTER_RIGHT" editable="false" layoutX="840.0" layoutY="397.0" prefHeight="30.0" prefWidth="100.0" styleClass="numero_estatico" text="0.00">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="788.0" layoutY="403.0" styleClass="label_titulo" text="TOTAL: ">
+         <font>
+            <Font name="System Bold" size="11.0" />
+         </font>
+      </Label>
+      <Label layoutX="33.0" layoutY="14.0" text="Pedido" />
+      <Label layoutX="152.0" layoutY="14.0" text="Situação" />
+      <Label fx:id="lblCadastro" layoutX="336.0" layoutY="35.0" />
    </children>
 </AnchorPane>

@@ -378,6 +378,18 @@ public class TrataCombo {
             return forma.getCdFormaPagto() + ": " + forma.getDsFormaPagto();
         }
     }
+    
+        public static String getTpSituacao(int tpConta) {
+        switch (tpConta) {
+            case 1:
+                return "Pendente";
+            case 2:
+                return "Encerrada";
+            case 3:
+                return "Cancelada";
+        }
+        return null;
+    }
 
     public static String getTpConta(int tpConta) {
         switch (tpConta) {

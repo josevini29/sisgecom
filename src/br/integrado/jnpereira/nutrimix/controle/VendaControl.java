@@ -126,7 +126,13 @@ public class VendaControl implements Initializable {
         vlDesconto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 if (!vlDesconto.getText().equals("")) {
+                    Double valorTotal = Double.parseDouble(vlTotalVenda.getText());
                     Double valor = Double.parseDouble(vlDesconto.getText());
+                    if (valorTotal < valor) {
+                        Alerta.AlertaError("Campo inválido!", "Valor do desconto maior que o valor de venda.");
+                        vlDesconto.requestFocus();
+                        return;
+                    }
                     vlDesconto.setText(Numero.doubleToReal(valor, 2));
                 }
                 calculaTotalProd();
@@ -340,7 +346,13 @@ public class VendaControl implements Initializable {
             vVlFrete = Double.parseDouble(vlFrete.getText());
         }
         vlTotalProds.setText(Numero.doubleToReal(totalProd, 2));
-        total += (totalProd + vVlDesconto + vVlAdicional + vVlFrete);
+        total += ((totalProd + vVlAdicional + vVlFrete) - vVlDesconto);
+        if (total < 0.00) {
+            Alerta.AlertaWarning("Alerta!", "Desconto maior que o total da venda, desconto removido.");
+            vlDesconto.setText("");
+            calculaTotalProd();
+            return;
+        }
         vlTotalVenda.setText(Numero.doubleToReal(total, 2));
     }
 
@@ -488,6 +500,8 @@ public class VendaControl implements Initializable {
         FuncaoCampo.limparCampos(painel);
         lblAtendimento.setText("");
         iniciaTela();
+        TrataCombo.setValueComboTpCondicaoPagto(tpCondPagto, 1);
+        TrataCombo.setValueComboTpFormaPagto(tpFormaPagto, 1);
     }
 
     public void atualizaVendaProd() {

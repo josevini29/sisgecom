@@ -25,6 +25,10 @@ public class EstoqueControl {
         Produto produto = new Produto();
         produto.setCdProduto(movto.getCdProduto());
         dao.get(produto);
+        
+        if(!produto.getInEstoque()){ //apenas produtos com controle de estoque
+            return;
+        }
 
         if (movto.getInCancelado() && movto.getCdEstqMovto() != null) {
             cancelaMovto(movto, produto);

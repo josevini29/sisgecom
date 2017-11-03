@@ -4,6 +4,7 @@ import br.integrado.jnpereira.nutrimix.controle.ListaGenericaControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaPessoaControl;
 import br.integrado.jnpereira.nutrimix.controle.MenuControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaAjustEstoqControl;
+import br.integrado.jnpereira.nutrimix.controle.ListaPedidoCompraControl;
 import br.integrado.jnpereira.nutrimix.controle.LoginControl;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.dao.Senha;
@@ -61,6 +62,8 @@ public class Tela {
     final public static String[] CAD_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadVendaFXML.fxml", "Venda"};
     @Senha
     final public static String[] CAD_COMPRA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadCompraFXML.fxml", "Compra"};
+    @Senha
+    final public static String[] CAD_PEDIDO_COMPRA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadPedidoCompraFXML.fxml", "Pedido de Compra"};
     final public static String[] CON_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConParcelaFXML.fxml", "Consulta Parcelas"};
     final public static String[] LOGIN = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmLoginFXML.fxml", "Login"};
     final public static String[] CAD_ALTSENHA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAltSenhaFXML.fxml", "Alteração de Senha"};
@@ -269,6 +272,29 @@ public class Tela {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaAjustEstoqFXML.fxml"));
             Parent root = (Parent) loader.load();
             ListaAjustEstoqControl controler = (ListaAjustEstoqControl) loader.getController();
+            controler.setStage(stage);
+            controler.iniciaTela();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.resizableProperty().setValue(Boolean.FALSE);
+            stage.centerOnScreen();
+            stage.showAndWait();
+            return controler.getDsRetorno();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
+        }
+        return null;
+    }
+    
+    public String abrirListaPedidoCompra() {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaPedidoCompraFXML.fxml"));
+            Parent root = (Parent) loader.load();
+            ListaPedidoCompraControl controler = (ListaPedidoCompraControl) loader.getController();
             controler.setStage(stage);
             controler.iniciaTela();
             Scene scene = new Scene(root);

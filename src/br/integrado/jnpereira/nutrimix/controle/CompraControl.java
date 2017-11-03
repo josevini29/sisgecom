@@ -16,7 +16,6 @@ import br.integrado.jnpereira.nutrimix.modelo.Pedido;
 import br.integrado.jnpereira.nutrimix.modelo.PedidoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
-import br.integrado.jnpereira.nutrimix.relatorio.Relatorio;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
@@ -29,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,7 +55,7 @@ public class CompraControl implements Initializable {
     @FXML
     TextField dtEmissao;
     @FXML
-    TextField nrPedido;
+    TextField cdPedido;
     @FXML
     TextField cdForne;
     @FXML
@@ -111,6 +112,7 @@ public class CompraControl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         FuncaoCampo.mascaraNumeroInteiro(cdForne);
         FuncaoCampo.mascaraNumeroInteiro(nrNotaFiscal);
+        FuncaoCampo.mascaraNumeroInteiro(cdPedido);
         TrataCombo.setValueComboTpCondicaoPagto(tpCondPagto, 1);
         TrataCombo.setValueComboTpFormaPagto(tpFormaPagto, 1);
         FuncaoCampo.mascaraNumeroDecimal(vlDesconto);
@@ -118,6 +120,16 @@ public class CompraControl implements Initializable {
         FuncaoCampo.mascaraNumeroDecimal(vlFrete);
         FuncaoCampo.mascaraTexto(cdSerie, 10);
         FuncaoCampo.mascaraData(dtEmissao);
+        cdPedido.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                validaCodigoPedido();
+            }
+        });
+        cdForne.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
+            if (!newPropertyValue) {
+                validaCodigoForne();
+            }
+        });
         cdForne.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 validaCodigoForne();
@@ -135,7 +147,13 @@ public class CompraControl implements Initializable {
         vlDesconto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 if (!vlDesconto.getText().equals("")) {
+                    Double valorTotal = Double.parseDouble(vlTotalCompra.getText());
                     Double valor = Double.parseDouble(vlDesconto.getText());
+                    if (valorTotal < valor) {
+                        Alerta.AlertaError("Campo inválido!", "Valor do desconto maior que o valor de venda.");
+                        vlDesconto.requestFocus();
+                        return;
+                    }
                     vlDesconto.setText(Numero.doubleToReal(valor, 2));
                 }
                 calculaTotalProd();
@@ -177,6 +195,29 @@ public class CompraControl implements Initializable {
         atualizaCompraProd();
     }
 
+    private void validaCodigoPedido() {
+        if (!cdPedido.getText().equals("")) {
+            try {
+                pedido = new Pedido();
+                pedido.setCdPedido(Integer.parseInt(cdPedido.getText()));
+                dao.get(pedido);
+                if (!pedido.getStPedido().equals("1")){
+                    Alerta.AlertaError("Campo inválido!", "Apenas permitido pedidos pendentes.");
+                    cdPedido.setText("");
+                    pedido = null;
+                    return;
+                }
+                cdForne.setText(pedido.getCdFornecedor().toString());
+                validaCodigoForne();
+                atualizaCompraProd();
+            } catch (Exception ex) {
+                Alerta.AlertaError("Campo inválido!", ex.getMessage());
+            }
+        } else {
+            limpar();
+        }
+    }
+
     @FXML
     public void pesquisarFornecedor() {
         Tela tela = new Tela();
@@ -184,6 +225,16 @@ public class CompraControl implements Initializable {
         if (valor != null) {
             cdForne.setText(valor);
             validaCodigoForne();
+        }
+    }
+
+    @FXML
+    public void pesquisarPedidoCompra() {
+        Tela tela = new Tela();
+        String valor = tela.abrirListaPedidoCompra();
+        if (valor != null) {
+            cdPedido.setText(valor);
+            validaCodigoPedido();
         }
     }
 
@@ -351,7 +402,13 @@ public class CompraControl implements Initializable {
             vVlFrete = Double.parseDouble(vlFrete.getText());
         }
         vlTotalProds.setText(Numero.doubleToReal(totalProd, 2));
-        total += (totalProd + vVlDesconto + vVlAdicional + vVlFrete);
+        total += ((totalProd + vVlAdicional + vVlFrete) - vVlDesconto);
+        if (total < 0.00) {
+            Alerta.AlertaWarning("Alerta!", "Desconto maior que o total da venda, desconto removido.");
+            vlDesconto.setText("");
+            calculaTotalProd();
+            return;
+        }
         vlTotalCompra.setText(Numero.doubleToReal(total, 2));
     }
 
@@ -405,7 +462,7 @@ public class CompraControl implements Initializable {
             compra.setCdPessoa(pessoa.getCdPessoa());
             compra.setNrNota(!nrNotaFiscal.getText().equals("") ? Integer.parseInt(nrNotaFiscal.getText()) : null);
             compra.setCdSerie(!cdSerie.getText().equals("") ? cdSerie.getText() : null);
-            compra.setCdPedido(!nrPedido.getText().equals("") ? Integer.parseInt(nrPedido.getText()) : null);
+            compra.setCdPedido(!cdPedido.getText().equals("") ? Integer.parseInt(cdPedido.getText()) : null);
             compra.setVlDesconto(!vlDesconto.getText().equals("") ? Double.parseDouble(vlDesconto.getText()) : 0.0);
             compra.setVlAdicional(!vlAdicional.getText().equals("") ? Double.parseDouble(vlAdicional.getText()) : 0.0);
             compra.setVlFrete(!vlFrete.getText().equals("") ? Double.parseDouble(vlFrete.getText()) : 0.0);
@@ -513,7 +570,7 @@ public class CompraControl implements Initializable {
         try {
             ArrayList<Object> pedidosProd = new ArrayList<>();
             if (pedido != null) {
-                String where = "WHERE $cdPedido$ = " + pedido.getCdPedido() + "' ORDER BY $cdProduto$ ASC";
+                String where = "WHERE $cdPedido$ = " + pedido.getCdPedido() + " ORDER BY $cdProduto$ ASC";
                 pedidosProd = dao.getAllWhere(new PedidoProduto(), where);
                 listCompraProd.clear();
             }
@@ -556,8 +613,6 @@ public class CompraControl implements Initializable {
             if (b.pedidoProd != null) {
                 b.cdProduto.setEditable(false);
                 b.cdProduto.getStyleClass().addAll("texto_estatico_center");
-                b.vlUnitario.setEditable(false);
-                b.vlUnitario.getStyleClass().addAll("numero_estatico");
             }
             b.cdProduto.setPrefHeight(cdProduto.getHeight());
             b.cdProduto.setPrefWidth(cdProduto.getWidth());
@@ -576,16 +631,16 @@ public class CompraControl implements Initializable {
             b.qtUnitario.setLayoutX(qtUnitario.getLayoutX());
             b.qtUnitario.setLayoutY(LayoutY);
             b.qtUnitario.getStyleClass().addAll(this.qtUnitario.getStyleClass());
-            //if (b.pedidoProd != null) {
-            //b.qtUnitario.setEditable(false);
-            //b.qtUnitario.getStyleClass().addAll("numero_estatico");
-            //}
             b.vlUnitario.setEditable(vlUnitario.isEditable());
             b.vlUnitario.setPrefHeight(vlUnitario.getHeight());
             b.vlUnitario.setPrefWidth(vlUnitario.getWidth());
             b.vlUnitario.setLayoutX(vlUnitario.getLayoutX());
             b.vlUnitario.setLayoutY(LayoutY);
             b.vlUnitario.getStyleClass().addAll(this.vlUnitario.getStyleClass());
+            if (b.pedidoProd != null) {
+                b.vlUnitario.setEditable(false);
+                b.vlUnitario.getStyleClass().addAll("numero_estatico");
+            }
             b.vlTotalProd.setEditable(vlTotalProd.isEditable());
             b.vlTotalProd.setPrefHeight(vlTotalProd.getHeight());
             b.vlTotalProd.setPrefWidth(vlTotalProd.getWidth());
