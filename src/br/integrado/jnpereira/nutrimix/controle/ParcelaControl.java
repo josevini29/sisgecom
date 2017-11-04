@@ -29,10 +29,13 @@ public class ParcelaControl {
         dao.get(condicao);
         for (Parcela parcela : getParcelas(condicao, conta.getVlConta())) {
             parcela.setCdConta(conta.getCdConta());
+            parcela.setTpMovto(conta.getTpMovto());
+            parcela.setCdUserMovto(MenuControl.usuarioAtivo);
+            parcela.setDtUltMovto(Data.getAgora());
             dao.save(parcela);
         }
         
-        //Pagar ultima parcela
+        //Pagar parcela avista
     }
 
     public ArrayList<Parcela> getParcelas(CondicaoPagto condicao, Double vlTotal) {
@@ -55,9 +58,7 @@ public class ParcelaControl {
             } else {
                 parcela.setVlParcela(Double.parseDouble(dfs.format(vlParcela).replace(",", ".")));
             }
-            parcela.setInPaga(false);
-            parcela.setVlMulta(0.00);
-            parcela.setVlDesconto(0.00);
+            parcela.setInCancelada(false);
             parcelas.add(parcela);
         }
         return parcelas;

@@ -42,6 +42,9 @@ public class Numero {
     }
 
     public static String doubleToReal(Double valor, int qtDecimal) {
+        if (valor == null) {
+            return "";
+        }
         String formato = "";
         for (int i = 1; i <= qtDecimal; i++) {
             formato += "0";

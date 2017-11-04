@@ -68,7 +68,9 @@ public class ConContasReceberControl implements Initializable {
         gridConta.setOnMousePressed((MouseEvent event) -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Tela tela = new Tela();
-                tela.abrirTelaModal(stage, Tela.PAG_PARCELA);
+                ContasPagarReceber conta = new ContasPagarReceber();
+                conta.setCdConta(gridConta.getSelectionModel().getSelectedItem().getCdConta());
+                tela.abrirTelaModalComParam(stage, Tela.PAG_PARCELA, conta);
             }
         });
         cdCliente.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {

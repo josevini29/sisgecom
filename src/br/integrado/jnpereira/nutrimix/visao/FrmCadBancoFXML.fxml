@@ -31,7 +31,7 @@
             </AnchorPane>
         </content>
       </ScrollPane>
-      <Button fx:id="btnSalvar" layoutX="14.0" layoutY="275.0" mnemonicParsing="false" onAction="#salvar" prefHeight="29.0" prefWidth="99.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Salvar">
+      <Button fx:id="btnSalvar" layoutX="14.0" layoutY="275.0" mnemonicParsing="false" onAction="#salvar" prefHeight="29.0" prefWidth="99.0" text="Salvar">
          <font>
             <Font size="12.0" />
          </font>
@@ -43,7 +43,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="123.0" layoutY="275.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="29.0" prefWidth="99.0" style="-fx-background-image: url(&quot;@icon/salvar.png&quot;);" stylesheets="@style.css" text="Cancelar">
+      <Button layoutX="123.0" layoutY="275.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="29.0" prefWidth="99.0" text="Cancelar">
          <font>
             <Font size="12.0" />
          </font>

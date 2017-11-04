@@ -26,6 +26,13 @@ public class Data {
     }
 
     public static Date StringToDate(String data) throws Exception {
+        if (data == null) {
+            return null;
+        } else {
+            if (data.equals("")) {
+                return null;
+            }
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setLenient(false);
         try {
@@ -55,8 +62,12 @@ public class Data {
     }
 
     public static String AmericaToBrasil(Date data) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return df.format(data);
+        if (data != null) {
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            return df.format(data);
+        } else {
+            return "";
+        }
     }
 
     public static String getDiaSemana(int dia) {
