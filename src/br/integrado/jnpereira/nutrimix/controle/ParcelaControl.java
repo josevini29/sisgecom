@@ -18,12 +18,12 @@ public class ParcelaControl {
     Dao dao = new Dao();
 
     public ParcelaControl() {
+        dao.autoCommit(false);
         df.setMaximumFractionDigits(2);
         df.setRoundingMode(RoundingMode.DOWN);
     }
 
     public void gerarParcelas(ContasPagarReceber conta) throws Exception {
-        dao.autoCommit(false);
         CondicaoPagto condicao = new CondicaoPagto();
         condicao.setCdCondicao(conta.getCdCondicao());
         dao.get(condicao);
@@ -34,7 +34,7 @@ public class ParcelaControl {
             parcela.setDtUltMovto(Data.getAgora());
             dao.save(parcela);
         }
-        
+
         //Pagar parcela avista
     }
 
@@ -69,6 +69,22 @@ public class ParcelaControl {
         c.setTime(data);
         c.add(Calendar.DATE, +qtDias);
         return c.getTime();
+    }
+
+    public void encerrarConta(ContasPagarReceber conta) throws Exception {
+        boolean vInEncerra = true;
+        String where = "WHERE $cdConta$ = " + conta.getCdConta() + " AND $inCancelada$ = 'F'";
+        ArrayList<Object> parcelas = dao.getAllWhere(new Parcela(), where);
+        for (Object obj: parcelas){
+            Parcela parcela = (Parcela) obj;
+            if (parcela.getDtPagto() == null){
+                vInEncerra = false;
+            }
+        }
+        if (vInEncerra){
+            conta.setStConta("2");
+            dao.update(conta);
+        }
     }
 
 }

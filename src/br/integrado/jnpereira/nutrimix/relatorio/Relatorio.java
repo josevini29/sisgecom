@@ -2,7 +2,9 @@ package br.integrado.jnpereira.nutrimix.relatorio;
 
 import br.integrado.jnpereira.nutrimix.controle.MenuControl;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
+import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
 import br.integrado.jnpereira.nutrimix.modelo.GrupoProduto;
+import br.integrado.jnpereira.nutrimix.modelo.Parcela;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.modelo.Usuario;
@@ -38,8 +40,8 @@ public class Relatorio {
 
     public static void main(String[] args) {
         Relatorio relatorio = new Relatorio();
-        //relatorio.gerarReciboVenda(5);
-        relatorio.gerarRelatorioEstoque(true);
+        relatorio.gerarReciboVenda(1);
+        //relatorio.gerarRelatorioEstoque(true);
     }
 
     private void abrirPDF(String dsCaminho) throws IOException {
@@ -75,6 +77,10 @@ public class Relatorio {
 
     private Font getFont(float nrTam) {
         return new Font(FontFamily.COURIER, nrTam, Font.BOLD);
+    }
+
+    private Font getFontTachada(float nrTam) {
+        return new Font(FontFamily.COURIER, nrTam, Font.STRIKETHRU);
     }
 
     public void gerarReciboVenda(int cdMovto) {
@@ -181,12 +187,70 @@ public class Relatorio {
             infoProd.addCell(new Paragraph("Total: ", getFont(2.5f)));
             infoProd.addCell(new Paragraph(Numero.doubleToR$(vlTotalProd), getFont(2.5f)));
             document.add(infoProd);
-            //Fecha e abre o PDF
+            document.add(getLinha(0));
+
+            //Pagamento
+            PdfPTable infoPag = new PdfPTable(6);
+            infoPag.setTotalWidth(new float[]{5, 10, 10, 7, 9, 7});
+            infoPag.setLockedWidth(true);
+
+            infoPag.getDefaultCell().setBorder(PdfPCell.NO_BORDER); // Aqui eu tiro a borda  
+            infoPag.setLockedWidth(true);
+            infoPag.setTotalWidth(larWight);
+
+            infoPag.addCell(new Paragraph("Par", getFont(1.8f)));
+            infoPag.addCell(new Paragraph("Dt. Vencto", getFont(1.8f)));
+            infoPag.addCell(new Paragraph("Dt. Pagto", getFont(1.8f)));
+            infoPag.addCell(new Paragraph("Valor", getFont(1.7f)));
+            infoPag.addCell(new Paragraph("Desconto", getFont(1.7f)));
+            infoPag.addCell(new Paragraph("Multa", getFont(1.7f)));
+
+            ArrayList<Object> arrayConta = dao.getAllWhere(new ContasPagarReceber(), "WHERE $cdMovto$ = " + venda.getCdMovto());
+            ContasPagarReceber conta = (ContasPagarReceber) arrayConta.get(0);
+
+            double vVlTotal = 0.00;
+            ArrayList<Object> parcelas = dao.getAllWhere(new Parcela(), "WHERE $cdConta$ = " + conta.getCdConta() + " ORDER BY $dtVencto$ ASC");
+            for (Object obj : parcelas) {
+                Parcela parcela = (Parcela) obj;
+                if (!parcela.getInCancelada()) {
+                    infoPag.addCell(new Paragraph(parcela.getCdParcela().toString(), getFont(2.1f)));
+                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtVencto()), getFont(2)));
+                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtPagto()), getFont(2)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlParcela(), 2), getFont(2)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlDesconto(), 2), getFont(2.1f)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlMulta(), 2), getFont(2.1f)));
+                    vVlTotal = (parcela.getVlParcela() + trataDouble(parcela.getVlMulta())) - trataDouble(parcela.getVlDesconto());
+                } else {
+                    infoPag.addCell(new Paragraph(parcela.getCdParcela().toString(), getFontTachada(2.1f)));
+                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtVencto()), getFontTachada(2)));
+                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtPagto()), getFontTachada(2)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlParcela(), 2), getFontTachada(2)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlDesconto(), 2), getFontTachada(2.1f)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlMulta(), 2), getFontTachada(2.1f)));
+                }
+            }
+            infoPag.addCell(new Paragraph("", getFont(2.5f)));
+            infoPag.addCell(new Paragraph("", getFont(2.5f)));
+            infoPag.addCell(new Paragraph("", getFont(2.5f)));
+            infoPag.addCell(new Paragraph("", getFont(2.5f)));
+            infoPag.addCell(new Paragraph("Total: ", getFont(2.5f)));
+            infoPag.addCell(new Paragraph(Numero.doubleToReal(vVlTotal, 2), getFont(2.5f)));
+
+            document.add(infoPag);
+
+            //Fecha document e abre o PDF
             document.close();
             abrirPDF(dsCaminho);
         } catch (Exception ex) {
             Alerta.AlertaError("Erro ao gerar recibo!", ex.toString());
         }
+    }
+
+    private double trataDouble(Double valor) {
+        if (valor == null) {
+            return 0.00;
+        }
+        return valor;
     }
 
     public void gerarRelatorioEstoque(boolean inEstoqMin) {

@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="1102.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.PagParcelaControl">
+<AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="1102.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.PagParcelaControl">
    <children>
-      <AnchorPane layoutX="14.0" layoutY="104.0" prefHeight="229.0" prefWidth="1075.0" styleClass="anchor">
+      <AnchorPane layoutX="14.0" layoutY="104.0" prefHeight="337.0" prefWidth="1075.0" styleClass="anchor">
          <children>
-            <ScrollPane layoutX="4.0" layoutY="26.0" prefHeight="195.0" prefWidth="1069.0" styleClass="transparente">
+            <ScrollPane layoutX="4.0" layoutY="26.0" prefHeight="308.0" prefWidth="1069.0" styleClass="transparente">
                <content>
-                  <AnchorPane fx:id="painel" minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="1056.0">
+                  <AnchorPane fx:id="painel" minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="1050.0">
                      <children>
                         <TextField fx:id="cdParcela" alignment="CENTER" editable="false" layoutX="14.0" layoutY="2.0" prefHeight="30.0" prefWidth="52.0" styleClass="texto_estatico_center">
                            <font>
@@ -130,7 +130,7 @@
          </font>
       </TextField>
       <Label layoutX="444.0" layoutY="23.0" text="Vl. Total Paga" />
-      <Button layoutX="750.0" layoutY="341.0" mnemonicParsing="false" onAction="#salvar" prefHeight="29.0" prefWidth="99.0" text="Salvar">
+      <Button layoutX="880.0" layoutY="458.0" mnemonicParsing="false" onAction="#salvar" prefHeight="29.0" prefWidth="99.0" text="Salvar">
          <font>
             <Font size="12.0" />
          </font>
@@ -142,7 +142,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="859.0" layoutY="341.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="29.0" prefWidth="99.0" text="Cancelar">
+      <Button layoutX="989.0" layoutY="458.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="29.0" prefWidth="99.0" text="Cancelar">
          <font>
             <Font size="12.0" />
          </font>

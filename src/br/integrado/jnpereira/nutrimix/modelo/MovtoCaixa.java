@@ -13,16 +13,16 @@ public class MovtoCaixa {
     @AutoIncrement
     @Coluna(nome = "cd_movto_caixa")
     private Integer cdMovtoCaixa;
-    @Coluna(nome = "tp_movtocaixa")
+    @Coluna(nome = "tp_movto_caixa")
     private String tpMovtoCaixa;
     @Coluna(nome = "dt_movto")
     private Date dtMovto;
-    @Coluna(nome = "cd_forma_pg")
+    @Coluna(nome = "cd_forpagto")
     private Integer cdFormaPagto;
     @Coluna(nome = "cd_parcela")
     private Integer cdParcela;
-    @Coluna(nome = "cd_titulo")
-    private Integer cdTitulo;
+    @Coluna(nome = "cd_conta")
+    private Integer cdConta;
     @Coluna(nome = "cd_despesa")
     private Integer cdDespesa;
     @Coluna(nome = "cd_ajuste")
@@ -70,12 +70,12 @@ public class MovtoCaixa {
         this.cdParcela = cdParcela;
     }
 
-    public Integer getCdTitulo() {
-        return cdTitulo;
+    public Integer getCdConta() {
+        return cdConta;
     }
 
-    public void setCdTitulo(Integer cdTitulo) {
-        this.cdTitulo = cdTitulo;
+    public void setCdConta(Integer cdConta) {
+        this.cdConta = cdConta;
     }
 
     public Integer getCdDespesa() {
@@ -102,6 +102,5 @@ public class MovtoCaixa {
         this.cdFechamento = cdFechamento;
     }
 
-    
-    
+   
 }

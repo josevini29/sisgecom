@@ -7,7 +7,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.FechamentoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.Parcela;
+import br.integrado.jnpereira.nutrimix.relatorio.Relatorio;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
 import br.integrado.jnpereira.nutrimix.tools.IconButtonHit;
@@ -76,7 +78,7 @@ public class PagParcelaControl implements Initializable {
     ArrayList<ParcelaHit> listParcela = new ArrayList<>();
     Dao dao = new Dao();
     ContasPagarReceber conta;
-    //boolean inAntiLoop = true;
+    boolean vInRecibo = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -99,6 +101,7 @@ public class PagParcelaControl implements Initializable {
                 tpConta.setText(TrataCombo.getTpConta(3));
             } else if (conta.getCdMovto() != null && conta.getTpMovto().equals("E")) {
                 tpConta.setText(TrataCombo.getTpConta(2));
+                vInRecibo = true;
             } else if (conta.getCdMovto() != null && conta.getTpMovto().equals("S")) {
                 tpConta.setText(TrataCombo.getTpConta(1));
             }
@@ -119,29 +122,38 @@ public class PagParcelaControl implements Initializable {
     @FXML
     public void salvar() {
 
+        double vVlTotal = 0.00;
+        double vVlTotalDesconto = 0.00;
+        double vVlTotalMulta = 0.00;
+
         for (ParcelaHit parcelaHit : listParcela) {
 
+            if (!parcelaHit.inCancelada.isSelected()) {
+                vVlTotal += Double.parseDouble(parcelaHit.vlParcela.getText());
+            }
+
             if (parcelaHit.parcela == null) {
-                if (parcelaHit.vlParcela.equals("")) {
+                if (parcelaHit.vlParcela.getText().equals("")) {
                     Alerta.AlertaError("Campo inválido", "Valor da parcela é obrigatória.");
                     parcelaHit.vlParcela.requestFocus();
                     return;
                 }
 
-                if (parcelaHit.dtVencto.equals("")) {
+                if (parcelaHit.dtVencto.getText().equals("")) {
                     Alerta.AlertaError("Campo inválido", "Data de vencimento da parcela é obrigatória.");
                     parcelaHit.dtVencto.requestFocus();
                     return;
                 }
             }
 
-            if (!parcelaHit.dtPagamento.getText().equals("")
+            if (TrataCombo.getValueComboTpFormaPagto(parcelaHit.tpForPagto) != null
+                    || !parcelaHit.dtPagamento.getText().equals("")
                     || !parcelaHit.vlDesconto.getText().equals("")
                     || !parcelaHit.vlMulta.getText().equals("")) {
 
                 if (parcelaHit.dtPagamento.getText().equals("")) {
                     Alerta.AlertaError("Campo inválido", "Para pagamento de parcela data de pagamento é obrigatória.");
-                    parcelaHit.tpForPagto.requestFocus();
+                    parcelaHit.dtPagamento.requestFocus();
                     return;
                 }
 
@@ -152,20 +164,43 @@ public class PagParcelaControl implements Initializable {
                 }
 
                 double vVlParcela = Double.parseDouble(parcelaHit.vlParcela.getText());
+
                 double vVlDesconto = converteDouble(parcelaHit.vlDesconto.getText());
+                vVlTotalDesconto += vVlDesconto;
                 double vVlMulta = converteDouble(parcelaHit.vlMulta.getText());
+                vVlTotalMulta += vVlMulta;
+
                 vVlParcela = vVlParcela - vVlDesconto;
                 vVlParcela = vVlParcela + vVlMulta;
                 if (vVlParcela < 0) {
-                    Alerta.AlertaError("Campo inválido", "Pagamento não pode ser inferior ao valor 0.");
+                    Alerta.AlertaError("Campo inválido", "Parcela com data de pagamento "+parcelaHit.dtPagamento.getText()+" está com valor de pagamento inferior a R$ 0.00.");
                     parcelaHit.vlDesconto.requestFocus();
                     return;
                 }
             }
 
         }
+
+        vVlTotal = vVlTotal - vVlTotalDesconto;
+        vVlTotal = vVlTotal + vVlTotalMulta;
+        String vDsTotal = Numero.doubleToReal(vVlTotal, 2);
+        String vDsTotalConta = Numero.doubleToReal((Double.parseDouble(vlTotal.getText()) + vVlTotalMulta) - vVlTotalDesconto, 2);
+        if (!vDsTotal.equals(vDsTotalConta)) {
+            Alerta.AlertaError("Campo inválido", "Total das parcelas não confere com o total da conta.\n"
+                    + "Total Parcela: " + Numero.doubleToReal(vVlTotal, 2));
+            return;
+        }
+
         try {
             dao.autoCommit(false);
+            CaixaControler caixa = new CaixaControler();
+            FechamentoCaixa fechamento;
+            try {
+                fechamento = caixa.getCaixaAberto(Data.getAgora()); //pega caixa aberto
+            } catch (Exception ex) {
+                Alerta.AlertaWarning("Negado!", ex.getMessage());
+                return;
+            }
 
             for (ParcelaHit parcelaHit : listParcela) {
                 boolean vInPag = false;
@@ -178,8 +213,8 @@ public class PagParcelaControl implements Initializable {
                     parcelaHit.parcela.setTpMovto(conta.getTpMovto());
                     parcelaHit.parcela.setDtVencto(Data.StringToDate(parcelaHit.dtVencto.getText()));
                     parcelaHit.parcela.setVlParcela(converteDouble(parcelaHit.vlParcela.getText()));
-                    parcelaHit.parcela.setDtPagto(Data.StringToDate(parcelaHit.dtPagamento.getText()));
                     if (!parcelaHit.dtPagamento.getText().equals("")) {
+                        parcelaHit.parcela.setDtPagto(Data.StringToDate(parcelaHit.dtPagamento.getText()));
                         double vVlParcela = Double.parseDouble(parcelaHit.vlParcela.getText());
                         double vVlDesconto = converteDouble(parcelaHit.vlDesconto.getText());
                         double vVlMulta = converteDouble(parcelaHit.vlMulta.getText());
@@ -188,7 +223,7 @@ public class PagParcelaControl implements Initializable {
                         parcelaHit.parcela.setVlPagto(vVlParcela);
                         parcelaHit.parcela.setVlDesconto(vVlDesconto);
                         parcelaHit.parcela.setVlMulta(vVlMulta);
-                        parcelaHit.parcela.setCdForPagto(TrataCombo.getValueComboTpFormaPagto(tpForPagto));
+                        parcelaHit.parcela.setCdForPagto(TrataCombo.getValueComboTpFormaPagto(parcelaHit.tpForPagto));
                         vInPag = true;
                     }
                     parcelaHit.parcela.setInCancelada(false);
@@ -198,6 +233,7 @@ public class PagParcelaControl implements Initializable {
                 } else {
                     if (!parcelaHit.dtPagamento.getText().equals("")
                             && parcelaHit.parcela.getDtPagto() == null) {
+                        parcelaHit.parcela.setDtPagto(Data.StringToDate(parcelaHit.dtPagamento.getText()));
                         double vVlParcela = Double.parseDouble(parcelaHit.vlParcela.getText());
                         double vVlDesconto = converteDouble(parcelaHit.vlDesconto.getText());
                         double vVlMulta = converteDouble(parcelaHit.vlMulta.getText());
@@ -206,18 +242,30 @@ public class PagParcelaControl implements Initializable {
                         parcelaHit.parcela.setVlPagto(vVlParcela);
                         parcelaHit.parcela.setVlDesconto(vVlDesconto);
                         parcelaHit.parcela.setVlMulta(vVlMulta);
-                        parcelaHit.parcela.setCdForPagto(TrataCombo.getValueComboTpFormaPagto(tpForPagto));
+                        parcelaHit.parcela.setCdForPagto(TrataCombo.getValueComboTpFormaPagto(parcelaHit.tpForPagto));
                         vInPag = true;
+                        dao.update(parcelaHit.parcela);
+                    }
+                    if (parcelaHit.parcela.getInCancelada() != parcelaHit.inCancelada.isSelected()) {
+                        parcelaHit.parcela.setInCancelada(parcelaHit.inCancelada.isSelected());
+                        dao.update(parcelaHit.parcela);
                     }
                 }
                 if (vInPag) {
-                    CaixaControler caixa = new CaixaControler();
-                    caixa.geraMovtoCaixa(parcelaHit.parcela);
+                    caixa.geraMovtoCaixaParcela(parcelaHit.parcela, fechamento);
                 }
             }
 
+            ParcelaControl parcelaControl = new ParcelaControl();
+            parcelaControl.encerrarConta(conta);
+            
             dao.commit();
             validaCodigoConta();
+            
+            if (vInRecibo){
+                Relatorio relatorio = new Relatorio();
+                relatorio.gerarReciboVenda(conta.getCdMovto());
+            }
         } catch (Exception ex) {
             dao.rollback();
             Alerta.AlertaError("Erro!", ex.getMessage());
@@ -255,6 +303,7 @@ public class PagParcelaControl implements Initializable {
                 parcelaHit.vlDesconto.setText(Numero.doubleToReal(parcela.getVlDesconto(), 2));
                 parcelaHit.vlMulta.setText(Numero.doubleToReal(parcela.getVlMulta(), 2));
                 parcelaHit.inCancelada.setSelected(parcela.getInCancelada());
+                TrataCombo.setValueComboTpFormaPagto(parcelaHit.tpForPagto, parcela.getCdForPagto());
                 parcelaHit.lblMovtoParcela.setText(Numero.getCadastro(parcela.getCdUserMovto(), parcela.getDtUltMovto()));
                 parcelaHit.parcela = parcela;
 
@@ -375,9 +424,29 @@ public class PagParcelaControl implements Initializable {
                     b.btnAdd.setDisable(true);
                     b.inCancelada.setDisable(true);
                     b.btnEstornar.setDisable(true);
+                    b.tpForPagto.setDisable(true);
+                    b.dtPagamento.setEditable(false);
+                    b.dtPagamento.getStyleClass().remove("texto_center");
+                    b.dtPagamento.getStyleClass().addAll("texto_estatico_center");
+                    b.vlDesconto.setEditable(false);
+                    b.vlDesconto.getStyleClass().remove("numero_editavel");
+                    b.vlDesconto.getStyleClass().addAll("numero_estatico");
+                    b.vlMulta.setEditable(false);
+                    b.vlMulta.getStyleClass().remove("numero_editavel");
+                    b.vlMulta.getStyleClass().addAll("numero_estatico");
                 } else {
                     if (b.parcela.getDtPagto() != null) {
                         b.inCancelada.setDisable(true);
+                        b.tpForPagto.setDisable(true);
+                        b.dtPagamento.setEditable(false);
+                        b.dtPagamento.getStyleClass().remove("texto_center");
+                        b.dtPagamento.getStyleClass().addAll("texto_estatico_center");
+                        b.vlDesconto.setEditable(false);
+                        b.vlDesconto.getStyleClass().remove("numero_editavel");
+                        b.vlDesconto.getStyleClass().addAll("numero_estatico");
+                        b.vlMulta.setEditable(false);
+                        b.vlMulta.getStyleClass().remove("numero_editavel");
+                        b.vlMulta.getStyleClass().addAll("numero_estatico");
                     } else {
                         b.btnEstornar.setDisable(true);
                     }
@@ -389,8 +458,8 @@ public class PagParcelaControl implements Initializable {
             painel.getChildren().add(b.vlParcela);
             painel.getChildren().add(b.tpMovto);
             painel.getChildren().add(b.vlPagamento);
-            painel.getChildren().add(b.dtPagamento);
             painel.getChildren().add(b.tpForPagto);
+            painel.getChildren().add(b.dtPagamento);
             painel.getChildren().add(b.vlDesconto);
             painel.getChildren().add(b.vlMulta);
             painel.getChildren().add(b.inCancelada);
@@ -404,6 +473,7 @@ public class PagParcelaControl implements Initializable {
     }
 
     public void addValidacao(ParcelaHit parcelaHit, int posicao, int total) {
+        FuncaoCampo.mascaraNumeroDecimal(parcelaHit.vlParcela);
         FuncaoCampo.mascaraNumeroDecimal(parcelaHit.vlMulta);
         FuncaoCampo.mascaraNumeroDecimal(parcelaHit.vlDesconto);
         TrataCombo.setValueComboTpFormaPagto(parcelaHit.tpForPagto, null);
