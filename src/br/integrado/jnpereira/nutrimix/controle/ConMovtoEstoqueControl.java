@@ -27,7 +27,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class ConAjustEstoqControl implements Initializable {
+public class ConMovtoEstoqueControl implements Initializable {
 
     @FXML
     TextField cdProduto;
@@ -93,6 +93,7 @@ public class ConAjustEstoqControl implements Initializable {
         TrataCombo.setValueComboTpMovtoEstoque(tpMovto, null);
 
         gridMovto = ContruirTableView.Criar(gridMovto, ClasseGenerica.class);
+        
         gridMovto.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
@@ -219,6 +220,7 @@ public class ConAjustEstoqControl implements Initializable {
                 classeGenerica.setDtMovto(new CustomDate(movto.getDtMovto().getTime()));
                 classeGenerica.setQtMovto(movto.getQtMovto());
                 classeGenerica.setQtEstoq(movto.getQtEstoque());
+                classeGenerica.setVlCustoMedio(movto.getVlCustoMedio());
                 classeGenerica.setInCancel(movto.getInCancelado() ? "Sim" : "Não");
                 valoresArray.add(classeGenerica);
             }
@@ -231,7 +233,7 @@ public class ConAjustEstoqControl implements Initializable {
         gridMovto.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    public class ClasseGenerica extends MovtoEstoque {
+    public class ClasseGenerica extends MovtoEstoque{
 
         @Coluna(nome = "Cód. Prod.")
         @Style(css = "-fx-alignment: CENTER;")
@@ -251,9 +253,12 @@ public class ConAjustEstoqControl implements Initializable {
         @Coluna(nome = "Qt. Movto")
         @Style(css = "-fx-alignment: CENTER;")
         private Double qtMovto;
-        @Coluna(nome = "Qt. Estoq.")
+        @Coluna(nome = "Qt. Estoque")
         @Style(css = "-fx-alignment: CENTER;")
         private Double qtEstoq;
+        @Coluna(nome = "Vl. Custo Médio")
+        @Style(css = "-fx-alignment: CENTER;")
+        private Double vlCustoMedio;
         @Coluna(nome = "Cancelado")
         @Style(css = "-fx-alignment: CENTER;")
         private String inCancel;
@@ -264,16 +269,16 @@ public class ConAjustEstoqControl implements Initializable {
         }
 
         @Override
-        public void setCdProduto(Integer cdProduto) {
-            this.cdProduto = cdProduto;
+        public void setCdProduto(Integer vCdProduto) {
+            this.cdProduto = vCdProduto;
         }
 
         public String getDsProduto() {
             return dsProduto;
         }
 
-        public void setDsProduto(String dsProduto) {
-            this.dsProduto = dsProduto;
+        public void setDsProduto(String vDsProduto) {
+            this.dsProduto = vDsProduto;
         }
 
         @Override
@@ -281,16 +286,16 @@ public class ConAjustEstoqControl implements Initializable {
             return dtMovto;
         }
 
-        public void setDtMovto(CustomDate dtMovto) {
-            this.dtMovto = dtMovto;
+        public void setDtMovto(CustomDate vDtMovto) {
+            this.dtMovto = vDtMovto;
         }
 
         public String getDsMovto() {
             return dsMovto;
         }
 
-        public void setDsMovto(String dsMovto) {
-            this.dsMovto = dsMovto;
+        public void setDsMovto(String vDsMovto) {
+            this.dsMovto = vDsMovto;
         }
 
         @Override
@@ -299,8 +304,8 @@ public class ConAjustEstoqControl implements Initializable {
         }
 
         @Override
-        public void setTpMovto(String tpMovto) {
-            this.tpMovto = tpMovto;
+        public void setTpMovto(String vTpMovto) {
+            this.tpMovto = vTpMovto;
         }
 
         @Override
@@ -309,25 +314,35 @@ public class ConAjustEstoqControl implements Initializable {
         }
 
         @Override
-        public void setQtMovto(Double qtMovto) {
-            this.qtMovto = qtMovto;
+        public void setQtMovto(Double vQtMovto) {
+            this.qtMovto = vQtMovto;
         }
 
         public Double getQtEstoq() {
             return qtEstoq;
         }
 
-        public void setQtEstoq(Double qtEstoq) {
-            this.qtEstoq = qtEstoq;
+        public void setQtEstoq(Double vQtEstoq) {
+            this.qtEstoq = vQtEstoq;
+        }
+
+        @Override
+        public Double getVlCustoMedio() {
+            return vlCustoMedio;
+        }
+
+        @Override
+        public void setVlCustoMedio(Double vVlCustoMedio) {
+            this.vlCustoMedio = vVlCustoMedio;
         }
 
         public String getInCancel() {
             return inCancel;
         }
 
-        public void setInCancel(String inCancel) {
-            this.inCancel = inCancel;
-        }
+        public void setInCancel(String vInCancel) {
+            this.inCancel = vInCancel;
+        }             
 
     }
 

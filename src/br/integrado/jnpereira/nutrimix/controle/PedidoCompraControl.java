@@ -331,7 +331,7 @@ public class PedidoCompraControl implements Initializable {
                     return;
                 }
 
-                double qtEntregue = (pedidoHit.vlProduto.getText().equals("") ? 0.0 : Double.parseDouble(pedidoHit.vlProduto.getText()));
+                double qtEntregue = (pedidoHit.qtEntregue.getText().equals("") ? 0.0 : Double.parseDouble(pedidoHit.qtEntregue.getText()));
                 if (qtProduto < qtEntregue) {
                     Alerta.AlertaError("Campo inválido", "Quantidade do pedido menor que quantidade entregue.");
                     pedidoHit.qtProduto.requestFocus();

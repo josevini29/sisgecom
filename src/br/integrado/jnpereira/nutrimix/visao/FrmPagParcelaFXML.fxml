@@ -80,6 +80,7 @@
                            </graphic>
                         </Button>
                         <Label fx:id="lblMovtoParcela" layoutX="14.0" layoutY="32.0" prefHeight="16.0" prefWidth="723.0" />
+                        <Label fx:id="lblParcelaEstornada" layoutX="759.0" layoutY="33.0" prefHeight="16.0" prefWidth="283.0" styleClass="label_parcela" textFill="#ee0707" />
                      </children>
                   </AnchorPane>
                </content>
@@ -112,24 +113,24 @@
       </TextField>
       <Label layoutX="15.0" layoutY="22.0" text="Conta" />
       <Label layoutX="87.0" layoutY="23.0" text="Tipo Conta" />
-      <TextField fx:id="dtConta" editable="false" layoutX="206.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="texto_estatico_center">
+      <TextField fx:id="dtConta" editable="false" layoutX="324.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="texto_estatico_center">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <Label layoutX="207.0" layoutY="23.0" text="Dt. Conta" />
-      <TextField fx:id="vlTotal" editable="false" layoutX="325.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="numero_estatico">
+      <Label layoutX="325.0" layoutY="23.0" text="Dt. Conta" />
+      <TextField fx:id="vlTotal" editable="false" layoutX="443.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="numero_estatico">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <Label layoutX="326.0" layoutY="23.0" text="Vl. Total" />
-      <TextField fx:id="vlPago" editable="false" layoutX="443.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="numero_estatico">
+      <Label layoutX="444.0" layoutY="23.0" text="Vl. Total" />
+      <TextField fx:id="vlPago" editable="false" layoutX="561.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="numero_estatico">
          <font>
             <Font size="12.0" />
          </font>
       </TextField>
-      <Label layoutX="444.0" layoutY="23.0" text="Vl. Total Paga" />
+      <Label layoutX="562.0" layoutY="23.0" text="Vl. Total Paga" />
       <Button layoutX="880.0" layoutY="458.0" mnemonicParsing="false" onAction="#salvar" prefHeight="29.0" prefWidth="99.0" text="Salvar">
          <font>
             <Font size="12.0" />
@@ -154,5 +155,11 @@
             </ImageView>
          </graphic>
       </Button>
+      <TextField fx:id="stConta" editable="false" layoutX="205.0" layoutY="38.0" prefHeight="30.0" prefWidth="112.0" styleClass="texto_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="206.0" layoutY="23.0" text="Situação" />
    </children>
 </AnchorPane>

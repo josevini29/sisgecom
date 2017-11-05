@@ -37,7 +37,7 @@ import javafx.stage.WindowEvent;
 public class MenuControl implements Initializable {
 
     private Stage stage;
-    private Dao dao = new Dao();
+    private final Dao dao = new Dao();
     public static int usuarioAtivo;
     public static String version = "1.10";
 

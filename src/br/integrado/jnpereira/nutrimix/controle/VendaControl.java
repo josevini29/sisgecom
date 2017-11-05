@@ -13,6 +13,7 @@ import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Cliente;
 import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.FechamentoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
@@ -272,6 +273,10 @@ public class VendaControl implements Initializable {
                         }
                     }
 
+                    if (prod.getQtEstqAtual() <= 0) {
+                        Alerta.AlertaWarning("Aviso!", "Produto sem estoque ou estoque negativo, favor verificar!");
+                    }
+
                     EstoqueControl prodController = new EstoqueControl();
                     Double vlPreco = prodController.getUltimoPreco(prod.getCdProduto());
                     if (vlPreco == null) {
@@ -395,6 +400,15 @@ public class VendaControl implements Initializable {
                 }
             }
 
+            CaixaControler caixa = new CaixaControler();
+            FechamentoCaixa fechamento;
+            try {
+                fechamento = caixa.getCaixaAberto(Data.getAgora()); //pega caixa aberto
+            } catch (Exception ex) {
+                Alerta.AlertaWarning("Negado!", ex.getMessage());
+                return;
+            }
+
             dao.autoCommit(false);
             VendaCompra venda = new VendaCompra();
             venda.setTpMovto("S");
@@ -466,8 +480,10 @@ public class VendaControl implements Initializable {
             dao.save(conta);
 
             ParcelaControl parcela = new ParcelaControl();
-            parcela.gerarParcelas(conta);
+            parcela.gerarParcelas(conta, fechamento);
 
+            ParcelaControl parcelaControl = new ParcelaControl();
+            parcelaControl.encerrarConta(conta);
             dao.commit();
 
             Relatorio recibo = new Relatorio();
@@ -476,6 +492,7 @@ public class VendaControl implements Initializable {
             ex.printStackTrace();
             dao.rollback();
             Alerta.AlertaError("Erro!", ex.getMessage());
+            stage.close();
             return;
         }
 

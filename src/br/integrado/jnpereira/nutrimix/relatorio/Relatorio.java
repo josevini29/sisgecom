@@ -213,28 +213,28 @@ public class Relatorio {
             for (Object obj : parcelas) {
                 Parcela parcela = (Parcela) obj;
                 if (!parcela.getInCancelada()) {
-                    infoPag.addCell(new Paragraph(parcela.getCdParcela().toString(), getFont(2.1f)));
-                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtVencto()), getFont(2)));
-                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtPagto()), getFont(2)));
-                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlParcela(), 2), getFont(2)));
-                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlDesconto(), 2), getFont(2.1f)));
-                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlMulta(), 2), getFont(2.1f)));
+                    infoPag.addCell(new Paragraph(parcela.getCdParcela().toString(), getFont(1.7f)));
+                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtVencto()), getFont(1.7f)));
+                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtPagto()), getFont(1.7f)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlParcela(), 2), getFont(1.7f)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlDesconto(), 2), getFont(1.7f)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlMulta(), 2), getFont(1.7f)));
                     vVlTotal = (parcela.getVlParcela() + trataDouble(parcela.getVlMulta())) - trataDouble(parcela.getVlDesconto());
                 } else {
-                    infoPag.addCell(new Paragraph(parcela.getCdParcela().toString(), getFontTachada(2.1f)));
-                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtVencto()), getFontTachada(2)));
-                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtPagto()), getFontTachada(2)));
-                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlParcela(), 2), getFontTachada(2)));
-                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlDesconto(), 2), getFontTachada(2.1f)));
-                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlMulta(), 2), getFontTachada(2.1f)));
+                    infoPag.addCell(new Paragraph(parcela.getCdParcela().toString(), getFontTachada(1.7f)));
+                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtVencto()), getFontTachada(1.7f)));
+                    infoPag.addCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtPagto()), getFontTachada(1.7f)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlParcela(), 2), getFontTachada(1.7f)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlDesconto(), 2), getFontTachada(1.7f)));
+                    infoPag.addCell(new Paragraph(Numero.doubleToReal(parcela.getVlMulta(), 2), getFontTachada(1.7f)));
                 }
             }
-            infoPag.addCell(new Paragraph("", getFont(2.5f)));
-            infoPag.addCell(new Paragraph("", getFont(2.5f)));
-            infoPag.addCell(new Paragraph("", getFont(2.5f)));
-            infoPag.addCell(new Paragraph("", getFont(2.5f)));
-            infoPag.addCell(new Paragraph("Total: ", getFont(2.5f)));
-            infoPag.addCell(new Paragraph(Numero.doubleToReal(vVlTotal, 2), getFont(2.5f)));
+            infoPag.addCell(new Paragraph("", getFont(1.7f)));
+            infoPag.addCell(new Paragraph("", getFont(1.7f)));
+            infoPag.addCell(new Paragraph("", getFont(1.7f)));
+            infoPag.addCell(new Paragraph("", getFont(1.7f)));
+            infoPag.addCell(new Paragraph("Total: ", getFont(1.7f)));
+            infoPag.addCell(new Paragraph(Numero.doubleToReal(vVlTotal, 2), getFont(1.7f)));
 
             document.add(infoPag);
 

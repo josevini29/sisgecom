@@ -3,6 +3,13 @@
     -fx-font-size: 11px;
 }
 
+.label_parcela {
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-text-fill: red;
+    -fx-alignment: center-right;
+}
+
 .text-field {
     -fx-font-size: 14px;
 }
@@ -136,6 +143,17 @@
     -fx-padding: 0 5 0 5;
     -fx-effect: innershadow(gaussian ,#ABABAB, 1,0.1,0.1,0.1);
     -fx-alignment: center;
+}
+
+.texto_estatico_center_vermelho {
+    -fx-background-color: linear-gradient(#E8E8E8,  #E8E8E8, #E8E8E8);
+    -fx-border-color: #ABABAB;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 0 5 0 5;
+    -fx-effect: innershadow(gaussian ,#ABABAB, 1,0.1,0.1,0.1);
+    -fx-alignment: center;
+    -fx-text-fill: red;
 }
 
 .numero_estatico {

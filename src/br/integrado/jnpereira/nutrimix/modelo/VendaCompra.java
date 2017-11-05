@@ -17,7 +17,7 @@ public class VendaCompra {
     @Coluna(nome="cd_pessoa")
     private Integer cdPessoa;
     @Coluna(nome="nr_nota")
-    private Integer nrNota;
+    private String nrNota;
     @Coluna(nome="cd_serie")
     private String cdSerie;
     @Coluna(nome="vl_desconto")
@@ -64,12 +64,12 @@ public class VendaCompra {
     public void setCdPessoa(Integer cdPessoa) {
         this.cdPessoa = cdPessoa;
     }
-    
-    public Integer getNrNota() {
+
+    public String getNrNota() {
         return nrNota;
     }
 
-    public void setNrNota(Integer nrNota) {
+    public void setNrNota(String nrNota) {
         this.nrNota = nrNota;
     }
 
@@ -137,14 +137,6 @@ public class VendaCompra {
         this.dtAtend = dtAtend;
     }
 
-    public Boolean getInCancelado() {
-        return inCancelado;
-    }
-
-    public void setInCancelado(Boolean inCancelado) {
-        this.inCancelado = inCancelado;
-    }
-
     public Double getVlTotal() {
         return vlTotal;
     }
@@ -160,4 +152,13 @@ public class VendaCompra {
     public void setCdPedido(Integer cdPedido) {
         this.cdPedido = cdPedido;
     }
+
+    public Boolean getInCancelado() {
+        return inCancelado;
+    }
+
+    public void setInCancelado(Boolean inCancelado) {
+        this.inCancelado = inCancelado;
+    }
+
 }

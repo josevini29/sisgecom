@@ -36,6 +36,8 @@ public class Parcela {
     private Integer cdUserMovto;
     @Coluna(nome = "dt_ultmovto")
     private Date dtUltMovto;
+    @Coluna(nome = "cd_parestorno")
+    private Integer cdParEstorno;
 
     public String getTpMovto() {
         return tpMovto;
@@ -139,6 +141,14 @@ public class Parcela {
 
     public void setInCancelada(Boolean inCancelada) {
         this.inCancelada = inCancelada;
+    }
+
+    public Integer getCdParEstorno() {
+        return cdParEstorno;
+    }
+
+    public void setCdParEstorno(Integer cdParEstorno) {
+        this.cdParEstorno = cdParEstorno;
     }
 
 }

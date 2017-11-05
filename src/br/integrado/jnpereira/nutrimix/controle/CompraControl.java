@@ -10,6 +10,7 @@ import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompraProduto;
 import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.FechamentoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.Fornecedor;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
 import br.integrado.jnpereira.nutrimix.modelo.Pedido;
@@ -28,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -198,10 +197,16 @@ public class CompraControl implements Initializable {
     private void validaCodigoPedido() {
         if (!cdPedido.getText().equals("")) {
             try {
+                if (pedido != null) {
+                    if (Integer.parseInt(cdPedido.getText()) == pedido.getCdPedido()) {
+                        return;
+                    }
+                }
+
                 pedido = new Pedido();
                 pedido.setCdPedido(Integer.parseInt(cdPedido.getText()));
                 dao.get(pedido);
-                if (!pedido.getStPedido().equals("1")){
+                if (!pedido.getStPedido().equals("1")) {
                     Alerta.AlertaError("Campo inválido!", "Apenas permitido pedidos pendentes.");
                     cdPedido.setText("");
                     pedido = null;
@@ -214,7 +219,7 @@ public class CompraControl implements Initializable {
                 Alerta.AlertaError("Campo inválido!", ex.getMessage());
             }
         } else {
-            limpar();
+            limparTelaPedido();
         }
     }
 
@@ -452,15 +457,24 @@ public class CompraControl implements Initializable {
         }
 
         try {
+            dao.autoCommit(false);
             CondicaoPagto cond = new CondicaoPagto();
             cond.setCdCondicao(TrataCombo.getValueComboTpCondicaoPagto(tpCondPagto));
             dao.get(cond);
 
-            dao.autoCommit(false);
+            CaixaControler caixa = new CaixaControler();
+            FechamentoCaixa fechamento;
+            try {
+                fechamento = caixa.getCaixaAberto(Data.getAgora()); //pega caixa aberto
+            } catch (Exception ex) {
+                Alerta.AlertaWarning("Negado!", ex.getMessage());
+                return;
+            }
+
             VendaCompra compra = new VendaCompra();
             compra.setTpMovto(EstoqueControl.ENTRADA);
             compra.setCdPessoa(pessoa.getCdPessoa());
-            compra.setNrNota(!nrNotaFiscal.getText().equals("") ? Integer.parseInt(nrNotaFiscal.getText()) : null);
+            compra.setNrNota(!nrNotaFiscal.getText().equals("") ? nrNotaFiscal.getText() : null);
             compra.setCdSerie(!cdSerie.getText().equals("") ? cdSerie.getText() : null);
             compra.setCdPedido(!cdPedido.getText().equals("") ? Integer.parseInt(cdPedido.getText()) : null);
             compra.setVlDesconto(!vlDesconto.getText().equals("") ? Double.parseDouble(vlDesconto.getText()) : 0.0);
@@ -533,7 +547,10 @@ public class CompraControl implements Initializable {
             dao.save(conta);
 
             ParcelaControl parcela = new ParcelaControl();
-            parcela.gerarParcelas(conta);
+            parcela.gerarParcelas(conta, fechamento);
+
+            ParcelaControl parcelaControl = new ParcelaControl();
+            parcelaControl.encerrarConta(conta);
 
             dao.commit();
 
@@ -564,6 +581,23 @@ public class CompraControl implements Initializable {
         listCompraProd = new ArrayList<>();
         FuncaoCampo.limparCampos(painel);
         iniciaTela();
+    }
+
+    private void limparTelaPedido() {
+        String nrNotaFiscal = this.nrNotaFiscal.getText();
+        String cdSerie = this.cdSerie.getText();
+        String dtEmissao = this.dtEmissao.getText();
+
+        pedido = null;
+        fornecedor = null;
+        pessoa = null;
+        listCompraProd = new ArrayList<>();
+        FuncaoCampo.limparCampos(painel);
+        iniciaTela();
+
+        this.nrNotaFiscal.setText(nrNotaFiscal);
+        this.cdSerie.setText(cdSerie);
+        this.dtEmissao.setText(dtEmissao);
     }
 
     public void atualizaCompraProd() {
