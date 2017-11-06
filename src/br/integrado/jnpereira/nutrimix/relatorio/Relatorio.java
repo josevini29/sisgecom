@@ -263,7 +263,7 @@ public class Relatorio {
             document.open();
 
             //Cabeçalho
-            Image imagem = Image.getInstance("./src/br/integrado/jnpereira/nutrimix/icon/sisgecom_logo.png");
+            Image imagem = Image.getInstance(getClass().getResource("/br/integrado/jnpereira/nutrimix/icon/sisgecom_logo.png"));
             imagem.scalePercent(15.4f);
             Paragraph dsRelatorio = new Paragraph("Relatório de Estoque", getFont(14));
             dsRelatorio.setAlignment(Element.ALIGN_CENTER);
