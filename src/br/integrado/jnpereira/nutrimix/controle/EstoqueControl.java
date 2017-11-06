@@ -25,8 +25,8 @@ public class EstoqueControl {
         Produto produto = new Produto();
         produto.setCdProduto(movto.getCdProduto());
         dao.get(produto);
-        
-        if(!produto.getInEstoque()){ //apenas produtos com controle de estoque
+
+        if (!produto.getInEstoque()) { //apenas produtos com controle de estoque
             return;
         }
 
@@ -50,11 +50,10 @@ public class EstoqueControl {
             if (movto.getVlItem() == null) {
                 movto.setVlItem(0.00);
             }
-            //if (movto.getVlItem() != null) { //Calcula o custo médio
             double vlTotal = ((produto.getQtEstqAtual() * produto.getVlCustoMedio())
                     + (movto.getQtMovto() * movto.getVlItem()));
             produto.setVlCustoMedio(divisao(vlTotal, (produto.getQtEstqAtual() + movto.getQtMovto())));
-            //}
+ 
             produto.setQtEstqAtual(produto.getQtEstqAtual() + movto.getQtMovto());
         } else {
             produto.setQtEstqAtual(produto.getQtEstqAtual() - movto.getQtMovto());
@@ -203,25 +202,39 @@ public class EstoqueControl {
     //Tipo de Ajuste
 
     //Tipo de Movimento de Estoque
-    public static ArrayList<TipoMovtoEstoque> getAllTipoMovtoEstoque() {
-        ArrayList<TipoMovtoEstoque> tipos = new ArrayList<>();
-        tipos.add(new TipoMovtoEstoque(null, ""));
-        tipos.add(new TipoMovtoEstoque(1, "Compra"));
-        tipos.add(new TipoMovtoEstoque(2, "Venda"));
-        tipos.add(new TipoMovtoEstoque(3, "Ajuste"));
+    public static ArrayList<TipoMovto> getAllTipoMovtoEstoque() {
+        ArrayList<TipoMovto> tipos = new ArrayList<>();
+        tipos.add(new TipoMovto(null, ""));
+        tipos.add(new TipoMovto(1, "Compra"));
+        tipos.add(new TipoMovto(2, "Venda"));
+        tipos.add(new TipoMovto(3, "Ajuste"));
         return tipos;
     }
 
-    public static TipoMovtoEstoque getTipoMovtoEstoque(int id) {
+    public static TipoMovto getTipoMovtoEstoque(int id) {
         return getAllTipoMovtoEstoque().get(id);
     }
 
-    public static class TipoMovtoEstoque {
+    public static ArrayList<TipoMovto> getAllTipoMovtoCaixa() {
+        ArrayList<TipoMovto> tipos = new ArrayList<>();
+        tipos.add(new TipoMovto(null, ""));
+        tipos.add(new TipoMovto(1, "Compra"));
+        tipos.add(new TipoMovto(2, "Venda"));
+        tipos.add(new TipoMovto(3, "Despesa"));
+        tipos.add(new TipoMovto(4, "Ajuste"));
+        return tipos;
+    }
+
+    public static TipoMovto getTipoMovtoCaixa(int id) {
+        return getAllTipoMovtoCaixa().get(id);
+    }
+
+    public static class TipoMovto {
 
         private Integer cdTpMovto;
         private String dsTpMovto;
 
-        public TipoMovtoEstoque(Integer cdTpMovto, String dsTpMovto) {
+        public TipoMovto(Integer cdTpMovto, String dsTpMovto) {
             this.cdTpMovto = cdTpMovto;
             this.dsTpMovto = dsTpMovto;
         }
@@ -252,9 +265,9 @@ public class EstoqueControl {
 
     public static String getDsEntraSaida(String tpMovto) {
         if (tpMovto.equals("E")) {
-            return "Entrada";
+            return "Entrada ▼";
         } else if (tpMovto.equals("S")) {
-            return "Saída";
+            return "Saída     ▲";
         }
         return null;
     }

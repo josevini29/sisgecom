@@ -57,6 +57,8 @@ public class Tela {
     @Senha
     final public static String[] CON_MOVTO_ESTOQ = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConMovtoEstoqueFXML.fxml", "Consulta Movimento de Estoque"};
     @Senha
+    final public static String[] CON_MOVTO_CAIXA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConMovtoCaixaFXML.fxml", "Consulta Movimento de Caixa"};
+    @Senha
     final public static String[] CAD_ATEND = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAtendimentoFXML.fxml", "Atendimento a Mesa"};
     @Senha
     final public static String[] CAD_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadVendaFXML.fxml", "Venda"};
@@ -75,7 +77,9 @@ public class Tela {
     final public static String[] CON_CONTA_RECEBER = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConContasReceberFXML.fxml", "Consulta de Contas a Receber"};
     @Senha
     final public static String[] CON_CONTA_PAGAR = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConContasPagarFXML.fxml", "Consulta de Contas a Pagar"};
+    @Senha
     final public static String[] PAG_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmPagParcelaFXML.fxml", "Pagamento de Parcela"};
+    final public static String[] CON_VENDA_COMPRA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConVendaCompraFXML.fxml", "Consulta Venda/Compra"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));

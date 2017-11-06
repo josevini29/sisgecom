@@ -214,6 +214,24 @@ public class TrataCombo {
         return null;
     }
 
+        public static void setValueComboTpMovtoCaixa(ChoiceBox combo, Integer selecionado) {
+        if (combo.getItems().isEmpty()) {
+            combo.setItems(FXCollections.observableArrayList(EstoqueControl.getAllTipoMovtoCaixa()));
+        }
+        if (selecionado != null) {
+            SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+            model.select(selecionado - 1);
+        }
+    }
+
+    public static Integer getValueComboTpMovtoCaixa(ChoiceBox combo) {
+        SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+        if (model.getSelectedIndex() > -1) {
+            return EstoqueControl.getAllTipoMovtoCaixa().get(model.getSelectedIndex()).getCdTpMovto();
+        }
+        return null;
+    }
+    
     public static void setValueComboEntradaSaida(ChoiceBox combo, String selecionado) {
         if (combo.getItems().isEmpty()) {
             combo.setItems(FXCollections.observableArrayList("Entrada", "Saída"));

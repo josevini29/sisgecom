@@ -34,6 +34,7 @@ public class CaixaControler {
         caixa.setCdFechamento(fechamento.getCdFechamento());
         caixa.setCdConta(parcela.getCdConta());
         caixa.setCdParcela(parcela.getCdParcela());
+        caixa.setVlMovto(parcela.getVlPagto());
         dao.save(caixa);
     }
     

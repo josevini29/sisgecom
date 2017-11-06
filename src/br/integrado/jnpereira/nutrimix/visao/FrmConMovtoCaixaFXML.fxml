@@ -12,17 +12,22 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="1048.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.ConMovtoCaixaControl">
    <children>
-      <TextField fx:id="dtInicio" alignment="CENTER" layoutX="205.0" layoutY="38.0" prefHeight="30.0" prefWidth="105.0">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
-      <TextField fx:id="dtFim" alignment="CENTER" layoutX="322.0" layoutY="37.0" prefHeight="30.0" prefWidth="105.0">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </TextField>
       <ChoiceBox fx:id="tpMovto" layoutX="14.0" layoutY="37.0" prefHeight="30.0" prefWidth="176.0" />
+      <TextField fx:id="dtInicio" alignment="CENTER" layoutX="205.0" layoutY="38.0" prefHeight="30.0" prefWidth="105.0" styleClass="texto_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="dtFim" alignment="CENTER" layoutX="322.0" layoutY="37.0" prefHeight="30.0" prefWidth="105.0" styleClass="texto_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="cdFechamento" alignment="CENTER" layoutX="437.0" layoutY="36.0" prefHeight="30.0" prefWidth="105.0" styleClass="numero_editavel">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
       <Button layoutX="958.0" layoutY="31.0" maxHeight="23.0" maxWidth="75.0" mnemonicParsing="false" onAction="#atualizaGrid" prefHeight="30.0" prefWidth="75.0">
          <graphic>
             <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
@@ -36,5 +41,6 @@
       <Label layoutX="205.0" layoutY="22.0" text="Data Inicial" />
       <Label layoutX="322.0" layoutY="22.0" text="Data Fim" />
       <Label layoutX="14.0" layoutY="22.0" text="Tipo de Movto" />
+      <Label layoutX="437.0" layoutY="21.0" text="Cód. Fechamento" />
    </children>
 </AnchorPane>

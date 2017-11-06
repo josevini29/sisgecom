@@ -2,9 +2,9 @@ package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
-import br.integrado.jnpereira.nutrimix.modelo.AjusteEstoque;
-import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
-import br.integrado.jnpereira.nutrimix.modelo.Produto;
+import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.FormaPagto;
+import br.integrado.jnpereira.nutrimix.modelo.MovtoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
 import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
@@ -13,6 +13,7 @@ import br.integrado.jnpereira.nutrimix.tools.Criteria;
 import br.integrado.jnpereira.nutrimix.tools.CustomDate;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
+import br.integrado.jnpereira.nutrimix.tools.Numero;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
 import br.integrado.jnpereira.nutrimix.tools.TrataCombo;
 import java.net.URL;
@@ -24,19 +25,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class ConMovtoEstoqueControl implements Initializable {
+public class ConMovtoCaixaControl implements Initializable {
 
-    @FXML
-    TextField cdProduto;
-    @FXML
-    TextField dsProduto;
     @FXML
     TextField dtInicio;
     @FXML
@@ -44,7 +40,7 @@ public class ConMovtoEstoqueControl implements Initializable {
     @FXML
     ChoiceBox tpMovto;
     @FXML
-    CheckBox inMovCancel;
+    TextField cdFechamento;
 
     @FXML
     TableView<ClasseGenerica> gridMovto;
@@ -58,54 +54,15 @@ public class ConMovtoEstoqueControl implements Initializable {
 
     }
 
-    @FXML
-    public void abrirListaProduto() {
-        Tela tela = new Tela();
-        String valor = tela.abrirListaGenerica(new Produto(), "cdProduto", "dsProduto", "AND $inAtivo$ = 'T'", "Lista de Produtos");
-        if (valor != null) {
-            cdProduto.setText(valor);
-            validaCodigoProduto();
-        }
-    }
-
-    private void validaCodigoProduto() {
-        if (!cdProduto.getText().equals("")) {
-            try {
-                Produto prod = new Produto();
-                prod.setCdProduto(Integer.parseInt(cdProduto.getText()));
-                dao.get(prod);
-
-                if (!prod.getInAtivo()) {
-                    Alerta.AlertaError("Inválido", "Produto está inativo.");
-                    cdProduto.requestFocus();
-                    return;
-                }
-
-                dsProduto.setText(prod.getDsProduto());
-            } catch (Exception ex) {
-                Alerta.AlertaError("Notificação", "Produto não encontrado!");
-                cdProduto.requestFocus();
-            }
-        } else {
-            dsProduto.setText("");
-        }
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        FuncaoCampo.mascaraNumeroInteiro(cdProduto);
         FuncaoCampo.mascaraData(dtInicio);
         FuncaoCampo.mascaraData(dtFim);
-        TrataCombo.setValueComboTpMovtoEstoque(tpMovto, null);
+        TrataCombo.setValueComboTpMovtoCaixa(tpMovto, null);
 
         gridMovto = ContruirTableView.Criar(gridMovto, ClasseGenerica.class);
 
         gridMovto.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
-            if (!newPropertyValue) {
-                validaCodigoProduto();
-            }
-        });
 
         gridMovto.setOnMousePressed((MouseEvent event) -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
@@ -182,53 +139,55 @@ public class ConMovtoEstoqueControl implements Initializable {
             dtInicio.requestFocus();
             return;
         }
+        Integer vCdTpMovto = TrataCombo.getValueComboTpMovtoCaixa(tpMovto);
         try {
-            Criteria criterio = new Criteria(new MovtoEstoque());
-            criterio.AddAnd("cdProduto", cdProduto.getText(), false);
-            if (!inMovCancel.isSelected()) {
-                criterio.AddAnd("inCancelado", false, false);
-            }
+            Criteria criterio = new Criteria(new MovtoCaixa());
             criterio.AddAndBetweenDate("dtMovto", dtInicio.getText(), dtFim.getText());
-
-            if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) != null) {
-                if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) == 1) {
-                    criterio.AddAnd("tpMovto", "E", false);
-                    criterio.AddAnd("cdAjuste", null, true);
-                } else if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) == 2) {
-                    criterio.AddAnd("tpMovto", "S", false);
-                    criterio.AddAnd("cdAjuste", null, true);
-                } else if (TrataCombo.getValueComboTpMovtoEstoque(tpMovto) == 3) {
-                    criterio.AddAnd("cdMovCompVend", null, true);
-                }
-            }
+            criterio.AddAnd("cdFechamento", cdFechamento.getText(), false);
             criterio.AddOrderByAsc("dtMovto");
             String sql = criterio.getWhereSql();
 
-            ArrayList<Object> ajustes = dao.getAllWhere(new MovtoEstoque(), sql);
+            ArrayList<Object> ajustes = dao.getAllWhere(new MovtoCaixa(), sql);
             for (Object obj : ajustes) {
-                MovtoEstoque movto = (MovtoEstoque) obj;
+                MovtoCaixa movto = (MovtoCaixa) obj;
+                int vTpMovto;
+                if (movto.getCdAjuste() != null) {
+                    vTpMovto = 4;
+                } else {
+                    ContasPagarReceber conta = new ContasPagarReceber();
+                    conta.setCdConta(movto.getCdConta());
+                    dao.get(conta);
+                    if (conta.getCdDespesa() != null) {
+                        vTpMovto = 3;
+                    } else {
+                        VendaCompra vendaCompra = new VendaCompra();
+                        vendaCompra.setCdMovto(conta.getCdMovto());
+                        dao.get(vendaCompra);
+                        if (vendaCompra.getTpMovto().equals("S")) {
+                            vTpMovto = 2;
+                        } else {
+                            vTpMovto = 1;
+                        }
+                    }
+                }
+                if (vCdTpMovto != null) {
+                    if (vTpMovto != vCdTpMovto) {
+                        continue;
+                    }
+                }
                 ClasseGenerica classeGenerica = new ClasseGenerica();
                 classeGenerica.movto = movto;
-                classeGenerica.setCdProduto(movto.getCdProduto());
-                Produto prod = new Produto();
-                prod.setCdProduto(movto.getCdProduto());
-                dao.get(prod);
-                classeGenerica.setDsProduto(prod.getDsProduto());
-                classeGenerica.setDsMovto(EstoqueControl.getDsEntraSaida(movto.getTpMovto()));
-                Integer codMovto = null;
-                if (movto.getCdMovCompVend() != null && movto.getTpMovto().equals("E")) {
-                    codMovto = 1;
-                } else if (movto.getCdMovCompVend() != null && movto.getTpMovto().equals("S")) {
-                    codMovto = 2;
-                } else if (movto.getCdAjuste() != null) {
-                    codMovto = 3;
-                }
-                classeGenerica.setTpMovto(EstoqueControl.getTipoMovtoEstoque(codMovto).getDsTpMovto());
+                classeGenerica.setCdMovtoCaixa(movto.getCdMovtoCaixa());
+                classeGenerica.setTpMovtoCaixa(EstoqueControl.getAllTipoMovtoCaixa().get(vTpMovto).getDsTpMovto());
+                classeGenerica.setTpMovto(EstoqueControl.getDsEntraSaida(movto.getTpMovtoCaixa()));
                 classeGenerica.setDtMovto(new CustomDate(movto.getDtMovto().getTime()));
-                classeGenerica.setQtMovto(movto.getQtMovto());
-                classeGenerica.setQtEstoq(movto.getQtEstoque());
-                classeGenerica.setVlCustoMedio(movto.getVlCustoMedio());
-                classeGenerica.setInCancel(movto.getInCancelado() ? "Sim" : "Não");
+                classeGenerica.setCdFechamento(movto.getCdFechamento());
+                classeGenerica.setCdForPagto(movto.getCdFormaPagto());
+                FormaPagto forma = new FormaPagto();
+                forma.setCdFormaPagto(movto.getCdFormaPagto());
+                dao.get(forma);
+                classeGenerica.setDsForPagto(forma.getDsFormaPagto());
+                classeGenerica.setVlMovto(Numero.arredondaDecimal(movto.getVlMovto(), 2));
                 valoresArray.add(classeGenerica);
             }
         } catch (Exception ex) {
@@ -246,16 +205,27 @@ public class ConMovtoEstoqueControl implements Initializable {
             Alerta.AlertaWarning("Aviso!", "Selecione um item.");
             return;
         }
-        if (classe.movto.getCdMovCompVend() != null) {
-            VendaCompra movto = new VendaCompra();
-            movto.setCdMovto(classe.movto.getCdMovCompVend());
-            Tela tela = new Tela();
-            tela.abrirTelaModalComParam(stage, Tela.CON_VENDA_COMPRA, movto);
-        } else {
-            AjusteEstoque movto = new AjusteEstoque();
-            movto.setCdAjuste(classe.movto.getCdAjuste());
-            Tela tela = new Tela();
-            tela.abrirTelaModalComParam(stage, Tela.CAD_AJUSTPROD, movto);
+
+        MovtoCaixa movto = classe.movto;
+        try {
+            if (movto.getCdAjuste() != null) {
+                //Consulta ajustte
+            } else {
+                ContasPagarReceber conta = new ContasPagarReceber();
+                conta.setCdConta(movto.getCdConta());
+                dao.get(conta);
+
+                if (conta.getCdDespesa() != null) {
+                    //Consulta despesa
+                } else {
+                    VendaCompra vendaCompra = new VendaCompra();
+                    vendaCompra.setCdMovto(conta.getCdMovto());
+                    Tela tela = new Tela();
+                    tela.abrirTelaModalComParam(stage, Tela.CON_VENDA_COMPRA, vendaCompra);
+                }
+            }
+        } catch (Exception ex) {
+            Alerta.AlertaError("Erro!", ex.toString());
         }
     }
 
@@ -263,103 +233,92 @@ public class ConMovtoEstoqueControl implements Initializable {
 
         @Coluna(nome = "Cód. Prod.")
         @Style(css = "-fx-alignment: CENTER;")
-        private Integer cdProduto;
-        @Coluna(nome = "Descrição do Produto")
-        @Style(css = "-fx-alignment: LEFT-CENTER;")
-        private String dsProduto;
+        private Integer cdMovtoCaixa;
+        @Coluna(nome = "Tipo Movto")
+        @Style(css = "-fx-alignment: CENTER;")
+        private String tpMovtoCaixa;
+        @Coluna(nome = "Entrada/Saída")
+        @Style(css = "-fx-alignment: CENTER;")
+        private String tpMovto;
         @Coluna(nome = "Data Movto")
         @Style(css = "-fx-alignment: CENTER;")
         private CustomDate dtMovto;
-        @Coluna(nome = "Entrada/Saída")
+        @Coluna(nome = "Cód. Fechamento")
         @Style(css = "-fx-alignment: CENTER;")
-        private String dsMovto;
-        @Coluna(nome = "Tipo de Movto")
+        private Integer cdFechamento;
+        @Coluna(nome = "Cód.Forma.Pagto")
         @Style(css = "-fx-alignment: CENTER;")
-        private String tpMovto;
-        @Coluna(nome = "Qt. Movto")
+        private Integer cdForPagto;
+        @Coluna(nome = "Forma Pagamento")
         @Style(css = "-fx-alignment: CENTER;")
-        private Double qtMovto;
-        @Coluna(nome = "Qt. Estoque")
+        private String dsForPagto;
+        @Coluna(nome = "Vl. Movto")
         @Style(css = "-fx-alignment: CENTER;")
-        private Double qtEstoq;
-        @Coluna(nome = "Vl. Custo Médio")
-        @Style(css = "-fx-alignment: CENTER;")
-        private Double vlCustoMedio;
-        @Coluna(nome = "Cancelado")
-        @Style(css = "-fx-alignment: CENTER;")
-        private String inCancel;
-        MovtoEstoque movto;
+        private Double vlMovto;
+        MovtoCaixa movto;
 
-        public Integer getCdProduto() {
-            return cdProduto;
+        public Integer getCdMovtoCaixa() {
+            return cdMovtoCaixa;
         }
 
-        public void setCdProduto(Integer vCdProduto) {
-            this.cdProduto = vCdProduto;
+        public void setCdMovtoCaixa(Integer cdMovtoCaixa) {
+            this.cdMovtoCaixa = cdMovtoCaixa;
         }
 
-        public String getDsProduto() {
-            return dsProduto;
+        public String getTpMovtoCaixa() {
+            return tpMovtoCaixa;
         }
 
-        public void setDsProduto(String vDsProduto) {
-            this.dsProduto = vDsProduto;
-        }
-
-        public CustomDate getDtMovto() {
-            return dtMovto;
-        }
-
-        public void setDtMovto(CustomDate vDtMovto) {
-            this.dtMovto = vDtMovto;
-        }
-
-        public String getDsMovto() {
-            return dsMovto;
-        }
-
-        public void setDsMovto(String vDsMovto) {
-            this.dsMovto = vDsMovto;
+        public void setTpMovtoCaixa(String tpMovtoCaixa) {
+            this.tpMovtoCaixa = tpMovtoCaixa;
         }
 
         public String getTpMovto() {
             return tpMovto;
         }
 
-        public void setTpMovto(String vTpMovto) {
-            this.tpMovto = vTpMovto;
+        public void setTpMovto(String tpMovto) {
+            this.tpMovto = tpMovto;
         }
 
-        public Double getQtMovto() {
-            return qtMovto;
+        public CustomDate getDtMovto() {
+            return dtMovto;
         }
 
-        public void setQtMovto(Double vQtMovto) {
-            this.qtMovto = vQtMovto;
+        public void setDtMovto(CustomDate dtMovto) {
+            this.dtMovto = dtMovto;
         }
 
-        public Double getQtEstoq() {
-            return qtEstoq;
+        public Integer getCdFechamento() {
+            return cdFechamento;
         }
 
-        public void setQtEstoq(Double vQtEstoq) {
-            this.qtEstoq = vQtEstoq;
+        public void setCdFechamento(Integer cdFechamento) {
+            this.cdFechamento = cdFechamento;
         }
 
-        public Double getVlCustoMedio() {
-            return vlCustoMedio;
+        public Integer getCdForPagto() {
+            return cdForPagto;
         }
 
-        public void setVlCustoMedio(Double vVlCustoMedio) {
-            this.vlCustoMedio = vVlCustoMedio;
+        public void setCdForPagto(Integer cdForPagto) {
+            this.cdForPagto = cdForPagto;
         }
 
-        public String getInCancel() {
-            return inCancel;
+        public String getDsForPagto() {
+            return dsForPagto;
         }
 
-        public void setInCancel(String vInCancel) {
-            this.inCancel = vInCancel;
+        public void setDsForPagto(String dsForPagto) {
+            this.dsForPagto = dsForPagto;
+        }
+
+        public Double getVlMovto() {
+            return vlMovto;
+        }
+
+        public void setVlMovto(Double vlMovto) {
+            this.vlMovto = vlMovto;
         }
 
     }

@@ -12,7 +12,6 @@ import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.IconButtonHit;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -27,6 +26,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 public class AjustEstoqControl implements Initializable {
 
@@ -72,6 +72,8 @@ public class AjustEstoqControl implements Initializable {
     AjusteEstoque ajuste;
     ArrayList<AjusteMovtoHit> listMovto = new ArrayList<>();
     boolean inAntiLoop = true;
+    public Stage stage;
+    public Object param;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -87,7 +89,12 @@ public class AjustEstoqControl implements Initializable {
     }
 
     public void iniciaTela() {
-        atualizaMovtoHit();
+        if (param != null) {
+            cdAjuste.setText(((AjusteEstoque) param).getCdAjuste().toString());
+            validaCodigoAjuste();
+        } else {
+            atualizaMovtoHit();
+        }
     }
 
     private void validaCodigoAjuste() {
@@ -293,11 +300,11 @@ public class AjustEstoqControl implements Initializable {
     private void limparTela() {
         ajuste = null;
         FuncaoCampo.limparCampos(painel);
-        atualizaMovtoHit();
         lblCadastro.setText("");
         cdAjuste.setEditable(true);
         tpAjuste.setDisable(false);
         dtAjuste.setText(Data.AmericaToBrasilSemHora(Data.getAgora()));
+        iniciaTela();
     }
 
     //Inicio codigo da lista de movimentos de produto

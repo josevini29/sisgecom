@@ -20,6 +20,8 @@ public class VendaCompra {
     private String nrNota;
     @Coluna(nome="cd_serie")
     private String cdSerie;
+    @Coluna(nome="dt_emissao")
+    private Date dtEmissao;
     @Coluna(nome="vl_desconto")
     private Double vlDesconto;
     @Coluna(nome="vl_adicional")
@@ -159,6 +161,14 @@ public class VendaCompra {
 
     public void setInCancelado(Boolean inCancelado) {
         this.inCancelado = inCancelado;
+    }
+
+    public Date getDtEmissao() {
+        return dtEmissao;
+    }
+
+    public void setDtEmissao(Date dtEmissao) {
+        this.dtEmissao = dtEmissao;
     }
 
 }

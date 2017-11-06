@@ -17,14 +17,14 @@ public class MovtoCaixa {
     private String tpMovtoCaixa;
     @Coluna(nome = "dt_movto")
     private Date dtMovto;
+    @Coluna(nome = "vl_movto")
+    private Double vlMovto;
     @Coluna(nome = "cd_forpagto")
     private Integer cdFormaPagto;
     @Coluna(nome = "cd_parcela")
     private Integer cdParcela;
     @Coluna(nome = "cd_conta")
     private Integer cdConta;
-    @Coluna(nome = "cd_despesa")
-    private Integer cdDespesa;
     @Coluna(nome = "cd_ajuste")
     private Integer cdAjuste;
     @Coluna(nome = "cd_fechamento")
@@ -54,6 +54,14 @@ public class MovtoCaixa {
         this.dtMovto = dtMovto;
     }
 
+    public Double getVlMovto() {
+        return vlMovto;
+    }
+
+    public void setVlMovto(Double vlMovto) {
+        this.vlMovto = vlMovto;
+    }
+
     public Integer getCdFormaPagto() {
         return cdFormaPagto;
     }
@@ -77,15 +85,7 @@ public class MovtoCaixa {
     public void setCdConta(Integer cdConta) {
         this.cdConta = cdConta;
     }
-
-    public Integer getCdDespesa() {
-        return cdDespesa;
-    }
-
-    public void setCdDespesa(Integer cdDespesa) {
-        this.cdDespesa = cdDespesa;
-    }
-
+    
     public Integer getCdAjuste() {
         return cdAjuste;
     }
@@ -103,4 +103,5 @@ public class MovtoCaixa {
     }
 
    
+
 }

@@ -217,7 +217,7 @@ public class MenuControl implements Initializable {
     @FXML
     public void abrirConMovtoEstoq(ActionEvent event) {
         Tela tela = new Tela();
-        tela.abrirTelaModal(stage, Tela.CON_MOVTO_ESTOQ);
+        tela.abrirTelaModalComStage(stage, Tela.CON_MOVTO_ESTOQ);
     }
 
     @FXML
@@ -229,7 +229,7 @@ public class MenuControl implements Initializable {
     @FXML
     public void abrirConVenda(ActionEvent event) {
         Tela tela = new Tela();
-        tela.abrirTelaModal(stage, Tela.CAD_VENDA);
+        tela.abrirTelaModalComStage(stage, Tela.CAD_VENDA);
     }
 
     @FXML
@@ -237,13 +237,13 @@ public class MenuControl implements Initializable {
         Tela tela = new Tela();
         tela.abrirTelaModalComStage(stage, Tela.CAD_COMPRA);
     }
-    
+
     @FXML
     public void abrirCadPedidoCompra(ActionEvent event) {
         Tela tela = new Tela();
         tela.abrirTelaModalComParam(getStage(), Tela.CAD_PEDIDO_COMPRA, null);
     }
-    
+
     @FXML
     public void abrirConCompra(ActionEvent event) {
         Tela tela = new Tela();
@@ -284,6 +284,12 @@ public class MenuControl implements Initializable {
     public void abrirRelEstoqProd(ActionEvent event) {
         TelaRelatorio tela = new TelaRelatorio();
         tela.abrirRelatorio(stage, tela.telaEstoqueProduto());
+    }
+
+    @FXML
+    public void abrirConMovtoCaixa(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModalComStage(stage, Tela.CON_MOVTO_CAIXA);
     }
 
     @FXML

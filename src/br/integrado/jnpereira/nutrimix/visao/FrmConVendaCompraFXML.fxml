@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="529.0" prefWidth="817.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.ConVendaCompraControl">
+   <children>
+      <TextField fx:id="nrNotaFiscal" alignment="CENTER" editable="false" layoutX="33.0" layoutY="89.0" prefHeight="30.0" prefWidth="82.0" styleClass="numero_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="cdSerie" alignment="CENTER" editable="false" layoutX="129.0" layoutY="89.0" prefHeight="30.0" prefWidth="36.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="dtEmissao" alignment="CENTER" editable="false" layoutX="179.0" layoutY="89.0" prefHeight="30.0" prefWidth="110.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="cdPessoa" alignment="CENTER" cache="true" editable="false" layoutX="128.0" layoutY="34.0" prefHeight="30.0" prefWidth="58.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="dsPessoa" editable="false" layoutX="194.0" layoutY="34.0" prefHeight="30.0" prefWidth="356.0" styleClass="texto_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="nrCpfCnpj" alignment="CENTER" editable="false" layoutX="559.0" layoutY="34.0" prefHeight="30.0" prefWidth="153.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label fx:id="lblCdPessoa" layoutX="129.0" layoutY="20.0" text="Cód. ..." />
+      <Label fx:id="lblDsPessoa" layoutX="195.0" layoutY="20.0" text="Nome do ..." />
+      <Label layoutX="560.0" layoutY="20.0" text="CPF/CNPJ" />
+      <Label fx:id="lblNotaFiscal" layoutX="34.0" layoutY="74.0" text="Nota Fiscal" />
+      <Label fx:id="lblDtEmissao" layoutX="180.0" layoutY="74.0" text="Data Emissão" />
+      <Label fx:id="lblSerie" layoutX="130.0" layoutY="74.0" text="Série" />
+      <TextField fx:id="cdPedido" alignment="CENTER" editable="false" layoutX="303.0" layoutY="89.0" prefHeight="30.0" prefWidth="82.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label fx:id="lblPedido" layoutX="303.0" layoutY="74.0" text="Pedido" />
+      <TableView fx:id="gridProduto" layoutX="34.0" layoutY="127.0" prefHeight="262.0" prefWidth="759.0" />
+      <TextField fx:id="cdCondPagto" alignment="CENTER" editable="false" layoutX="32.0" layoutY="458.0" prefHeight="30.0" prefWidth="52.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="32.0" layoutY="443.0" text="Condição Pagamento" />
+      <TextField fx:id="dsCondPagto" alignment="CENTER" editable="false" layoutX="86.0" layoutY="458.0" prefHeight="30.0" prefWidth="143.0" styleClass="texto_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="vlDesconto" alignment="CENTER_RIGHT" editable="false" layoutX="449.0" layoutY="458.0" prefHeight="30.0" prefWidth="70.0" styleClass="numero_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="450.0" layoutY="443.0" text="Desconto" />
+      <TextField fx:id="vlAdicional" alignment="CENTER_RIGHT" editable="false" layoutX="527.0" layoutY="458.0" prefHeight="30.0" prefWidth="70.0" styleClass="numero_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="vlFrete" alignment="CENTER_RIGHT" editable="false" layoutX="604.0" layoutY="458.0" prefHeight="30.0" prefWidth="88.0" styleClass="numero_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="605.0" layoutY="443.0" text="Frete" />
+      <TextField fx:id="vlTotalMovto" alignment="CENTER_RIGHT" editable="false" layoutX="702.0" layoutY="458.0" prefHeight="30.0" prefWidth="88.0" styleClass="numero_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="702.0" layoutY="443.0" text="Total Compra" />
+      <Label layoutX="527.0" layoutY="443.0" text="Adicional" />
+      <TextField fx:id="vlTotalProduto" alignment="CENTER_RIGHT" editable="false" layoutX="690.0" layoutY="399.0" prefHeight="30.0" prefWidth="100.0" styleClass="numero_estatico">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label layoutX="641.0" layoutY="405.0" styleClass="label_titulo" text="TOTAL: ">
+         <font>
+            <Font name="System Bold" size="11.0" />
+         </font>
+      </Label>
+      <Button layoutX="234.0" layoutY="458.0" mnemonicParsing="false" onAction="#visualizarPagamento" prefHeight="31.0" prefWidth="153.0" text="Pagamento">
+         <graphic>
+            <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/saida_dinheiro.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Label fx:id="lblCadastro" layoutX="32.0" layoutY="499.0" prefHeight="16.0" prefWidth="715.0" />
+      <TextField fx:id="cdMovto" alignment="CENTER" cache="true" editable="false" layoutX="34.0" layoutY="34.0" prefHeight="30.0" prefWidth="82.0" styleClass="texto_estatico_center">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </TextField>
+      <Label fx:id="lblCdPessoa1" layoutX="35.0" layoutY="20.0" text="Cód. Movto." />
+   </children>
+</AnchorPane>

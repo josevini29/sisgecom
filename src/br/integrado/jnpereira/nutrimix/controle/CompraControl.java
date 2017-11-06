@@ -477,6 +477,7 @@ public class CompraControl implements Initializable {
             compra.setNrNota(!nrNotaFiscal.getText().equals("") ? nrNotaFiscal.getText() : null);
             compra.setCdSerie(!cdSerie.getText().equals("") ? cdSerie.getText() : null);
             compra.setCdPedido(!cdPedido.getText().equals("") ? Integer.parseInt(cdPedido.getText()) : null);
+            compra.setDtEmissao(Data.StringToDate(dtEmissao.getText()));
             compra.setVlDesconto(!vlDesconto.getText().equals("") ? Double.parseDouble(vlDesconto.getText()) : 0.0);
             compra.setVlAdicional(!vlAdicional.getText().equals("") ? Double.parseDouble(vlAdicional.getText()) : 0.0);
             compra.setVlFrete(!vlFrete.getText().equals("") ? Double.parseDouble(vlFrete.getText()) : 0.0);
@@ -499,7 +500,7 @@ public class CompraControl implements Initializable {
                 prod.setCdProduto(compraProd.getCdProduto());
                 dao.get(prod);
                 compraProd.setQtUnitario(qtCompra * prod.getQtConversao()); //Conversão conforme cadastro
-                compraProd.setVlUnitario(Double.parseDouble(compraHit.vlUnitario.getText()));
+                compraProd.setVlUnitario(divisao(Double.parseDouble(compraHit.vlUnitario.getText()), prod.getQtConversao()));
                 dao.save(compraProd);
                 if (compraHit.pedidoProd != null) {
                     Double qtEntregue = compraHit.pedidoProd.getQtEntregue() + qtCompra;
@@ -598,6 +599,16 @@ public class CompraControl implements Initializable {
         this.nrNotaFiscal.setText(nrNotaFiscal);
         this.cdSerie.setText(cdSerie);
         this.dtEmissao.setText(dtEmissao);
+    }
+
+    private Double divisao(Double v1, Double v2) {
+        if (v1 == null | v2 == null) {
+            return 0.00;
+        }
+        if (v1 == 0 | v2 == 0) {
+            return 0.00;
+        }
+        return v1 / v2;
     }
 
     public void atualizaCompraProd() {

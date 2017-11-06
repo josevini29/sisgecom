@@ -43,7 +43,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadUnidPadrao" text="Unidade Padrão" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadPrecoProd" text="Preço Produto" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadAjustEstoq" text="Ajuste de Estoque" />
-                        <MenuItem mnemonicParsing="false" onAction="#abrirConMovtoEstoq" text="Consulta Movto. Estoque" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirConMovtoEstoq" text="Consulta Movto Estoque" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Cliente">
@@ -80,6 +80,7 @@
                     <MenuItem mnemonicParsing="false" onAction="#abrirCadTipoDespesa" text="Tipo de Despesa" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadFormaPagto" text="Forma de Pagamento" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadCondicaoPagto" text="Condição de Pagamento" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirConMovtoCaixa" text="Consulta Movto Caixa" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Contas">

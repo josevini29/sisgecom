@@ -35,6 +35,31 @@ public class Numero {
         }
         return "Usuário: " + cdUsercad + " - " + nome + "  Data Cadastro: " + Data.AmericaToBrasilSemHora(dtCadastro);
     }
+    
+    public static String getCadastroComHora(int cdUsercad, Date dtCadastro) {
+        String nome = "<Nome não Encontrado>";
+        try {
+            Usuario usuario = new Usuario();
+            Dao dao = new Dao();
+            usuario.setCdUsuario(cdUsercad);
+            dao.get(usuario);
+            if (usuario.getCdFuncionario() == null) {
+                nome = usuario.getDsLogin().toUpperCase();
+            } else {
+                Funcionario func = new Funcionario();
+                func.setCdFuncionario(usuario.getCdFuncionario());
+                dao.get(func);
+                Pessoa pessoa = new Pessoa();
+                pessoa.setCdPessoa(func.getCdPessoa());
+                dao.get(pessoa);
+                nome = pessoa.getDsPessoa();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro!", "Erro ao buscar usuário do cadastro.");
+        }
+        return "Usuário: " + cdUsercad + " - " + nome + "  Data Cadastro: " + Data.AmericaToBrasil(dtCadastro);
+    }
 
     public static String doubleToR$(Double valor) {
         DecimalFormat decFormat = new DecimalFormat("'R$ ' 0.00");
@@ -223,5 +248,13 @@ public class Numero {
         } catch (InputMismatchException erro) {
             return (false);
         }
+    }
+
+    public static Double arredondaDecimal(Double vlMovto, int i) {
+        if (vlMovto == null){
+            vlMovto = 0.00;
+        }
+        String valor = doubleToReal(vlMovto, i);
+        return Double.parseDouble(valor);
     }
 }

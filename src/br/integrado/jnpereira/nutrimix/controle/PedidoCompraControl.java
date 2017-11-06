@@ -388,8 +388,8 @@ public class PedidoCompraControl implements Initializable {
                             vInUpdate = true;
                         }
 
-                        Double vlProduto = Double.parseDouble(pedidoHit.qtProduto.getText());
-                        if (!vlProduto.equals(pedidoHit.pedidoProd.getQtProduto())) {
+                        Double vlProduto = Double.parseDouble(pedidoHit.vlProduto.getText());
+                        if (!vlProduto.equals(pedidoHit.pedidoProd.getVlUnitario())) {
                             pedidoHit.pedidoProd.setVlUnitario(vlProduto);
                             vInUpdate = true;
                         }
