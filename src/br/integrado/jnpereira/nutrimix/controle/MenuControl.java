@@ -291,6 +291,12 @@ public class MenuControl implements Initializable {
         Tela tela = new Tela();
         tela.abrirTelaModalComStage(stage, Tela.CON_MOVTO_CAIXA);
     }
+    
+    @FXML
+    public void abrirFechamentoCaixa(){
+        Tela tela = new Tela();
+        tela.abrirTelaModal(stage, Tela.FEC_CAIXA);
+    }
 
     @FXML
     public void logoff(ActionEvent event) throws IOException {

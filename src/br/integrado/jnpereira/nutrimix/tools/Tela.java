@@ -80,6 +80,8 @@ public class Tela {
     @Senha
     final public static String[] PAG_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmPagParcelaFXML.fxml", "Pagamento de Parcela"};
     final public static String[] CON_VENDA_COMPRA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConVendaCompraFXML.fxml", "Consulta Venda/Compra"};
+    @Senha
+    final public static String[] FEC_CAIXA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmFechamentoCaixaFXML.fxml", "Fechamento Caixa"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));

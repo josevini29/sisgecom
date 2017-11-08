@@ -62,7 +62,7 @@ public class Numero {
     }
 
     public static String doubleToR$(Double valor) {
-        DecimalFormat decFormat = new DecimalFormat("'R$ ' 0.00");
+        DecimalFormat decFormat = new DecimalFormat("R$ 0.00");
         return decFormat.format(valor);
     }
 

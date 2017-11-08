@@ -81,6 +81,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadFormaPagto" text="Forma de Pagamento" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadCondicaoPagto" text="Condição de Pagamento" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirConMovtoCaixa" text="Consulta Movto Caixa" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirFechamentoCaixa" text="Fechamento Caixa" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Contas">
@@ -209,7 +210,7 @@
                                     </ScrollPane>
                                     <AnchorPane prefHeight="73.0" prefWidth="629.0">
                                        <children>
-                                          <Button alignment="BOTTOM_CENTER" layoutX="391.0" layoutY="15.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="172.0" text="Abrir/Fechar Caixa">
+                                          <Button alignment="BOTTOM_CENTER" layoutX="391.0" layoutY="15.0" mnemonicParsing="false" onAction="#abrirFechamentoCaixa" prefHeight="27.0" prefWidth="172.0" text="Abrir/Fechar Caixa">
                                              <graphic>
                                                 <ImageView fitHeight="17.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
