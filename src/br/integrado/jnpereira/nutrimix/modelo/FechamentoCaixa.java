@@ -21,6 +21,10 @@ public class FechamentoCaixa {
     private Double vlInicial;
     @Coluna(nome = "vl_final")
     private Double vlFinal;
+    @Coluna(nome = "cd_useraber")
+    private Integer cdUserAber;
+    @Coluna(nome = "cd_userfech")
+    private Integer cdUserFech;
 
     public Integer getCdFechamento() {
         return cdFechamento;
@@ -60,6 +64,22 @@ public class FechamentoCaixa {
 
     public void setVlFinal(Double vlFinal) {
         this.vlFinal = vlFinal;
+    }
+
+    public Integer getCdUserAber() {
+        return cdUserAber;
+    }
+
+    public void setCdUserAber(Integer cdUserAber) {
+        this.cdUserAber = cdUserAber;
+    }
+
+    public Integer getCdUserFech() {
+        return cdUserFech;
+    }
+
+    public void setCdUserFech(Integer cdUserFech) {
+        this.cdUserFech = cdUserFech;
     }
 
 }

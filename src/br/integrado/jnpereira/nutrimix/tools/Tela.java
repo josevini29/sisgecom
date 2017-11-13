@@ -4,6 +4,7 @@ import br.integrado.jnpereira.nutrimix.controle.ListaGenericaControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaPessoaControl;
 import br.integrado.jnpereira.nutrimix.controle.MenuControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaAjustEstoqControl;
+import br.integrado.jnpereira.nutrimix.controle.ListaFechCaixaControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaPedidoCompraControl;
 import br.integrado.jnpereira.nutrimix.controle.LoginControl;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
@@ -301,6 +302,29 @@ public class Tela {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaPedidoCompraFXML.fxml"));
             Parent root = (Parent) loader.load();
             ListaPedidoCompraControl controler = (ListaPedidoCompraControl) loader.getController();
+            controler.setStage(stage);
+            controler.iniciaTela();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.resizableProperty().setValue(Boolean.FALSE);
+            stage.centerOnScreen();
+            stage.showAndWait();
+            return controler.getDsRetorno();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
+        }
+        return null;
+    }
+    
+    public String abrirListaFechCaixa() {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaFechCaixaFXML.fxml"));
+            Parent root = (Parent) loader.load();
+            ListaFechCaixaControl controler = (ListaFechCaixaControl) loader.getController();
             controler.setStage(stage);
             controler.iniciaTela();
             Scene scene = new Scene(root);

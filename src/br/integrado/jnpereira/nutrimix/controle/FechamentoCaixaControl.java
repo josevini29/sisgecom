@@ -9,6 +9,7 @@ import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
 import br.integrado.jnpereira.nutrimix.tools.Numero;
+import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -30,7 +31,15 @@ public class FechamentoCaixaControl implements Initializable {
     @FXML
     TextField cdFechamento;
     @FXML
+    TextField cdUserAber;
+    @FXML
+    TextField dsUserAber;
+    @FXML
     TextField dtAbertura;
+    @FXML
+    TextField cdUserFech;
+    @FXML
+    TextField dsUserFech;
     @FXML
     TextField dtFechamento;
     @FXML
@@ -107,14 +116,24 @@ public class FechamentoCaixaControl implements Initializable {
                 dao.get(fechamento);
                 dtAbertura.setText(Data.AmericaToBrasil(fechamento.getDtAbertura()));
                 dtFechamento.setText(Data.AmericaToBrasil(fechamento.getDtFechamento()));
+                cdUserAber.setText(fechamento.getCdUserAber().toString());
+                dsUserAber.setText(Numero.getDsUsuario(fechamento.getCdUserAber()));
                 btnFechar.setDisable(false);
                 btnAbrir.setDisable(true);
                 vlAbertura.setText(Numero.doubleToR$(fechamento.getVlInicial()));
                 if (fechamento.getVlFinal() != null) {
+                    cdUserFech.setText(fechamento.getCdUserFech().toString());
+                    dsUserFech.setText(Numero.getDsUsuario(fechamento.getCdUserFech()));
                     vlFechamento.setText(Numero.doubleToR$(fechamento.getVlFinal()));
                     btnFechar.setDisable(true);
                 }
                 cdFechamento.setEditable(false);
+
+                //Caso seja o ultima caixa fechado ele pode reabrir
+                //long qtCaixa = dao.getCountWhere(new FechamentoCaixa(), "WHERE $cdFechamento$ > " + fechamento.getCdFechamento());
+                //if (qtCaixa == 0){
+                //    btnAbrir.setDisable(false);
+                //}
                 atualizaGrid();
             } catch (Exception ex) {
                 Alerta.AlertaError("Notificação", ex.getMessage());
@@ -163,29 +182,48 @@ public class FechamentoCaixaControl implements Initializable {
 
     @FXML
     public void pesquisarFechamento() {
-
+        Tela tela = new Tela();
+        String valor = tela.abrirListaFechCaixa();
+        if (valor != null) {
+            cdFechamento.setText(valor);
+            validaCodigoFechamento();
+        }
     }
 
     @FXML
     public void abrirCaixa() {
         try {
-            if (!Alerta.AlertaConfirmation("Confirmação!", "Deseja realmente abrir o caixa?")) {
-                return;
+            if (fechamento == null) {
+                if (!Alerta.AlertaConfirmation("Confirmação!", "Deseja realmente abrir o caixa?")) {
+                    return;
+                }
+                double vVlAbertura = 0.00;
+                ArrayList<Object> array = dao.getAllWhere(new FechamentoCaixa(), " ORDER BY $cdFechamento$ DESC");
+                if (!array.isEmpty()) {
+                    FechamentoCaixa fechamentoAnterior = (FechamentoCaixa) array.get(0);
+                    vVlAbertura = fechamentoAnterior.getVlFinal();
+                }
+                FechamentoCaixa fec = new FechamentoCaixa();
+                fec.setDtAbertura(Data.getAgora());
+                fec.setCdUserAber(MenuControl.usuarioAtivo);
+                fec.setVlInicial(vVlAbertura);
+                dao.save(fec);
+                dao.commit();
+                cdFechamento.setText(fec.getCdFechamento().toString());
+                validaCodigoFechamento();
+                Alerta.AlertaInfo("Aviso!", "Caixa aberto com sucesso!");
+            } else {
+                if (!Alerta.AlertaConfirmation("Confirmação!", "Deseja realmente reabrir o caixa?")) {
+                    return;
+                }
+                fechamento.setDtFechamento(null);
+                fechamento.setCdUserFech(null);
+                fechamento.setVlFinal(null);
+                dao.update(fechamento);
+                dao.commit();
+                Alerta.AlertaInfo("Aviso!", "Caixa reaberto com sucesso!");
+                validaCodigoFechamento();
             }
-            double vVlAbertura = 0.00;
-            ArrayList<Object> array = dao.getAllWhere(new FechamentoCaixa(), " ORDER BY $cdFechamento$ DESC");
-            if (!array.isEmpty()) {
-                FechamentoCaixa fechamentoAnterior = (FechamentoCaixa) array.get(0);
-                vVlAbertura = fechamentoAnterior.getVlFinal();
-            }
-            FechamentoCaixa fec = new FechamentoCaixa();
-            fec.setDtAbertura(Data.getAgora());
-            fec.setVlInicial(vVlAbertura);
-            dao.save(fec);
-            dao.commit();
-            cdFechamento.setText(fec.getCdFechamento().toString());
-            validaCodigoFechamento();
-            Alerta.AlertaInfo("Aviso!", "Caixa aberto com sucesso!");
         } catch (Exception ex) {
             Alerta.AlertaError("Notificação", ex.getMessage());
         }
@@ -197,6 +235,7 @@ public class FechamentoCaixaControl implements Initializable {
         try {
             if (Alerta.AlertaConfirmation("Confirmação!", "Deseja realmente fechar o caixa?")) {
                 fechamento.setDtFechamento(Data.getAgora());
+                fechamento.setCdUserFech(MenuControl.usuarioAtivo);
                 fechamento.setVlFinal(vVlFechamento);
                 dao.update(fechamento);
                 dao.commit();

@@ -35,7 +35,32 @@ public class Numero {
         }
         return "Usuário: " + cdUsercad + " - " + nome + "  Data Cadastro: " + Data.AmericaToBrasilSemHora(dtCadastro);
     }
-    
+
+    public static String getDsUsuario(int cdUsercad) {
+        String nome = "<Nome não Encontrado>";
+        try {
+            Usuario usuario = new Usuario();
+            Dao dao = new Dao();
+            usuario.setCdUsuario(cdUsercad);
+            dao.get(usuario);
+            if (usuario.getCdFuncionario() == null) {
+                return usuario.getDsLogin().toUpperCase();
+            } else {
+                Funcionario func = new Funcionario();
+                func.setCdFuncionario(usuario.getCdFuncionario());
+                dao.get(func);
+                Pessoa pessoa = new Pessoa();
+                pessoa.setCdPessoa(func.getCdPessoa());
+                dao.get(pessoa);
+                return pessoa.getDsPessoa();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro!", "Erro ao buscar usuário do cadastro.");
+        }
+        return nome;
+    }
+
     public static String getCadastroComHora(int cdUsercad, Date dtCadastro) {
         String nome = "<Nome não Encontrado>";
         try {
@@ -251,7 +276,7 @@ public class Numero {
     }
 
     public static Double arredondaDecimal(Double vlMovto, int i) {
-        if (vlMovto == null){
+        if (vlMovto == null) {
             vlMovto = 0.00;
         }
         String valor = doubleToReal(vlMovto, i);
