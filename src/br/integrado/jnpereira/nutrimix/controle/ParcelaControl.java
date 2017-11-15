@@ -42,7 +42,7 @@ public class ParcelaControl {
                 parcela.setVlDesconto(0.00);
                 parcela.setVlMulta(0.00);
                 dao.update(parcela);
-                CaixaControler caixa = new CaixaControler();
+                CaixaControl caixa = new CaixaControl();
                 caixa.geraMovtoCaixaParcela(parcela, fechamento);
             }
         }
@@ -75,7 +75,7 @@ public class ParcelaControl {
             parcelaEstorno.setCdParEstorno(parcela.getCdParcela());
             dao.save(parcelaEstorno);
             
-            CaixaControler caixa = new CaixaControler();
+            CaixaControl caixa = new CaixaControl();
             caixa.geraMovtoCaixaParcela(parcelaEstorno, fechamentoCaixa);
 
             Parcela parcelaNova = new Parcela(); //Parcela Nova

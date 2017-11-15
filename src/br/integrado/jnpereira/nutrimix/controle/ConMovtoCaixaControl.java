@@ -2,6 +2,7 @@ package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
+import br.integrado.jnpereira.nutrimix.modelo.AjusteCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
 import br.integrado.jnpereira.nutrimix.modelo.FormaPagto;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoCaixa;
@@ -40,6 +41,8 @@ public class ConMovtoCaixaControl implements Initializable {
     @FXML
     ChoiceBox tpMovto;
     @FXML
+    ChoiceBox tpForPagto;
+    @FXML
     TextField cdFechamento;
 
     @FXML
@@ -49,9 +52,15 @@ public class ConMovtoCaixaControl implements Initializable {
     Dao dao = new Dao();
 
     public Stage stage;
+    public Object param;
 
     public void iniciaTela() {
-
+        if (param != null) {
+            Param parametro = (Param) param;
+            cdFechamento.setText(parametro.cdFechamento.toString());
+            TrataCombo.setValueComboTpFormaPagto(tpForPagto, parametro.cdForPagto - 1);
+            atualizaGrid();
+        }
     }
 
     @Override
@@ -59,6 +68,7 @@ public class ConMovtoCaixaControl implements Initializable {
         FuncaoCampo.mascaraData(dtInicio);
         FuncaoCampo.mascaraData(dtFim);
         TrataCombo.setValueComboTpMovtoCaixa(tpMovto, null);
+        TrataCombo.setValueComboTpFormaPagto(tpForPagto, null);
 
         gridMovto = ContruirTableView.Criar(gridMovto, ClasseGenerica.class);
 
@@ -144,6 +154,7 @@ public class ConMovtoCaixaControl implements Initializable {
             Criteria criterio = new Criteria(new MovtoCaixa());
             criterio.AddAndBetweenDate("dtMovto", dtInicio.getText(), dtFim.getText());
             criterio.AddAnd("cdFechamento", cdFechamento.getText(), false);
+            criterio.AddAnd("cdFormaPagto", TrataCombo.getValueComboTpFormaPagto(tpForPagto), false);
             criterio.AddOrderByAsc("dtMovto");
             String sql = criterio.getWhereSql();
 
@@ -178,7 +189,15 @@ public class ConMovtoCaixaControl implements Initializable {
                 ClasseGenerica classeGenerica = new ClasseGenerica();
                 classeGenerica.movto = movto;
                 classeGenerica.setCdMovtoCaixa(movto.getCdMovtoCaixa());
-                classeGenerica.setTpMovtoCaixa(EstoqueControl.getAllTipoMovtoCaixa().get(vTpMovto).getDsTpMovto());
+                if (vTpMovto == 4) {
+                    AjusteCaixa ajust = new AjusteCaixa();
+                    ajust.setCdAjuste(movto.getCdAjuste());
+                    dao.get(ajust);
+                    int vTpAjuste = Integer.parseInt(ajust.getTpAjuste()) - 1;
+                    classeGenerica.setTpMovtoCaixa(CaixaControl.getAllTipoAjuste().get(vTpAjuste).getDsTpAjuste());
+                } else {
+                    classeGenerica.setTpMovtoCaixa(EstoqueControl.getAllTipoMovtoCaixa().get(vTpMovto).getDsTpMovto());
+                }
                 classeGenerica.setTpMovto(EstoqueControl.getDsEntraSaida(movto.getTpMovtoCaixa()));
                 classeGenerica.setDtMovto(new CustomDate(movto.getDtMovto().getTime()));
                 classeGenerica.setCdFechamento(movto.getCdFechamento());
@@ -323,4 +342,26 @@ public class ConMovtoCaixaControl implements Initializable {
 
     }
 
+    public static class Param {
+
+        private Integer cdFechamento;
+        private Integer cdForPagto;
+
+        public Integer getCdFechamento() {
+            return cdFechamento;
+        }
+
+        public void setCdFechamento(Integer cdFechamento) {
+            this.cdFechamento = cdFechamento;
+        }
+
+        public Integer getCdForPagto() {
+            return cdForPagto;
+        }
+
+        public void setCdForPagto(Integer cdForPagto) {
+            this.cdForPagto = cdForPagto;
+        }
+
+    }
 }

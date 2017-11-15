@@ -82,6 +82,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#abrirCadCondicaoPagto" text="Condição de Pagamento" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirConMovtoCaixa" text="Consulta Movto Caixa" />
                         <MenuItem mnemonicParsing="false" onAction="#abrirFechamentoCaixa" text="Fechamento Caixa" />
+                        <MenuItem mnemonicParsing="false" onAction="#abrirAjusteCaixa" text="Retirada/Ajuste" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Contas">

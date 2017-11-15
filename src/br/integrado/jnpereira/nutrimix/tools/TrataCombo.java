@@ -1,5 +1,6 @@
 package br.integrado.jnpereira.nutrimix.tools;
 
+import br.integrado.jnpereira.nutrimix.controle.CaixaControl;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ChoiceBox;
@@ -196,6 +197,24 @@ public class TrataCombo {
         return null;
     }
 
+    public static void setValueComboTpAjustCaixa(ChoiceBox combo, Integer selecionado) {
+        if (combo.getItems().isEmpty()) {
+            combo.setItems(FXCollections.observableArrayList(CaixaControl.getAllTipoAjuste()));
+        }
+        if (selecionado != null) {
+            SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+            model.select(selecionado - 1);
+        }
+    }
+
+    public static Integer getValueComboTpAjustCaixa(ChoiceBox combo) {
+        SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
+        if (model.getSelectedIndex() > -1) {
+            return CaixaControl.getAllTipoAjuste().get(model.getSelectedIndex()).getCdTpAjuste();
+        }
+        return null;
+    }
+
     public static void setValueComboTpMovtoEstoque(ChoiceBox combo, Integer selecionado) {
         if (combo.getItems().isEmpty()) {
             combo.setItems(FXCollections.observableArrayList(EstoqueControl.getAllTipoMovtoEstoque()));
@@ -214,7 +233,7 @@ public class TrataCombo {
         return null;
     }
 
-        public static void setValueComboTpMovtoCaixa(ChoiceBox combo, Integer selecionado) {
+    public static void setValueComboTpMovtoCaixa(ChoiceBox combo, Integer selecionado) {
         if (combo.getItems().isEmpty()) {
             combo.setItems(FXCollections.observableArrayList(EstoqueControl.getAllTipoMovtoCaixa()));
         }
@@ -231,7 +250,7 @@ public class TrataCombo {
         }
         return null;
     }
-    
+
     public static void setValueComboEntradaSaida(ChoiceBox combo, String selecionado) {
         if (combo.getItems().isEmpty()) {
             combo.setItems(FXCollections.observableArrayList("Entrada", "Saída"));
@@ -352,6 +371,7 @@ public class TrataCombo {
         if (combo.getItems().isEmpty()) {
             try {
                 Dao dao = new Dao();
+                dao.autoCommit(false);
                 ArrayList<Object> objs = dao.getAllWhere(new FormaPagto(), "WHERE $inAtivo$ = 'T'");
                 ArrayList<FormaHit> hits = new ArrayList<>();
                 int i = 0;
@@ -396,8 +416,8 @@ public class TrataCombo {
             return forma.getCdFormaPagto() + ": " + forma.getDsFormaPagto();
         }
     }
-    
-        public static String getTpSituacao(int tpConta) {
+
+    public static String getTpSituacao(int tpConta) {
         switch (tpConta) {
             case 1:
                 return "Pendente";

@@ -4,6 +4,7 @@ import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.FechamentoCaixa;
 import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
+import br.integrado.jnpereira.nutrimix.table.IgnoreTable;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Data;
@@ -22,7 +23,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 public class FechamentoCaixaControl implements Initializable {
 
@@ -59,6 +62,7 @@ public class FechamentoCaixaControl implements Initializable {
     @FXML
     TableView<EntradasSaidas> gridMovto;
 
+    public Stage stage;
     ObservableList<EntradasSaidas> data;
     Dao dao = new Dao();
     FechamentoCaixa fechamento;
@@ -77,10 +81,29 @@ public class FechamentoCaixaControl implements Initializable {
                 validaCodigoFechamento();
             }
         });
+        gridMovto.setOnMousePressed((MouseEvent event) -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                abrirTelaConsulta();
+            }
+        });
     }
 
     public void iniciaTela() {
         caixaAberto(false);
+    }
+
+    public void abrirTelaConsulta() {
+        EntradasSaidas movto = gridMovto.getSelectionModel().getSelectedItem();
+        if (movto == null) {
+            Alerta.AlertaWarning("Aviso!", "Selecione um item.");
+            return;
+        }
+
+        ConMovtoCaixaControl.Param param = new ConMovtoCaixaControl.Param();
+        param.setCdFechamento(fechamento.getCdFechamento());
+        param.setCdForPagto(movto.getCdForPagto());
+        Tela tela = new Tela();
+        tela.abrirTelaModalComParam(stage, Tela.CON_MOVTO_CAIXA, param);
     }
 
     public void caixaAberto(boolean mensagem) {
@@ -158,6 +181,7 @@ public class FechamentoCaixaControl implements Initializable {
             double vVlTotalSaida = 0.00;
             while (rs.next()) {
                 EntradasSaidas movto = new EntradasSaidas();
+                movto.setCdForPagto(rs.getInt("CD_FORMA"));
                 movto.setDsForPagto(rs.getString("DS_FORMA"));
                 movto.setVlEntradas(Numero.doubleToR$(rs.getDouble("VL_ENTRADA")));
                 movto.setVlSaidas(Numero.doubleToR$(rs.getDouble("VL_SAIDA")));
@@ -286,6 +310,8 @@ public class FechamentoCaixaControl implements Initializable {
         @Coluna(nome = "Valor Rendimento")
         @Style(css = "-fx-alignment: CENTER;")
         private String vlRendimento;
+        @IgnoreTable
+        private Integer cdForPagto;
 
         public String getDsForPagto() {
             return dsForPagto;
@@ -317,6 +343,14 @@ public class FechamentoCaixaControl implements Initializable {
 
         public void setVlRendimento(String vlRendimento) {
             this.vlRendimento = vlRendimento;
+        }
+
+        public Integer getCdForPagto() {
+            return cdForPagto;
+        }
+
+        public void setCdForPagto(Integer cdForPagto) {
+            this.cdForPagto = cdForPagto;
         }
 
     }

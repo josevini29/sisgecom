@@ -42,5 +42,7 @@
       <Label layoutX="322.0" layoutY="22.0" text="Data Fim" />
       <Label layoutX="14.0" layoutY="22.0" text="Tipo de Movto" />
       <Label layoutX="437.0" layoutY="21.0" text="Cód. Fechamento" />
+      <ChoiceBox fx:id="tpForPagto" layoutX="554.0" layoutY="35.0" prefHeight="30.0" prefWidth="176.0" />
+      <Label layoutX="554.0" layoutY="21.0" text="Forma Pagamento" />
    </children>
 </AnchorPane>

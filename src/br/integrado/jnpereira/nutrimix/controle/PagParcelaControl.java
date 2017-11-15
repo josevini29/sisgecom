@@ -211,7 +211,7 @@ public class PagParcelaControl implements Initializable {
 
         try {
             dao.autoCommit(false);
-            CaixaControler caixa = new CaixaControler();
+            CaixaControl caixa = new CaixaControl();
             FechamentoCaixa fechamento;
             try {
                 fechamento = caixa.getCaixaAberto(Data.getAgora()); //pega caixa aberto
@@ -623,7 +623,7 @@ public class PagParcelaControl implements Initializable {
                 if (parcelaHit.parcela.getDtPagto() != null) {
                     try { //Estorno de Parcela
                         if (Alerta.AlertaConfirmation("Confirmação", "Deseja estornar está parcela? todas as outras alterações desta tela serão descartadas.")) {
-                            CaixaControler caixa = new CaixaControler();
+                            CaixaControl caixa = new CaixaControl();
                             FechamentoCaixa fechamento;
                             fechamento = caixa.getCaixaAberto(Data.getAgora()); //pega caixa aberto
                             ParcelaControl parcelaControl = new ParcelaControl();

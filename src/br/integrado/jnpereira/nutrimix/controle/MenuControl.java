@@ -291,11 +291,17 @@ public class MenuControl implements Initializable {
         Tela tela = new Tela();
         tela.abrirTelaModalComStage(stage, Tela.CON_MOVTO_CAIXA);
     }
-    
+
     @FXML
-    public void abrirFechamentoCaixa(){
+    public void abrirFechamentoCaixa() {
         Tela tela = new Tela();
-        tela.abrirTelaModal(stage, Tela.FEC_CAIXA);
+        tela.abrirTelaModalComStage(stage, Tela.FEC_CAIXA);
+    }
+
+    @FXML
+    public void abrirAjusteCaixa() {
+        Tela tela = new Tela();
+        tela.abrirTelaModal(stage, Tela.AJUSTE_CAIXA);
     }
 
     @FXML

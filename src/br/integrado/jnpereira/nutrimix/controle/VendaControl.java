@@ -400,7 +400,7 @@ public class VendaControl implements Initializable {
                 }
             }
 
-            CaixaControler caixa = new CaixaControler();
+            CaixaControl caixa = new CaixaControl();
             FechamentoCaixa fechamento;
             try {
                 fechamento = caixa.getCaixaAberto(Data.getAgora()); //pega caixa aberto
