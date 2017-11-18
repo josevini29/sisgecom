@@ -322,6 +322,7 @@ public class TrataCombo {
         if (combo.getItems().isEmpty()) {
             try {
                 Dao dao = new Dao();
+                dao.autoCommit(false);
                 ArrayList<Object> objs = dao.getAllWhere(new CondicaoPagto(), "WHERE $inAtivo$ = 'T'");
                 ArrayList<CondicaoHit> hits = new ArrayList<>();
                 int i = 0;

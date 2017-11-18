@@ -2,10 +2,13 @@ package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.AjusteCaixa;
+import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.Despesa;
 import br.integrado.jnpereira.nutrimix.modelo.FechamentoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.Parcela;
 import br.integrado.jnpereira.nutrimix.tools.Data;
+import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -51,6 +54,62 @@ public class CaixaControl {
         caixa.setCdAjuste(ajuste.getCdAjuste());
         caixa.setVlMovto(ajuste.getVlAjuste());
         dao.save(caixa);
+    }
+
+    public void excluirDespesa(Despesa despesa) throws Exception {
+        ContasPagarReceber conta;
+        try {
+            conta = (ContasPagarReceber) dao.getAllWhere(new ContasPagarReceber(), "WHERE $cdDespesa$ = " + despesa.getCdDespesa()).get(0);
+            excluirConta(conta);
+            dao.delete(despesa);
+        } catch (Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    private void excluirConta(ContasPagarReceber conta) throws Exception {
+        Tela tela = new Tela();
+        if (!tela.validaAcessoOperacao(Tela.EXCLUSAO_DESPESAS)) {
+            throw new Exception("Usuário sem acesso a está operação.");
+        }
+
+        ArrayList<Object> parcelas = dao.getAllWhere(new Parcela(), "WHERE $cdConta$ = " + conta.getCdConta());
+        boolean vInAtiva = false;
+        for (Object obj : parcelas) {
+            Parcela parcela = (Parcela) obj;
+            if (parcela.getDtPagto() != null && parcela.getCdParEstorno() == null) {
+                String where = "WHERE $cdConta$ = " + conta.getCdConta() + " AND $cdParEstorno$ = " + parcela.getCdParcela();
+                long vCdParEstorno = dao.getCountWhere(new Parcela(), where);
+                if (vCdParEstorno == 0) {
+                    vInAtiva = true;
+                    break;
+                }
+                where = "WHERE $cdConta$ = " + conta.getCdConta() + " AND $cdParcela$ = " + parcela.getCdParcela();
+                MovtoCaixa movtoCaixa = (MovtoCaixa) dao.getAllWhere(new MovtoCaixa(), where).get(0);
+                FechamentoCaixa fechamento = new FechamentoCaixa();
+                fechamento.setCdFechamento(movtoCaixa.getCdFechamento());
+                dao.get(fechamento);
+                if (fechamento.getDtFechamento() != null) {
+                    vInAtiva = true;
+                    return;
+                }
+            }
+        }
+
+        if (vInAtiva) {
+            throw new Exception("Este movimento já tem parcela paga para um caixa já fechado.");
+        }
+
+        for (Object obj : parcelas) {
+            Parcela parcela = (Parcela) obj;
+            if (parcela.getDtPagto() != null) {
+                String where = "WHERE $cdConta$ = " + conta.getCdConta() + " AND $cdParcela$ = " + parcela.getCdParcela();
+                MovtoCaixa movtoCaixa = (MovtoCaixa) dao.getAllWhere(new MovtoCaixa(), where).get(0);
+                dao.delete(movtoCaixa);
+            }
+            dao.delete(parcela);
+        }
+        dao.delete(conta);
     }
 
     //Tipo de Ajuste

@@ -5,6 +5,7 @@ import br.integrado.jnpereira.nutrimix.controle.ListaPessoaControl;
 import br.integrado.jnpereira.nutrimix.controle.MenuControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaAjustEstoqControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaAjusteCaixaControl;
+import br.integrado.jnpereira.nutrimix.controle.ListaDespesaControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaFechCaixaControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaPedidoCompraControl;
 import br.integrado.jnpereira.nutrimix.controle.LoginControl;
@@ -34,6 +35,8 @@ public class Tela {
     final public static String[] CAD_GRUPO_PRODUTO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadGrupoProdFXML.fxml", "Cadastro de Grupo de Produtos"};
     @Senha
     final public static String[] CAD_TIPO_DESPESA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadTipoDespesaFXML.fxml", "Cadastro de Tipo de Despesa"};
+    @Senha
+    final public static String[] CAD_DESPESA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadDespesaFXML.fxml", "Despesas Administrativas/Operacional"};
     @Senha
     final public static String[] CAD_UNID_PADRAO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadUnidPadraoFXML.fxml", "Cadastro de Unidade Padrão"};
     @Senha
@@ -86,6 +89,10 @@ public class Tela {
     final public static String[] FEC_CAIXA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmFechamentoCaixaFXML.fxml", "Fechamento Caixa"};
     @Senha
     final public static String[] AJUSTE_CAIXA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmAjusteCaixaFXML.fxml", "Retirada/Ajuste de Caixa"};
+    @Senha
+    final public static String[] EXCLUSAO_DESPESAS = new String[]{"", "Exclusão de Despesas"};
+    @Senha
+    final public static String[] EXCLUSAO_VENDA_COMPRA = new String[]{"", "Exclusão de Venda/Compra"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
@@ -298,7 +305,7 @@ public class Tela {
         }
         return null;
     }
-    
+
     public String abrirListaPedidoCompra() {
         try {
             Stage stage = new Stage();
@@ -321,7 +328,7 @@ public class Tela {
         }
         return null;
     }
-    
+
     public String abrirListaFechCaixa() {
         try {
             Stage stage = new Stage();
@@ -344,13 +351,36 @@ public class Tela {
         }
         return null;
     }
-    
+
     public String abrirListaAjusteCaixa() {
         try {
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaAjusteCaixaFXML.fxml"));
             Parent root = (Parent) loader.load();
             ListaAjusteCaixaControl controler = (ListaAjusteCaixaControl) loader.getController();
+            controler.setStage(stage);
+            controler.iniciaTela();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.resizableProperty().setValue(Boolean.FALSE);
+            stage.centerOnScreen();
+            stage.showAndWait();
+            return controler.getDsRetorno();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
+        }
+        return null;
+    }
+
+    public String abrirListaDespesa() {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaDespesaFXML.fxml"));
+            Parent root = (Parent) loader.load();
+            ListaDespesaControl controler = (ListaDespesaControl) loader.getController();
             controler.setStage(stage);
             controler.iniciaTela();
             Scene scene = new Scene(root);
@@ -401,6 +431,44 @@ public class Tela {
                 dao.get(perfilTela);
             } catch (Exception ex) {
                 Alerta.AlertaError("Acesso Negado!", "Usuário não tem acesso a está tela.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validaAcessoOperacao(String[] telaArray) {
+        if (MenuControl.usuarioAtivo == 0) { //Admin pula a validação
+            return true;
+        }
+        String cdOperacao = null;
+        for (Field field : this.getClass().getDeclaredFields()) {
+            if (field.isAnnotationPresent(Senha.class)) {
+                try {
+                    if (telaArray.equals(field.get(new Object()))) {
+                        cdOperacao = field.getName();
+                        break;
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        if (cdOperacao != null) {
+            Usuario usuario = new Usuario();
+            try {
+                usuario.setCdUsuario(MenuControl.usuarioAtivo);
+                dao.get(usuario);
+            } catch (Exception ex) {
+                Alerta.AlertaError("Erro!", "Erro ao validar acesso a tela.\n" + ex.toString());
+                return false;
+            }
+            PerfilTela perfilTela = new PerfilTela();
+            perfilTela.setCdPerfil(usuario.getCdPerfil());
+            perfilTela.setCdTela(cdOperacao);
+            try {
+                dao.get(perfilTela);
+            } catch (Exception ex) {
                 return false;
             }
         }

@@ -7,14 +7,15 @@ package br.integrado.jnpereira.nutrimix.controle;
 
 import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
-import br.integrado.jnpereira.nutrimix.modelo.AjusteCaixa;
+import br.integrado.jnpereira.nutrimix.modelo.Despesa;
+import br.integrado.jnpereira.nutrimix.modelo.TipoDespesa;
 import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
-import br.integrado.jnpereira.nutrimix.tools.CustomDate;
 import br.integrado.jnpereira.nutrimix.tools.Criteria;
+import br.integrado.jnpereira.nutrimix.tools.CustomDateNoTime;
 import br.integrado.jnpereira.nutrimix.tools.Numero;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,13 +31,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class ListaAjusteCaixaControl implements Initializable {
+public class ListaDespesaControl implements Initializable {
 
     Dao dao = new Dao();
     ObservableList<ClasseGenerica> data;
 
     @FXML
-    TextField cdAjuste;
+    TextField cdDespesa;
     @FXML
     TextField dtInicio;
     @FXML
@@ -132,18 +133,21 @@ public class ListaAjusteCaixaControl implements Initializable {
         }
 
         try {
-            Criteria criterio = new Criteria(new AjusteCaixa());
-            criterio.AddAnd("cdAjuste", cdAjuste.getText(), false);
-            criterio.AddAndBetweenDate("dtCadastro", dtInicio.getText(), dtFim.getText());
+            Criteria criterio = new Criteria(new Despesa());
+            criterio.AddAnd("cdDespesa", cdDespesa.getText(), false);
+            criterio.AddAndBetweenDate("dtDespesa", dtInicio.getText(), dtFim.getText());
 
-            ArrayList<Object> fech = dao.getAllWhere(new AjusteCaixa(), criterio.getWhereSql());
+            ArrayList<Object> fech = dao.getAllWhere(new Despesa(), criterio.getWhereSql());
             for (Object obj : fech) {
-                AjusteCaixa ajuste = (AjusteCaixa) obj;
+                Despesa despesa = (Despesa) obj;
                 ClasseGenerica classeGenerica = new ClasseGenerica();
-                classeGenerica.setCdAjuste(ajuste.getCdAjuste());
-                classeGenerica.setDtMovto(new CustomDate(ajuste.getDtCadastro().getTime()));
-                classeGenerica.setTpAjuste(CaixaControl.getAllTipoAjuste().get(Integer.parseInt(ajuste.getTpAjuste()) - 1).getDsTpAjuste());
-                classeGenerica.setVlAjuste(Numero.arredondaDecimal(ajuste.getVlAjuste(), 2));
+                classeGenerica.setCdDespesa(despesa.getCdDespesa());
+                classeGenerica.setDtDespesa(new CustomDateNoTime(despesa.getDtDespesa().getTime()));
+                TipoDespesa tipo = new TipoDespesa();
+                tipo.setCdTipoDespesa(despesa.getCdTipoDespesa());
+                dao.get(tipo);
+                classeGenerica.setTpDespesa(tipo.getDsTipoDespesa());
+                classeGenerica.setVlDespesa(Numero.arredondaDecimal(despesa.getVlDespesa(), 2));
                 valoresArray.add(classeGenerica);
             }
         } catch (Exception ex) {
@@ -162,7 +166,7 @@ public class ListaAjusteCaixaControl implements Initializable {
             Alerta.AlertaInfo("Aviso!", "Selecione um item.");
             return;
         }
-        setDsRetorno(generica.getCdAjuste().toString());
+        setDsRetorno(generica.getCdDespesa().toString());
         stage.close();
     }
 
@@ -177,7 +181,7 @@ public class ListaAjusteCaixaControl implements Initializable {
     }
 
     public void iniciaTela() {
-        FuncaoCampo.mascaraNumeroInteiro(cdAjuste);
+        FuncaoCampo.mascaraNumeroInteiro(cdDespesa);
         FuncaoCampo.mascaraData(dtInicio);
         FuncaoCampo.mascaraData(dtFim);
         atualizaGrid();
@@ -203,48 +207,49 @@ public class ListaAjusteCaixaControl implements Initializable {
 
         @Coluna(nome = "Código")
         @Style(css = "-fx-alignment: CENTER-RIGHT;")
-        private Integer cdAjuste;
-        @Coluna(nome = "Dt. Ajuste")
+        private Integer cdDespesa;
+        @Coluna(nome = "Dt. Despesa")
         @Style(css = "-fx-alignment: CENTER;")
-        private CustomDate dtMovto;
-        @Coluna(nome = "Tipo Ajuste")
+        private CustomDateNoTime dtDespesa;
+        @Coluna(nome = "Tipo Despesa")
         @Style(css = "-fx-alignment: CENTER;")
-        private String tpAjuste;
-        @Coluna(nome = "Vl. Ajuste")
+        private String tpDespesa;
+        @Coluna(nome = "Vl. Despesa")
         @Style(css = "-fx-alignment: CENTER-RIGHT;")
-        private Double vlAjuste;
+        private Double vlDespesa;
 
-        public Integer getCdAjuste() {
-            return cdAjuste;
+        public Integer getCdDespesa() {
+            return cdDespesa;
         }
 
-        public void setCdAjuste(Integer cdAjuste) {
-            this.cdAjuste = cdAjuste;
+        public void setCdDespesa(Integer cdDespesa) {
+            this.cdDespesa = cdDespesa;
         }
 
-        public CustomDate getDtMovto() {
-            return dtMovto;
+        public CustomDateNoTime getDtDespesa() {
+            return dtDespesa;
         }
 
-        public void setDtMovto(CustomDate dtMovto) {
-            this.dtMovto = dtMovto;
+        public void setDtDespesa(CustomDateNoTime dtDespesa) {
+            this.dtDespesa = dtDespesa;
         }
 
-        public String getTpAjuste() {
-            return tpAjuste;
+        public String getTpDespesa() {
+            return tpDespesa;
         }
 
-        public void setTpAjuste(String tpAjuste) {
-            this.tpAjuste = tpAjuste;
+        public void setTpDespesa(String tpDespesa) {
+            this.tpDespesa = tpDespesa;
         }
 
-        public Double getVlAjuste() {
-            return vlAjuste;
+        public Double getVlDespesa() {
+            return vlDespesa;
         }
 
-        public void setVlAjuste(Double vlAjuste) {
-            this.vlAjuste = vlAjuste;
+        public void setVlDespesa(Double vlDespesa) {
+            this.vlDespesa = vlDespesa;
         }
 
+        
     }
 }

@@ -147,6 +147,12 @@ public class MenuControl implements Initializable {
         Tela tela = new Tela();
         tela.abrirTelaModal(stage, Tela.CAD_TIPO_DESPESA);
     }
+    
+    @FXML
+    public void abrirCadDespesa(ActionEvent event) {
+        Tela tela = new Tela();
+        tela.abrirTelaModal(stage, Tela.CAD_DESPESA);
+    }
 
     @FXML
     public void abrirCadUnidPadrao(ActionEvent event) {

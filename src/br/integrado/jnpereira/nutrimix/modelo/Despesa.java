@@ -1,4 +1,4 @@
-
+    
 package br.integrado.jnpereira.nutrimix.modelo;
 
 import br.integrado.jnpereira.nutrimix.dao.AutoIncrement;
@@ -22,8 +22,26 @@ public class Despesa {
     private Double vlDespesa;
     @Coluna(nome = "ds_obs")
     private String dsObs;
-    @Coluna(nome = "in_cancelado")
-    private Boolean inCancelado;
+    @Coluna(nome="cd_usercad")
+    private Integer cdUserCad;
+    @Coluna(nome="dt_cadastro")
+    private Date dtCadastro;
+
+    public Integer getCdUserCad() {
+        return cdUserCad;
+    }
+
+    public void setCdUserCad(Integer cdUserCad) {
+        this.cdUserCad = cdUserCad;
+    }
+
+    public Date getDtCadastro() {
+        return dtCadastro;
+    }
+
+    public void setDtCadastro(Date dtCadastro) {
+        this.dtCadastro = dtCadastro;
+    }
 
     public Integer getCdDespesa() {
         return cdDespesa;
@@ -65,12 +83,4 @@ public class Despesa {
         this.dsObs = dsObs;
     }
 
-    public Boolean getInCancelado() {
-        return inCancelado;
-    }
-
-    public void setInCancelado(Boolean inCancelado) {
-        this.inCancelado = inCancelado;
-    }
-    
 }

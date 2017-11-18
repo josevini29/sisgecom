@@ -4,6 +4,7 @@ import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.AjusteCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.Despesa;
 import br.integrado.jnpereira.nutrimix.modelo.FormaPagto;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
@@ -238,7 +239,10 @@ public class ConMovtoCaixaControl implements Initializable {
                 dao.get(conta);
 
                 if (conta.getCdDespesa() != null) {
-                    //Consulta despesa
+                    Despesa despesa = new Despesa();
+                    despesa.setCdDespesa(conta.getCdDespesa());
+                    Tela tela = new Tela();
+                    tela.abrirTelaModalComParam(stage, Tela.CAD_DESPESA, despesa);
                 } else {
                     VendaCompra vendaCompra = new VendaCompra();
                     vendaCompra.setCdMovto(conta.getCdMovto());
