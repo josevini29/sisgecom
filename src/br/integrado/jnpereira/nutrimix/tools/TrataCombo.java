@@ -393,7 +393,7 @@ public class TrataCombo {
         }
         if (selecionado != null) {
             SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
-            model.select(selecionado);
+            model.select(selecionado-1);
         }
     }
 

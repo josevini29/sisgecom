@@ -16,6 +16,7 @@ public class Numero {
         try {
             Usuario usuario = new Usuario();
             Dao dao = new Dao();
+            dao.autoCommit(false);
             usuario.setCdUsuario(cdUsercad);
             dao.get(usuario);
             if (usuario.getCdFuncionario() == null) {
@@ -41,6 +42,7 @@ public class Numero {
         try {
             Usuario usuario = new Usuario();
             Dao dao = new Dao();
+            dao.autoCommit(false);
             usuario.setCdUsuario(cdUsercad);
             dao.get(usuario);
             if (usuario.getCdFuncionario() == null) {
@@ -66,6 +68,7 @@ public class Numero {
         try {
             Usuario usuario = new Usuario();
             Dao dao = new Dao();
+            dao.autoCommit(false);
             usuario.setCdUsuario(cdUsercad);
             dao.get(usuario);
             if (usuario.getCdFuncionario() == null) {

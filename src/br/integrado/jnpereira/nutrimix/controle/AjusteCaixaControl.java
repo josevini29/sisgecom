@@ -8,10 +8,12 @@ package br.integrado.jnpereira.nutrimix.controle;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.AjusteCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.FechamentoCaixa;
+import br.integrado.jnpereira.nutrimix.modelo.MovtoCaixa;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
 import br.integrado.jnpereira.nutrimix.tools.Numero;
+import br.integrado.jnpereira.nutrimix.tools.Tela;
 import br.integrado.jnpereira.nutrimix.tools.TrataCombo;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -50,6 +53,8 @@ public class AjusteCaixaControl implements Initializable {
 
     Dao dao = new Dao();
     AjusteCaixa ajuste;
+    public Stage stage;
+    public Object param;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -76,7 +81,11 @@ public class AjusteCaixaControl implements Initializable {
     }
 
     public void iniciaTela() {
-
+        if (param != null) {
+            AjusteCaixa aj = (AjusteCaixa) param;
+            cdAjuste.setText(aj.getCdAjuste().toString());
+            validaCodigoAjuste();
+        }
     }
 
     public void validaCodigoAjuste() {
@@ -94,10 +103,10 @@ public class AjusteCaixaControl implements Initializable {
                 lblCadastro.setText(Numero.getCadastro(ajuste.getCdUserCad(), ajuste.getDtCadastro()));
 
                 cdAjuste.setEditable(false);
-                vlAjuste.setEditable(false);
-                dsObs.setEditable(false);
+                //vlAjuste.setEditable(false);
+                //dsObs.setEditable(false);
                 tpAjuste.setDisable(true);
-                tpForPagto.setDisable(true);
+                //tpForPagto.setDisable(true);
             } catch (Exception ex) {
                 Alerta.AlertaError("Notificação", ex.getMessage());
                 ajuste = null;
@@ -108,13 +117,34 @@ public class AjusteCaixaControl implements Initializable {
 
     @FXML
     public void abrirListaAjustCaixa() {
-
+        Tela tela = new Tela();
+        String valor = tela.abrirListaAjusteCaixa();
+        if (valor != null) {
+            cdAjuste.setText(valor);
+            validaCodigoAjuste();
+        }
     }
 
     @FXML
     public void salvar() {
-        if (ajuste != null) {
-            Alerta.AlertaError("Negado!", "Alterações não são permitidas");
+        try {
+            if (ajuste != null) {
+                if (ajuste.getCdUserCad() != MenuControl.usuarioAtivo) {
+                    Alerta.AlertaError("Negado!", "Usuário diferente do cadastro!");
+                    return;
+                }
+                MovtoCaixa movtoCaixa = (MovtoCaixa) dao.getAllWhere(new MovtoCaixa(), "WHERE $cdAjuste$ = " + ajuste.getCdAjuste()).get(0);
+                FechamentoCaixa fechamento = new FechamentoCaixa();
+                fechamento.setCdFechamento(movtoCaixa.getCdFechamento());
+                dao.get(fechamento);
+                if (fechamento.getDtFechamento() != null) {
+                    Alerta.AlertaError("Negado!", "Caixa deste ajuste já foi fechado!");
+                    return;
+                }
+            }
+        } catch (Exception ex) {
+            Alerta.AlertaError("Erro!", "Erro ao validar registro.\n" + ex.toString());
+            ajuste = null;
             return;
         }
 
@@ -122,8 +152,8 @@ public class AjusteCaixaControl implements Initializable {
             Alerta.AlertaError("Campo inválido", "Tipo de Ajuste é obrigatório.");
             return;
         }
-        
-         if (TrataCombo.getValueComboTpFormaPagto(tpForPagto) == null) {
+
+        if (TrataCombo.getValueComboTpFormaPagto(tpForPagto) == null) {
             Alerta.AlertaError("Campo inválido", "Forma de Pagamento é obrigatório.");
             return;
         }
@@ -131,6 +161,11 @@ public class AjusteCaixaControl implements Initializable {
         if (vlAjuste.getText().equals("")) {
             Alerta.AlertaError("Campo inválido", "Valor do ajuste é obrigatório.");
             return;
+        } else {
+            if (Double.parseDouble(vlAjuste.getText()) <= 0.00) {
+                Alerta.AlertaError("Campo inválido", "Valor do ajuste deve ser maior que zero.");
+                return;
+            }
         }
 
         CaixaControl caixa = new CaixaControl();
@@ -141,18 +176,29 @@ public class AjusteCaixaControl implements Initializable {
             Alerta.AlertaWarning("Negado!", ex.getMessage());
             return;
         }
-
-        ajuste = new AjusteCaixa();
-        ajuste.setTpAjuste(TrataCombo.getValueComboTpAjustCaixa(tpAjuste).toString());
-        ajuste.setCdForPagto(TrataCombo.getValueComboTpFormaPagto(tpForPagto));
-        ajuste.setVlAjuste(Double.parseDouble(vlAjuste.getText()));
-        ajuste.setDsObs(dsObs.getText());
-        ajuste.setCdUserCad(MenuControl.usuarioAtivo);
-        ajuste.setDtCadastro(Data.getAgora());
         try {
-            dao.save(ajuste);
-            caixa.geraMovtoAjuste(ajuste, fechamento);
-            dao.commit();
+            if (ajuste != null) {
+                ajuste.setCdForPagto(TrataCombo.getValueComboTpFormaPagto(tpForPagto));
+                ajuste.setVlAjuste(Double.parseDouble(vlAjuste.getText()));
+                ajuste.setDsObs(dsObs.getText());
+                dao.update(ajuste);
+                MovtoCaixa movtoCaixa = (MovtoCaixa) dao.getAllWhere(new MovtoCaixa(), "WHERE $cdAjuste$ = " + ajuste.getCdAjuste()).get(0);
+                movtoCaixa.setCdFormaPagto(TrataCombo.getValueComboTpFormaPagto(tpForPagto));
+                movtoCaixa.setVlMovto(Double.parseDouble(vlAjuste.getText()));
+                dao.update(movtoCaixa);
+                dao.commit();
+            } else {
+                ajuste = new AjusteCaixa();
+                ajuste.setTpAjuste(TrataCombo.getValueComboTpAjustCaixa(tpAjuste).toString());
+                ajuste.setCdForPagto(TrataCombo.getValueComboTpFormaPagto(tpForPagto));
+                ajuste.setVlAjuste(Double.parseDouble(vlAjuste.getText()));
+                ajuste.setDsObs(dsObs.getText());
+                ajuste.setCdUserCad(MenuControl.usuarioAtivo);
+                ajuste.setDtCadastro(Data.getAgora());
+                dao.save(ajuste);
+                caixa.geraMovtoAjuste(ajuste, fechamento);
+                dao.commit();
+            }
         } catch (Exception ex) {
             Alerta.AlertaError("Erro!", "Erro ao salvar registro.\n" + ex.toString());
             ajuste = null;
@@ -170,10 +216,10 @@ public class AjusteCaixaControl implements Initializable {
         ajuste = null;
         FuncaoCampo.limparCampos(anchor);
         cdAjuste.setEditable(true);
-        vlAjuste.setEditable(true);
-        dsObs.setEditable(true);
+        //vlAjuste.setEditable(true);
+        //dsObs.setEditable(true);
         tpAjuste.setDisable(false);
-        tpForPagto.setDisable(false);
+        //tpForPagto.setDisable(false);
         lblCadastro.setText("");
         cdAjuste.requestFocus();
     }

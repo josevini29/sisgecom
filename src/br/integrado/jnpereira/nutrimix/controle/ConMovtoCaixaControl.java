@@ -58,7 +58,7 @@ public class ConMovtoCaixaControl implements Initializable {
         if (param != null) {
             Param parametro = (Param) param;
             cdFechamento.setText(parametro.cdFechamento.toString());
-            TrataCombo.setValueComboTpFormaPagto(tpForPagto, parametro.cdForPagto - 1);
+            TrataCombo.setValueComboTpFormaPagto(tpForPagto, parametro.cdForPagto);
             atualizaGrid();
         }
     }
@@ -228,7 +228,10 @@ public class ConMovtoCaixaControl implements Initializable {
         MovtoCaixa movto = classe.movto;
         try {
             if (movto.getCdAjuste() != null) {
-                //Consulta ajustte
+                AjusteCaixa aj = new AjusteCaixa();
+                aj.setCdAjuste(movto.getCdAjuste());
+                Tela tela = new Tela();
+                tela.abrirTelaModalComParam(stage, Tela.AJUSTE_CAIXA, aj);
             } else {
                 ContasPagarReceber conta = new ContasPagarReceber();
                 conta.setCdConta(movto.getCdConta());
