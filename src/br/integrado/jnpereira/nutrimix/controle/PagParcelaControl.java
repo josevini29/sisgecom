@@ -19,8 +19,6 @@ import br.integrado.jnpereira.nutrimix.tools.Data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -540,7 +538,7 @@ public class PagParcelaControl implements Initializable {
         FuncaoCampo.mascaraNumeroDecimal(parcelaHit.vlParcela);
         FuncaoCampo.mascaraNumeroDecimal(parcelaHit.vlMulta);
         FuncaoCampo.mascaraNumeroDecimal(parcelaHit.vlDesconto);
-        TrataCombo.setValueComboTpFormaPagto(parcelaHit.tpForPagto, null);
+       // TrataCombo.setValueComboTpFormaPagto(parcelaHit.tpForPagto, null);
 
         parcelaHit.dtVencto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
@@ -669,6 +667,10 @@ public class PagParcelaControl implements Initializable {
         Button btnEstornar = new Button();
         Label lblMovtoParcela = new Label();
         Label lblParcelaEstornada = new Label();
+        
+        public ParcelaHit(){
+            TrataCombo.setValueComboTpFormaPagto(this.tpForPagto, null);
+        }
     }
 
 }

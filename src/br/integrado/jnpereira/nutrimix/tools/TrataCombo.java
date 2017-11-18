@@ -368,32 +368,33 @@ public class TrataCombo {
     }
 
     public static void setValueComboTpFormaPagto(ChoiceBox combo, Integer selecionado) {
-        if (combo.getItems().isEmpty()) {
-            try {
-                Dao dao = new Dao();
-                dao.autoCommit(false);
-                ArrayList<Object> objs = dao.getAllWhere(new FormaPagto(), "WHERE $inAtivo$ = 'T'");
-                ArrayList<FormaHit> hits = new ArrayList<>();
-                int i = 0;
-                for (Object obj : objs) {
-                    FormaHit hit = new FormaHit();
-                    hit.forma = (FormaPagto) obj;
-                    hits.add(hit);
-                    if (selecionado == hit.forma.getCdFormaPagto()) {
-                        selecionado = i;
-                    }
-                    i++;
+        //if (combo.getItems().isEmpty()) {
+        int set = 0;
+        try {
+            Dao dao = new Dao();
+            dao.autoCommit(false);
+            ArrayList<Object> objs = dao.getAllWhere(new FormaPagto(), "WHERE $inAtivo$ = 'T'");
+            ArrayList<FormaHit> hits = new ArrayList<>();
+            int i = 0;
+            for (Object obj : objs) {
+                FormaHit hit = new FormaHit();
+                hit.forma = (FormaPagto) obj;
+                hits.add(hit);
+                if (selecionado == hit.forma.getCdFormaPagto()) {
+                    set = i;
                 }
-                combo.setItems(FXCollections.observableArrayList(hits));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Alerta.AlertaError("Atenção!", "Nenhuma forma de pagamento cadastrada!");
-                return;
+                i++;
             }
+            combo.setItems(FXCollections.observableArrayList(hits));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Atenção!", "Nenhuma forma de pagamento cadastrada!");
+            return;
         }
+        //}
         if (selecionado != null) {
             SingleSelectionModel<ChoiceBox> model = combo.getSelectionModel();
-            model.select(selecionado-1);
+            model.select(set);
         }
     }
 
