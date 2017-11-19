@@ -1,5 +1,7 @@
 package br.integrado.jnpereira.nutrimix.relatorio;
 
+import br.integrado.jnpereira.nutrimix.controle.ConMovtoCaixaControl;
+import br.integrado.jnpereira.nutrimix.controle.ConMovtoEstoqueControl;
 import br.integrado.jnpereira.nutrimix.controle.MenuControl;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
@@ -23,7 +25,11 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 
 public class Relatorio {
 
@@ -40,7 +46,7 @@ public class Relatorio {
 
     public static void main(String[] args) {
         Relatorio relatorio = new Relatorio();
-        relatorio.gerarReciboVenda(1);
+        relatorio.gerarRelatorioContasPendente("S");
         //relatorio.gerarRelatorioEstoque(true);
     }
 
@@ -363,6 +369,415 @@ public class Relatorio {
                 nrCont.setBorder(PdfPCell.NO_BORDER);
                 nrCont.setHorizontalAlignment(1);
                 infoProduto.addCell(nrCont);
+            }
+            document.add(infoProduto);
+
+            document.add(getLinhaSolida());
+            document.add(getEmissao());
+
+            document.close();
+            abrirPDF(dsCaminho);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro ao gerar relatório!", ex.toString());
+        }
+    }
+
+    public void gerarRelatorioMovtoEstoque(TableView<ConMovtoEstoqueControl.ClasseGenerica> grid) {
+        try {
+            Document document = new Document();
+            document.setPageSize(PageSize.A4);
+
+            String dsCaminho = dsDiretorio + "relatorio_movto_estoque" + getDtEmissao();
+            PdfWriter.getInstance(document, new FileOutputStream(dsCaminho));
+            document.open();
+
+            //Cabeçalho
+            Image imagem = Image.getInstance(getClass().getResource("/br/integrado/jnpereira/nutrimix/icon/sisgecom_logo.png"));
+            imagem.scalePercent(15.4f);
+            Paragraph dsRelatorio = new Paragraph("Relatório Movimento de Estoque", getFont(14));
+            dsRelatorio.setAlignment(Element.ALIGN_CENTER);
+            dsRelatorio.add(imagem);
+            dsRelatorio.setLeading(6);
+            document.add(dsRelatorio);
+            document.add(getLinhaSolida());
+            Usuario usuario = new Usuario();
+            usuario.setCdUsuario(MenuControl.usuarioAtivo);
+            dao.get(usuario);
+            Paragraph infoRelatorio = new Paragraph("Emitido por: " + usuario.getDsLogin().toUpperCase() + " Dt. Emissão: " + Data.AmericaToBrasil(Data.getAgora()), getFont(7));
+            //infoRelatorio.setLeading(15);
+            document.add(infoRelatorio);
+            document.add(getLinhaSolida());
+
+            PdfPTable infoProduto = new PdfPTable(7);
+            infoProduto.getDefaultCell().setBorder(PdfPCell.NO_BORDER); // Aqui eu tiro a borda
+            infoProduto.setTotalWidth(new float[]{120, 60, 80, 70, 60, 60, 80});
+            infoProduto.setLockedWidth(true);
+
+            boolean inCab = true;
+            ObservableList<ConMovtoEstoqueControl.ClasseGenerica> movtos = grid.getItems();
+            for (ConMovtoEstoqueControl.ClasseGenerica prod : movtos) {
+                PdfPCell dsProduto;
+                PdfPCell dtMovto;
+                PdfPCell dsMovto;
+                PdfPCell tpMovto;
+                PdfPCell qtMovto;
+                PdfPCell qtEstoq;
+                PdfPCell vlCustoMedio;
+
+                if (inCab) {
+                    dsProduto = new PdfPCell(new Paragraph("Produto", getFont(8)));
+                    dsProduto.setPadding(3);
+                    infoProduto.addCell(dsProduto);
+
+                    dtMovto = new PdfPCell(new Paragraph("Data Movto", getFont(8)));
+                    dtMovto.setPadding(3);
+                    infoProduto.addCell(dtMovto);
+
+                    dsMovto = new PdfPCell(new Paragraph("Entrada/Saída", getFont(8)));
+                    dsMovto.setPadding(3);
+                    infoProduto.addCell(dsMovto);
+
+                    tpMovto = new PdfPCell(new Paragraph("Tipo de Movto", getFont(8)));
+                    tpMovto.setPadding(3);
+                    infoProduto.addCell(tpMovto);
+
+                    qtMovto = new PdfPCell(new Paragraph("Qt. Movto", getFont(8)));
+                    qtMovto.setPadding(3);
+                    infoProduto.addCell(qtMovto);
+
+                    qtEstoq = new PdfPCell(new Paragraph("Qt. Estoque", getFont(8)));
+                    qtEstoq.setPadding(3);
+                    infoProduto.addCell(qtEstoq);
+
+                    vlCustoMedio = new PdfPCell(new Paragraph("Vl. Custo Médio", getFont(8)));
+                    vlCustoMedio.setPadding(3);
+                    infoProduto.addCell(vlCustoMedio);
+
+                    inCab = false;
+                }
+
+                dsProduto = new PdfPCell(new Paragraph(prod.getCdProduto() + ". " + prod.getDsProduto(), getFont(8)));
+                dsProduto.setPadding(1.5f);
+                dsProduto.setBorder(PdfPCell.NO_BORDER);
+                infoProduto.addCell(dsProduto);
+
+                dtMovto = new PdfPCell(new Paragraph(prod.getDtMovto().toString(), getFont(8)));
+                dtMovto.setPadding(1.5f);
+                dtMovto.setBorder(PdfPCell.NO_BORDER);
+                dtMovto.setHorizontalAlignment(1);
+                infoProduto.addCell(dtMovto);
+
+                dsMovto = new PdfPCell(new Paragraph(prod.movto.getTpMovto().equals("E") ? "Entrada" : "Saída", getFont(8)));
+                dsMovto.setPadding(1.5f);
+                dsMovto.setBorder(PdfPCell.NO_BORDER);
+                dsMovto.setHorizontalAlignment(1);
+                infoProduto.addCell(dsMovto);
+
+                tpMovto = new PdfPCell(new Paragraph(prod.getTpMovto(), getFont(8)));
+                tpMovto.setPadding(1.5f);
+                tpMovto.setBorder(PdfPCell.NO_BORDER);
+                tpMovto.setHorizontalAlignment(1);
+                infoProduto.addCell(tpMovto);
+
+                qtMovto = new PdfPCell(new Paragraph(Numero.doubleToReal(prod.getQtMovto(), 2), getFont(8)));
+                qtMovto.setPadding(1.5f);
+                qtMovto.setBorder(PdfPCell.NO_BORDER);
+                qtMovto.setHorizontalAlignment(1);
+                infoProduto.addCell(qtMovto);
+
+                qtEstoq = new PdfPCell(new Paragraph(Numero.doubleToReal(prod.getQtEstoq(), 2), getFont(8)));
+                qtEstoq.setPadding(1.5f);
+                qtEstoq.setBorder(PdfPCell.NO_BORDER);
+                qtEstoq.setHorizontalAlignment(1);
+                infoProduto.addCell(qtEstoq);
+
+                vlCustoMedio = new PdfPCell(new Paragraph(Numero.doubleToR$(prod.getVlCustoMedio()), getFont(8)));
+                vlCustoMedio.setPadding(1.5f);
+                vlCustoMedio.setBorder(PdfPCell.NO_BORDER);
+                vlCustoMedio.setHorizontalAlignment(1);
+                infoProduto.addCell(vlCustoMedio);
+            }
+            document.add(infoProduto);
+
+            document.add(getLinhaSolida());
+            document.add(getEmissao());
+
+            document.close();
+            abrirPDF(dsCaminho);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro ao gerar relatório!", ex.toString());
+        }
+    }
+
+    public void gerarRelatorioMovtoCaixa(TableView<ConMovtoCaixaControl.ClasseGenerica> grid) {
+        try {
+            Document document = new Document();
+            document.setPageSize(PageSize.A4);
+
+            String dsCaminho = dsDiretorio + "relatorio_movto_estoque" + getDtEmissao();
+            PdfWriter.getInstance(document, new FileOutputStream(dsCaminho));
+            document.open();
+
+            //Cabeçalho
+            Image imagem = Image.getInstance(getClass().getResource("/br/integrado/jnpereira/nutrimix/icon/sisgecom_logo.png"));
+            imagem.scalePercent(15.4f);
+            Paragraph dsRelatorio = new Paragraph("Relatório Movimento de Caixa", getFont(14));
+            dsRelatorio.setAlignment(Element.ALIGN_CENTER);
+            dsRelatorio.add(imagem);
+            dsRelatorio.setLeading(6);
+            document.add(dsRelatorio);
+            document.add(getLinhaSolida());
+            Usuario usuario = new Usuario();
+            usuario.setCdUsuario(MenuControl.usuarioAtivo);
+            dao.get(usuario);
+            Paragraph infoRelatorio = new Paragraph("Emitido por: " + usuario.getDsLogin().toUpperCase() + " Dt. Emissão: " + Data.AmericaToBrasil(Data.getAgora()), getFont(7));
+            //infoRelatorio.setLeading(15);
+            document.add(infoRelatorio);
+            document.add(getLinhaSolida());
+
+            PdfPTable infoProduto = new PdfPTable(6);
+            infoProduto.getDefaultCell().setBorder(PdfPCell.NO_BORDER); // Aqui eu tiro a borda
+            infoProduto.setTotalWidth(new float[]{120, 80, 120, 70, 80, 60});
+            infoProduto.setLockedWidth(true);
+
+            boolean inCab = true;
+            ObservableList<ConMovtoCaixaControl.ClasseGenerica> movtos = grid.getItems();
+            for (ConMovtoCaixaControl.ClasseGenerica prod : movtos) {
+                PdfPCell dsMovto;
+                PdfPCell tpMovto;
+                PdfPCell dtMovto;
+                PdfPCell cdFechamento;
+                PdfPCell dsForPagto;
+                PdfPCell vlMovto;
+
+                if (inCab) {
+                    dsMovto = new PdfPCell(new Paragraph("Movimento", getFont(8)));
+                    dsMovto.setPadding(3);
+                    infoProduto.addCell(dsMovto);
+
+                    tpMovto = new PdfPCell(new Paragraph("Entrada/Saída", getFont(8)));
+                    tpMovto.setPadding(3);
+                    infoProduto.addCell(tpMovto);
+
+                    dtMovto = new PdfPCell(new Paragraph("Data Movto", getFont(8)));
+                    dtMovto.setPadding(3);
+                    infoProduto.addCell(dtMovto);
+
+                    cdFechamento = new PdfPCell(new Paragraph("Cód. Fecha.", getFont(8)));
+                    cdFechamento.setPadding(3);
+                    infoProduto.addCell(cdFechamento);
+
+                    dsForPagto = new PdfPCell(new Paragraph("Forma Pagto", getFont(8)));
+                    dsForPagto.setPadding(3);
+                    dsForPagto.setHorizontalAlignment(1);
+                    infoProduto.addCell(dsForPagto);
+
+                    vlMovto = new PdfPCell(new Paragraph("Vl. Movto", getFont(8)));
+                    vlMovto.setPadding(3);
+                    infoProduto.addCell(vlMovto);
+
+                    inCab = false;
+                }
+
+                dsMovto = new PdfPCell(new Paragraph(prod.getCdMovtoCaixa() + ". " + prod.getTpMovtoCaixa(), getFont(8)));
+                dsMovto.setPadding(1.5f);
+                dsMovto.setBorder(PdfPCell.NO_BORDER);
+                infoProduto.addCell(dsMovto);
+
+                tpMovto = new PdfPCell(new Paragraph(prod.movto.getTpMovtoCaixa().equals("E") ? "Entrada" : "Saída", getFont(8)));
+                tpMovto.setPadding(1.5f);
+                tpMovto.setBorder(PdfPCell.NO_BORDER);
+                tpMovto.setHorizontalAlignment(1);
+                infoProduto.addCell(tpMovto);
+
+                dtMovto = new PdfPCell(new Paragraph(prod.getDtMovto().toString(), getFont(8)));
+                dtMovto.setPadding(1.5f);
+                dtMovto.setBorder(PdfPCell.NO_BORDER);
+                dtMovto.setHorizontalAlignment(1);
+                infoProduto.addCell(dtMovto);
+
+                cdFechamento = new PdfPCell(new Paragraph(prod.getCdFechamento().toString(), getFont(8)));
+                cdFechamento.setPadding(1.5f);
+                cdFechamento.setBorder(PdfPCell.NO_BORDER);
+                cdFechamento.setHorizontalAlignment(1);
+                infoProduto.addCell(cdFechamento);
+
+                dsForPagto = new PdfPCell(new Paragraph(prod.getDsForPagto(), getFont(8)));
+                dsForPagto.setPadding(1.5f);
+                dsForPagto.setBorder(PdfPCell.NO_BORDER);
+                dsForPagto.setHorizontalAlignment(1);
+                infoProduto.addCell(dsForPagto);
+
+                vlMovto = new PdfPCell(new Paragraph(Numero.doubleToR$(prod.getVlMovto()), getFont(8)));
+                vlMovto.setPadding(1.5f);
+                vlMovto.setBorder(PdfPCell.NO_BORDER);
+                vlMovto.setHorizontalAlignment(1);
+                infoProduto.addCell(vlMovto);
+            }
+            document.add(infoProduto);
+
+            document.add(getLinhaSolida());
+            document.add(getEmissao());
+
+            document.close();
+            abrirPDF(dsCaminho);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro ao gerar relatório!", ex.toString());
+        }
+    }
+
+    public void gerarRelatorioContasPendente(String tpMovto) {
+        try {
+            Document document = new Document();
+            document.setPageSize(PageSize.A4);
+
+            String dsCaminho = dsDiretorio + "relatorio_contas" + getDtEmissao();
+            PdfWriter.getInstance(document, new FileOutputStream(dsCaminho));
+            document.open();
+
+            //Cabeçalho
+            Image imagem = Image.getInstance(getClass().getResource("/br/integrado/jnpereira/nutrimix/icon/sisgecom_logo.png"));
+            imagem.scalePercent(15.4f);
+            Paragraph dsRelatorio = new Paragraph("Relatório Contas a " + (tpMovto.equals("S") ? "Pagar" : "Receber") + " - Pendente");
+            dsRelatorio.setAlignment(Element.ALIGN_CENTER);
+            dsRelatorio.add(imagem);
+            dsRelatorio.setLeading(6);
+            document.add(dsRelatorio);
+            document.add(getLinhaSolida());
+            Usuario usuario = new Usuario();
+            usuario.setCdUsuario(MenuControl.usuarioAtivo);
+            dao.get(usuario);
+            Paragraph infoRelatorio = new Paragraph("Emitido por: " + usuario.getDsLogin().toUpperCase() + " Dt. Emissão: " + Data.AmericaToBrasil(Data.getAgora()), getFont(7));
+            //infoRelatorio.setLeading(15);
+            document.add(infoRelatorio);
+            document.add(getLinhaSolida());
+
+            PdfPTable infoProduto = new PdfPTable(6);
+            infoProduto.getDefaultCell().setBorder(PdfPCell.NO_BORDER); // Aqui eu tiro a borda
+            infoProduto.setTotalWidth(new float[]{40, 170, 80, 80, 60, 60});
+            infoProduto.setLockedWidth(true);
+
+            boolean inCab = true;
+            double total = 0.00;
+            String where = "WHERE $dtPagto$ IS NULL AND $tpMovto$ = '" + tpMovto + "' ORDER BY $dtVencto$ ASC";
+            ArrayList<Object> array = dao.getAllWhere(new Parcela(), where);
+            for (Object obj : array) {
+                Parcela parcela = (Parcela) obj;
+                PdfPCell cdPessoa;
+                PdfPCell dsPessoa;
+                PdfPCell dsMovto;
+                PdfPCell dtVenct;
+                PdfPCell vlParcela;
+                PdfPCell qtDias;
+
+                if (inCab) {
+                    cdPessoa = new PdfPCell(new Paragraph("Cód.", getFont(8)));
+                    cdPessoa.setPadding(3);
+                    infoProduto.addCell(cdPessoa);
+
+                    dsPessoa = new PdfPCell(new Paragraph("Nome", getFont(8)));
+                    dsPessoa.setPadding(3);
+                    infoProduto.addCell(dsPessoa);
+
+                    dsMovto = new PdfPCell(new Paragraph("Tipo Movimento", getFont(8)));
+                    dsMovto.setPadding(3);
+                    infoProduto.addCell(dsMovto);
+
+                    dtVenct = new PdfPCell(new Paragraph("Dt. Vencto", getFont(8)));
+                    dtVenct.setPadding(3);
+                    infoProduto.addCell(dtVenct);
+
+                    vlParcela = new PdfPCell(new Paragraph("Valor", getFont(8)));
+                    vlParcela.setPadding(3);
+                    vlParcela.setHorizontalAlignment(1);
+                    infoProduto.addCell(vlParcela);
+
+                    qtDias = new PdfPCell(new Paragraph("Dias Atraso", getFont(8)));
+                    qtDias.setPadding(3);
+                    infoProduto.addCell(qtDias);
+
+                    inCab = false;
+                }
+
+                String vDsConta = "";
+                String vCdPessoa = "";
+                String vDsPessoa = "";
+                ContasPagarReceber conta = new ContasPagarReceber();
+                conta.setCdConta(parcela.getCdConta());
+                dao.get(conta);
+                if (conta.getCdDespesa() != null) {
+                    vDsConta = "Despesa";
+                } else {
+                    VendaCompra m = new VendaCompra();
+                    m.setCdMovto(conta.getCdMovto());
+                    dao.get(m);
+                    if (m.getTpMovto().equals("S")) {
+                        vDsConta = "Venda";
+                    } else {
+                        vDsConta = "Compra";
+                    }
+                    if (m.getCdPessoa() != null) {
+                        Pessoa pessoa = new Pessoa();
+                        pessoa.setCdPessoa(m.getCdPessoa());
+                        dao.get(pessoa);
+                        vCdPessoa = pessoa.getCdPessoa().toString();
+                        vDsPessoa = pessoa.getDsPessoa();
+                    }
+                }
+
+                cdPessoa = new PdfPCell(new Paragraph(vCdPessoa, getFont(8)));
+                cdPessoa.setPadding(1.5f);
+                cdPessoa.setHorizontalAlignment(1);
+                cdPessoa.setBorder(PdfPCell.NO_BORDER);
+                infoProduto.addCell(cdPessoa);
+
+                dsPessoa = new PdfPCell(new Paragraph(vDsPessoa, getFont(8)));
+                dsPessoa.setPadding(1.5f);
+                dsPessoa.setBorder(PdfPCell.NO_BORDER);
+                infoProduto.addCell(dsPessoa);
+
+                dsMovto = new PdfPCell(new Paragraph(vDsConta, getFont(8)));
+                dsMovto.setPadding(1.5f);
+                dsMovto.setBorder(PdfPCell.NO_BORDER);
+                dsMovto.setHorizontalAlignment(1);
+                infoProduto.addCell(dsMovto);
+
+                dtVenct = new PdfPCell(new Paragraph(Data.AmericaToBrasilSemHora(parcela.getDtVencto()), getFont(8)));
+                dtVenct.setPadding(1.5f);
+                dtVenct.setBorder(PdfPCell.NO_BORDER);
+                dtVenct.setHorizontalAlignment(1);
+                infoProduto.addCell(dtVenct);
+
+                vlParcela = new PdfPCell(new Paragraph(Numero.doubleToR$(parcela.getVlParcela()), getFont(8)));
+                vlParcela.setPadding(1.5f);
+                vlParcela.setBorder(PdfPCell.NO_BORDER);
+                vlParcela.setHorizontalAlignment(1);
+                infoProduto.addCell(vlParcela);
+                total += parcela.getVlParcela();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Calendar data1 = Calendar.getInstance();
+                Calendar data2 = Calendar.getInstance();
+                try {
+                    data1.setTime(Data.getAgora());
+                    data2.setTime(parcela.getDtVencto());
+                } catch (Exception e) {
+                }
+                Integer dias = data2.get(Calendar.DAY_OF_YEAR)
+                        - data1.get(Calendar.DAY_OF_YEAR);
+
+                if (parcela.getDtVencto().after(Data.getAgora())) {
+                    dias = 0;
+                }
+
+                qtDias = new PdfPCell(new Paragraph(dias.toString(), getFont(8)));
+                qtDias.setPadding(1.5f);
+                qtDias.setBorder(PdfPCell.NO_BORDER);
+                qtDias.setHorizontalAlignment(1);
+                infoProduto.addCell(qtDias);
             }
             document.add(infoProduto);
 

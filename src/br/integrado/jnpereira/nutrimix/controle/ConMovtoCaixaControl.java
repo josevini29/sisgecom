@@ -8,6 +8,7 @@ import br.integrado.jnpereira.nutrimix.modelo.Despesa;
 import br.integrado.jnpereira.nutrimix.modelo.FormaPagto;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
+import br.integrado.jnpereira.nutrimix.relatorio.Relatorio;
 import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
@@ -254,10 +255,17 @@ public class ConMovtoCaixaControl implements Initializable {
             Alerta.AlertaError("Erro!", ex.toString());
         }
     }
+    
+    @FXML
+    public void gerarRelatorio(){
+        atualizaGrid();
+        Relatorio relatorio = new Relatorio();
+        relatorio.gerarRelatorioMovtoCaixa(gridMovto);
+    }
 
     public class ClasseGenerica {
 
-        @Coluna(nome = "Cód. Prod.")
+        @Coluna(nome = "Cód. Movto.")
         @Style(css = "-fx-alignment: CENTER;")
         private Integer cdMovtoCaixa;
         @Coluna(nome = "Tipo Movto")
@@ -281,7 +289,7 @@ public class ConMovtoCaixaControl implements Initializable {
         @Coluna(nome = "Vl. Movto")
         @Style(css = "-fx-alignment: CENTER;")
         private Double vlMovto;
-        MovtoCaixa movto;
+        public MovtoCaixa movto;
 
         public Integer getCdMovtoCaixa() {
             return cdMovtoCaixa;

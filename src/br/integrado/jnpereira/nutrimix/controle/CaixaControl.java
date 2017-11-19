@@ -66,7 +66,7 @@ public class CaixaControl {
             throw new Exception(ex.getMessage());
         }
     }
-
+    
     private void excluirConta(ContasPagarReceber conta) throws Exception {
         Tela tela = new Tela();
         if (!tela.validaAcessoOperacao(Tela.EXCLUSAO_DESPESAS)) {

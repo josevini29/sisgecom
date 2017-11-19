@@ -19,6 +19,7 @@ import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Data;
+import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
 import br.integrado.jnpereira.nutrimix.tools.Numero;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.net.URL;
@@ -220,7 +221,7 @@ public class ConVendaCompraControl implements Initializable {
         Tela tela = new Tela();
         tela.abrirTelaModalComParam(stage, Tela.PAG_PARCELA, conta);
     }
-
+    
     public class ClasseGenerica {
 
         @Coluna(nome = "Cód. Produto")

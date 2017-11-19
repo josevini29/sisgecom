@@ -57,5 +57,14 @@
       <Label layoutX="388.0" layoutY="15.0" text="Data Inicial" />
       <Label layoutX="498.0" layoutY="15.0" text="Data Fim" />
       <Label layoutX="611.0" layoutY="15.0" text="Situação" />
+      <Button layoutX="779.0" layoutY="30.0" maxHeight="29.0" maxWidth="105.0" mnemonicParsing="false" onAction="#gerarRelatorio" prefHeight="29.0" prefWidth="105.0" text="Relatório">
+         <graphic>
+            <ImageView fitHeight="19.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icon/report.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>

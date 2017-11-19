@@ -16,6 +16,7 @@ import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
 import br.integrado.jnpereira.nutrimix.modelo.Fornecedor;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
+import br.integrado.jnpereira.nutrimix.relatorio.Relatorio;
 import br.integrado.jnpereira.nutrimix.tools.Criteria;
 import br.integrado.jnpereira.nutrimix.tools.Data;
 import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
@@ -274,6 +275,12 @@ public class ConContasPagarControl implements Initializable {
             cdForne.setText(valor);
             validaCodigoForne();
         }
+    }
+    
+    @FXML
+    public void gerarRelatorio(){
+        Relatorio relatorio = new Relatorio();
+        relatorio.gerarRelatorioContasPendente("S");
     }
 
     public class GridConta {

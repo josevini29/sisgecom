@@ -6,6 +6,7 @@ import br.integrado.jnpereira.nutrimix.modelo.AjusteEstoque;
 import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
+import br.integrado.jnpereira.nutrimix.relatorio.Relatorio;
 import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
@@ -170,6 +171,13 @@ public class ConMovtoEstoqueControl implements Initializable {
             }
         });
     }
+    
+    @FXML
+    public void gerarRelatorio(){
+        atualizaGrid();
+        Relatorio relatorio = new Relatorio();
+        relatorio.gerarRelatorioMovtoEstoque(gridMovto);
+    }
 
     @FXML
     public void atualizaGrid() {
@@ -288,7 +296,7 @@ public class ConMovtoEstoqueControl implements Initializable {
         @Coluna(nome = "Cancelado")
         @Style(css = "-fx-alignment: CENTER;")
         private String inCancel;
-        MovtoEstoque movto;
+        public MovtoEstoque movto;
 
         public Integer getCdProduto() {
             return cdProduto;

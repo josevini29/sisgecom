@@ -91,8 +91,8 @@ public class Tela {
     final public static String[] AJUSTE_CAIXA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmAjusteCaixaFXML.fxml", "Retirada/Ajuste de Caixa"};
     @Senha
     final public static String[] EXCLUSAO_DESPESAS = new String[]{"", "Exclusão de Despesas"};
-    @Senha
-    final public static String[] EXCLUSAO_VENDA_COMPRA = new String[]{"", "Exclusão de Venda/Compra"};
+    //@Senha
+    //final public static String[] EXCLUSAO_VENDA_COMPRA = new String[]{"", "Exclusão de Venda/Compra"};
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
