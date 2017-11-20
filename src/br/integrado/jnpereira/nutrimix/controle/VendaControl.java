@@ -159,6 +159,15 @@ public class VendaControl implements Initializable {
     }
 
     @FXML
+    public void abrirTelaDivisao(){
+        Tela tela = new Tela();
+        Parametro p = new Parametro();
+        p.setListVendaProd(listVendaProd);
+        p.setVlTotal(Double.parseDouble(vlTotalVenda.getText()));
+        tela.abrirTelaModalComParam(stage, Tela.DIVISAO, p);
+    }
+    
+    @FXML
     public void pesquisarCliente() {
         Tela tela = new Tela();
         String valor = tela.abrirListaPessoa(new Cliente(), true);
@@ -699,6 +708,27 @@ public class VendaControl implements Initializable {
         TextField vlTotalProd = new TextField();
         Button btnAdd = new Button();
         Button btnRem = new Button();
+    }
+    
+    public class Parametro{
+         private ArrayList<VendaProdHit> listVendaProd;
+         private Double vlTotal;
+
+        public ArrayList<VendaProdHit> getListVendaProd() {
+            return listVendaProd;
+        }
+
+        public void setListVendaProd(ArrayList<VendaProdHit> listVendaProd) {
+            this.listVendaProd = listVendaProd;
+        }
+
+        public Double getVlTotal() {
+            return vlTotal;
+        }
+
+        public void setVlTotal(Double vlTotal) {
+            this.vlTotal = vlTotal;
+        }
     }
 
 }
