@@ -73,8 +73,8 @@ public class Tela {
     final public static String[] CAD_PEDIDO_COMPRA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadPedidoCompraFXML.fxml", "Pedido de Compra"};
     final public static String[] CON_PARCELA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmConParcelaFXML.fxml", "Consulta Parcelas"};
     final public static String[] LOGIN = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmLoginFXML.fxml", "Login"};
-    final public static String[] DIVISAO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmDivisaoFXML.fxml", "Login"};
-    final public static String[] CAD_ALTSENHA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAltSenhaFXML.fxml", "Divisão de Venda"};
+    final public static String[] DIVISAO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmDivisaoFXML.fxml", "Divisão de Venda"};
+    final public static String[] CAD_ALTSENHA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadAltSenhaFXML.fxml", "Alteração de Senha"};
     @Senha
     final public static String[] CAD_USUARIO = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmCadUsuarioFXML.fxml", "Cadastro de Usuário"};
     @Senha
@@ -294,6 +294,7 @@ public class Tela {
             controler.iniciaTela();
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setTitle("Lista Ajuste de Estoque");
             stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.resizableProperty().setValue(Boolean.FALSE);
@@ -317,6 +318,7 @@ public class Tela {
             controler.iniciaTela();
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setTitle("Lista de Pedido de Compra");
             stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.resizableProperty().setValue(Boolean.FALSE);
@@ -340,6 +342,7 @@ public class Tela {
             controler.iniciaTela();
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setTitle("Fechamento de Caixa");
             stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.resizableProperty().setValue(Boolean.FALSE);
@@ -366,6 +369,7 @@ public class Tela {
             stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.resizableProperty().setValue(Boolean.FALSE);
+            stage.setTitle("Ajuste de Caixa");
             stage.centerOnScreen();
             stage.showAndWait();
             return controler.getDsRetorno();
@@ -388,6 +392,7 @@ public class Tela {
             stage.setScene(scene);
             stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Lista de Despesa");
             stage.resizableProperty().setValue(Boolean.FALSE);
             stage.centerOnScreen();
             stage.showAndWait();
