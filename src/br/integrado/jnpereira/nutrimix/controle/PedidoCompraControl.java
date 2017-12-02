@@ -30,7 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class PedidoCompraControl implements Initializable {
-
+    
     @FXML
     AnchorPane anchor;
     @FXML
@@ -47,7 +47,7 @@ public class PedidoCompraControl implements Initializable {
     TextField vlTotalPedido;
     @FXML
     Label lblCadastro;
-
+    
     @FXML
     AnchorPane painel;
     @FXML
@@ -70,7 +70,7 @@ public class PedidoCompraControl implements Initializable {
     Button btnAdd;
     @FXML
     Button btnRem;
-
+    
     public Stage stage;
     public Object param;
     double LayoutY;
@@ -79,7 +79,7 @@ public class PedidoCompraControl implements Initializable {
     Pedido pedido;
     Fornecedor fornecedor;
     boolean inAntiLoop = true;
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         FuncaoCampo.mascaraNumeroInteiro(cdPedido);
@@ -96,9 +96,9 @@ public class PedidoCompraControl implements Initializable {
                 validaCodigoForne();
             }
         });
-
+        
     }
-
+    
     public void iniciaTela() {
         if (param != null) {
             Pedido ped = (Pedido) param;
@@ -108,7 +108,7 @@ public class PedidoCompraControl implements Initializable {
             atualizaPedidoProd();
         }
     }
-
+    
     private void validaCodigoPedido() {
         if (!cdPedido.getText().equals("") & pedido == null) {
             try {
@@ -129,13 +129,13 @@ public class PedidoCompraControl implements Initializable {
             }
         }
     }
-
+    
     public void abrirListaProduto(PedidoProdHit movto) {
         if (movto.pedidoProd != null) {
             Alerta.AlertaError("Não permitido!", "Não é possível alterar um produto já efetivado.");
             return;
         }
-
+        
         Tela tela = new Tela();
         String valor = tela.abrirListaGenerica(new Produto(), "cdProduto", "dsProduto", "AND $inAtivo$ = 'T'", "Lista de Produtos");
         if (valor != null) {
@@ -153,7 +153,7 @@ public class PedidoCompraControl implements Initializable {
             validaCodigoPedido();
         }
     }
-
+    
     @FXML
     public void pesquisarFornecedor() {
         Tela tela = new Tela();
@@ -163,7 +163,7 @@ public class PedidoCompraControl implements Initializable {
             validaCodigoForne();
         }
     }
-
+    
     private void validaCodigoForne() {
         if (!cdForne.getText().equals("")) {
             boolean vInBusca = true;
@@ -208,14 +208,14 @@ public class PedidoCompraControl implements Initializable {
             nrCpfCnpj.setText("");
         }
     }
-
+    
     private void validaCodigoProduto(PedidoProdHit pedidoHit) {
         if (!pedidoHit.cdProduto.getText().equals("")) {
             try {
                 Produto prod = new Produto();
                 prod.setCdProduto(Integer.parseInt(pedidoHit.cdProduto.getText()));
                 dao.get(prod);
-
+                
                 if (pedidoHit.pedidoProd == null & inAntiLoop) {
                     inAntiLoop = false;
                     if (!prod.getInAtivo()) {
@@ -224,7 +224,7 @@ public class PedidoCompraControl implements Initializable {
                         inAntiLoop = true;
                         return;
                     }
-
+                    
                     for (PedidoProdHit movtoHit : listPedidoProd) {
                         if (movtoHit.cdProduto.getText().equals(pedidoHit.cdProduto.getText())
                                 && !movtoHit.equals(pedidoHit)) {
@@ -236,7 +236,7 @@ public class PedidoCompraControl implements Initializable {
                     }
                     inAntiLoop = true;
                 }
-
+                
                 pedidoHit.dsProduto.setText(prod.getDsProduto());
             } catch (Exception ex) {
                 Alerta.AlertaError("Notificação", "Produto não encontrado!");
@@ -246,12 +246,12 @@ public class PedidoCompraControl implements Initializable {
             pedidoHit.dsProduto.setText("");
         }
     }
-
+    
     @FXML
     public void limpar() {
         limparTela();
     }
-
+    
     private void limparTela() {
         pedido = null;
         fornecedor = null;
@@ -263,7 +263,7 @@ public class PedidoCompraControl implements Initializable {
         stPedido.setDisable(true);
         iniciaTela();
     }
-
+    
     @FXML
     public void salvar() {
         if (pedido != null) {
@@ -271,12 +271,12 @@ public class PedidoCompraControl implements Initializable {
                 Alerta.AlertaError("Não autorizado", "Pedido já encerrado, não permitido alterações.");
                 return;
             }
-
+            
             if (pedido.getStPedido().equals("3")) {
                 Alerta.AlertaError("Não autorizado", "Pedido já cancelado, não permitido alterações.");
                 return;
             }
-
+            
             if (TrataCombo.getValueComboStAtendimento(stPedido).equals("3")) { //Cancelamento
                 for (PedidoProdHit pedidoHit : listPedidoProd) {
                     if (pedidoHit.pedidoProd != null) {
@@ -300,25 +300,25 @@ public class PedidoCompraControl implements Initializable {
                 }
             }
         }
-
+        
         if (TrataCombo.getValueComboStAtendimento(stPedido).equals("2")) {
             Alerta.AlertaError("Não autorizado", "Não permitido encerrar um pedido nesta tela.");
             return;
         }
-
+        
         if (cdForne.getText().equals("")) {
             Alerta.AlertaError("Campo inválido", "Fornecedor é obrigatório");
             cdForne.requestFocus();
             return;
         }
-
+        
         for (PedidoProdHit pedidoHit : listPedidoProd) {
             if (pedidoHit.cdProduto.getText().equals("")) {
                 Alerta.AlertaError("Campo inválido", "Código do produto é obrigatório");
                 pedidoHit.cdProduto.requestFocus();
                 return;
             }
-
+            
             if (pedidoHit.qtProduto.getText().equals("")) {
                 Alerta.AlertaError("Campo inválido", "Quantidade do pedido é obrigatório.");
                 pedidoHit.qtProduto.requestFocus();
@@ -330,7 +330,7 @@ public class PedidoCompraControl implements Initializable {
                     pedidoHit.qtProduto.requestFocus();
                     return;
                 }
-
+                
                 double qtEntregue = (pedidoHit.qtEntregue.getText().equals("") ? 0.0 : Double.parseDouble(pedidoHit.qtEntregue.getText()));
                 if (qtProduto < qtEntregue) {
                     Alerta.AlertaError("Campo inválido", "Quantidade do pedido menor que quantidade entregue.");
@@ -338,19 +338,19 @@ public class PedidoCompraControl implements Initializable {
                     return;
                 }
             }
-
+            
             if (pedidoHit.vlProduto.getText().equals("")) {
                 Alerta.AlertaError("Campo inválido", "Valor do produto é obrigatório");
                 pedidoHit.vlProduto.requestFocus();
                 return;
             }
-
+            
             if (pedidoHit.dtPrevEntrega.getText().equals("")) {
                 Alerta.AlertaError("Campo inválido", "Data de previsão de entrega do produto é obrigatório");
                 pedidoHit.dtPrevEntrega.requestFocus();
                 return;
             }
-
+            
         }
         try {
             dao.autoCommit(false);
@@ -366,7 +366,7 @@ public class PedidoCompraControl implements Initializable {
                 pedido.setStPedido(TrataCombo.getValueComboStAtendimento(stPedido));
                 dao.update(pedido);
             }
-
+            
             for (PedidoProdHit pedidoHit : listPedidoProd) {
                 if (pedidoHit.pedidoProd == null) {
                     PedidoProduto atendPrd = new PedidoProduto();
@@ -387,26 +387,26 @@ public class PedidoCompraControl implements Initializable {
                             pedidoHit.pedidoProd.setQtProduto(qtProduto);
                             vInUpdate = true;
                         }
-
+                        
                         Double vlProduto = Double.parseDouble(pedidoHit.vlProduto.getText());
                         if (!vlProduto.equals(pedidoHit.pedidoProd.getVlUnitario())) {
                             pedidoHit.pedidoProd.setVlUnitario(vlProduto);
                             vInUpdate = true;
                         }
-
+                        
                         Date dtEntrega = Data.StringToDate(pedidoHit.dtPrevEntrega.getText());
                         if (!dtEntrega.equals(pedidoHit.pedidoProd.getDtPrevEntrega())) {
                             pedidoHit.pedidoProd.setDtPrevEntrega(dtEntrega);
                             vInUpdate = true;
                         }
-
+                        
                         if (vInUpdate) {
                             dao.update(pedidoHit.pedidoProd);
                         }
                     }
                 }
             }
-
+            
             dao.commit();
             Integer cod = pedido.getCdPedido();
             limpar();
@@ -422,7 +422,7 @@ public class PedidoCompraControl implements Initializable {
             getStage().close();
         }
     }
-
+    
     private void calculaTotal() {
         double vlTotal = 0.00;
         for (PedidoProdHit pedidoHit : listPedidoProd) {
@@ -433,7 +433,7 @@ public class PedidoCompraControl implements Initializable {
         }
         vlTotalPedido.setText(Numero.doubleToReal(vlTotal, 2));
     }
-
+    
     private void calculaTotalProd(PedidoProdHit hit) {
         if (!hit.qtProduto.getText().equals("") && !hit.vlProduto.getText().equals("")) {
             double vQtProduto = Double.parseDouble(hit.qtProduto.getText());
@@ -443,7 +443,7 @@ public class PedidoCompraControl implements Initializable {
             hit.vlTotalProd.setText("");
         }
     }
-
+    
     public void atualizaPedidoProd() {
         try {
             ArrayList<Object> prods = new ArrayList<>();
@@ -478,7 +478,7 @@ public class PedidoCompraControl implements Initializable {
         }
         atualizaLista();
     }
-
+    
     public void atualizaLista() {
         int total = 0;
         for (PedidoProdHit b : listPedidoProd) {
@@ -486,7 +486,7 @@ public class PedidoCompraControl implements Initializable {
                 total++;
             }
         }
-
+        
         LayoutY = cdProduto.getLayoutY();
         painel.getChildren().clear();
         Iterator it = listPedidoProd.iterator();
@@ -569,18 +569,19 @@ public class PedidoCompraControl implements Initializable {
         }
         painel.setPrefHeight(LayoutY + 10);
     }
-
+    
     public void addValidacao(PedidoProdHit pedidoProdHit, int posicao, int total) {
         FuncaoCampo.mascaraNumeroInteiro(pedidoProdHit.cdProduto);
         FuncaoCampo.mascaraNumeroDecimal(pedidoProdHit.qtProduto);
         FuncaoCampo.mascaraNumeroDecimal(pedidoProdHit.vlProduto);
-
+        FuncaoCampo.mascaraData(pedidoProdHit.dtPrevEntrega);
+        
         pedidoProdHit.cdProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 validaCodigoProduto(pedidoProdHit);
             }
         });
-
+        
         pedidoProdHit.btnPesqProd.setOnAction((ActionEvent event) -> {
             abrirListaProduto(pedidoProdHit);
         });
@@ -599,7 +600,7 @@ public class PedidoCompraControl implements Initializable {
             calculaTotalProd(pedidoProdHit);
             calculaTotal();
         });
-
+        
         pedidoProdHit.vlProduto.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 if (!pedidoProdHit.vlProduto.getText().equals("")) {
@@ -610,17 +611,25 @@ public class PedidoCompraControl implements Initializable {
             calculaTotalProd(pedidoProdHit);
             calculaTotal();
         });
-
+        
         pedidoProdHit.dtPrevEntrega.focusedProperty().addListener((ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) -> {
             if (!newPropertyValue) {
                 if (!pedidoProdHit.dtPrevEntrega.getText().equals("")) {
                     try {
                         Data.autoComplete(pedidoProdHit.dtPrevEntrega);
                         Date dataInicio = Data.StringToDate(pedidoProdHit.dtPrevEntrega.getText());
-                        if (dataInicio.before(new Date())) {
-                            Alerta.AlertaError("Campo inválido", "Data de Previsão de Entrega não pode ser menor que a data atual.");
-                            pedidoProdHit.dtPrevEntrega.requestFocus();
-                            return;
+                        if (pedidoProdHit.pedidoProd == null) {
+                            if (dataInicio.before(Data.getAgora2())) {
+                                Alerta.AlertaError("Campo inválido", "Data de Previsão de Entrega não pode ser menor que a data atual.");
+                                pedidoProdHit.dtPrevEntrega.requestFocus();
+                                return;
+                            }
+                        } else {
+                            if (dataInicio.before(Data.getAgora2()) & !dataInicio.equals(pedidoProdHit.pedidoProd.getDtPrevEntrega())) {
+                                Alerta.AlertaError("Campo inválido", "Data de Previsão de Entrega não pode ser menor que a data atual.");
+                                pedidoProdHit.dtPrevEntrega.requestFocus();
+                                return;
+                            }
                         }
                     } catch (Exception ex) {
                         Alerta.AlertaError("Campo inválido", ex.getMessage());
@@ -629,13 +638,13 @@ public class PedidoCompraControl implements Initializable {
                 }
             }
         });
-
+        
         pedidoProdHit.btnAdd.setOnAction((ActionEvent event) -> {
             PedidoProdHit b = new PedidoProdHit();
             listPedidoProd.add(posicao + 1, b);
             atualizaLista();
         });
-
+        
         pedidoProdHit.btnRem.setOnAction((ActionEvent event) -> {
             if (pedidoProdHit.pedidoProd != null) {
                 if (pedidoProdHit.pedidoProd.getQtEntregue() > 0) {
@@ -643,7 +652,7 @@ public class PedidoCompraControl implements Initializable {
                     return;
                 }
             }
-
+            
             if (total == 1) {
                 PedidoProdHit b = new PedidoProdHit();
                 listPedidoProd.add(b);
@@ -656,17 +665,17 @@ public class PedidoCompraControl implements Initializable {
             atualizaLista();
         });
     }
-
+    
     public Stage getStage() {
         return stage;
     }
-
+    
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
+    
     public class PedidoProdHit {
-
+        
         PedidoProduto pedidoProd;
         TextField cdProduto = new TextField();
         Button btnPesqProd = new Button();
@@ -680,5 +689,5 @@ public class PedidoCompraControl implements Initializable {
         Button btnRem = new Button();
         public boolean isExcluir = false;
     }
-
+    
 }

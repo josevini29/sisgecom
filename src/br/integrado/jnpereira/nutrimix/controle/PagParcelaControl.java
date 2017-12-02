@@ -546,7 +546,7 @@ public class PagParcelaControl implements Initializable {
                     try {
                         Data.autoComplete(parcelaHit.dtVencto);
                         Date dataInicio = Data.StringToDate(parcelaHit.dtVencto.getText() + " 23:59:59");
-                        if (dataInicio.before(new Date()) && !dataInicio.equals(new Date())) {
+                        if (dataInicio.before(Data.getAgora2()) && parcelaHit.dtVencto.isEditable()) {
                             Alerta.AlertaError("Campo inválido", "Data de Vencimento não pode ser menor que a data atual.");
                             parcelaHit.dtVencto.requestFocus();
                             return;

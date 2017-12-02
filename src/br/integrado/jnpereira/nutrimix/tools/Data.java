@@ -3,6 +3,8 @@ package br.integrado.jnpereira.nutrimix.tools;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.TextField;
 
 public class Data {
@@ -10,6 +12,17 @@ public class Data {
     public static Date getAgora() {
         Date agora = new Date();
         return agora;
+    }
+    
+    public static Date getAgora2() {
+        Date agora = new Date();
+        String data = AmericaToBrasilSemHora(agora);
+        try {
+            return StringToDate(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     public static void autoComplete(TextField campo) {
