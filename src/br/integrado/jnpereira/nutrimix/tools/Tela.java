@@ -94,6 +94,8 @@ public class Tela {
     @Senha
     final public static String[] AJUSTE_CAIXA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmAjusteCaixaFXML.fxml", "Retirada/Ajuste de Caixa"};
     @Senha
+    final public static String[] LISTA_COMPRA_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmListaVendaCompraFXML.fxml", "Consulta ..."};
+    @Senha
     final public static String[] EXCLUSAO_DESPESAS = new String[]{"", "Exclusão de Despesas"};
     //@Senha
     //final public static String[] EXCLUSAO_VENDA_COMPRA = new String[]{"", "Exclusão de Venda/Compra"};    

@@ -3,8 +3,6 @@ package br.integrado.jnpereira.nutrimix.tools;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.control.TextField;
 
 public class Data {
@@ -77,6 +75,33 @@ public class Data {
     public static String AmericaToBrasil(Date data) {
         if (data != null) {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            return df.format(data);
+        } else {
+            return "";
+        }
+    }
+    
+    public static String AmericaToBrasilMesAno(Date data) {
+        if (data != null) {
+            SimpleDateFormat df = new SimpleDateFormat("MM-yyyy");
+            return df.format(data);
+        } else {
+            return "";
+        }
+    }
+    
+    public static String AmericaToBrasilMes(Date data) {
+        if (data != null) {
+            SimpleDateFormat df = new SimpleDateFormat("MM");
+            return df.format(data);
+        } else {
+            return "";
+        }
+    }
+    
+    public static String AmericaToBrasilAno(Date data) {
+        if (data != null) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy");
             return df.format(data);
         } else {
             return "";

@@ -160,7 +160,7 @@ public class AtendimentoControl implements Initializable {
                         return;
                     }
 
-                    if (prod.getQtEstqAtual() <= 0) {
+                    if (prod.getQtEstqAtual() <= 0 & prod.getInEstoque()) {
                         Alerta.AlertaWarning("Aviso!", "Produto sem estoque ou estoque negativo, favor verificar!");
                     }
 

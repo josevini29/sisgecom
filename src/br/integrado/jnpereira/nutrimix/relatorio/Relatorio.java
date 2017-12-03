@@ -5,6 +5,7 @@ import br.integrado.jnpereira.nutrimix.controle.ConMovtoEstoqueControl;
 import br.integrado.jnpereira.nutrimix.controle.MenuControl;
 import br.integrado.jnpereira.nutrimix.dao.Dao;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
+import br.integrado.jnpereira.nutrimix.modelo.FechamentoCaixa;
 import br.integrado.jnpereira.nutrimix.modelo.GrupoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Parcela;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 
@@ -778,6 +780,172 @@ public class Relatorio {
                 qtDias.setBorder(PdfPCell.NO_BORDER);
                 qtDias.setHorizontalAlignment(1);
                 infoProduto.addCell(qtDias);
+            }
+            document.add(infoProduto);
+
+            document.add(getLinhaSolida());
+            document.add(getEmissao());
+
+            document.close();
+            abrirPDF(dsCaminho);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro ao gerar relatório!", ex.toString());
+        }
+    }
+
+    public void gerarRelatorioCaixa(Date data) {
+        try {
+            Document document = new Document();
+            document.setPageSize(PageSize.A4);
+
+            String dsCaminho = dsDiretorio + "relatorio_caixa" + getDtEmissao();
+            PdfWriter.getInstance(document, new FileOutputStream(dsCaminho));
+            document.open();
+
+            //Cabeçalho
+            Image imagem = Image.getInstance(getClass().getResource("/br/integrado/jnpereira/nutrimix/icon/sisgecom_logo.png"));
+            imagem.scalePercent(15.4f);
+            Paragraph dsRelatorio = new Paragraph("Relatório de Caixa - Mês: " + Data.AmericaToBrasilMesAno(data));
+            dsRelatorio.setAlignment(Element.ALIGN_CENTER);
+            dsRelatorio.add(imagem);
+            dsRelatorio.setLeading(6);
+            document.add(dsRelatorio);
+            document.add(getLinhaSolida());
+            Usuario usuario = new Usuario();
+            usuario.setCdUsuario(MenuControl.usuarioAtivo);
+            dao.get(usuario);
+            Paragraph infoRelatorio = new Paragraph("Emitido por: " + usuario.getDsLogin().toUpperCase() + " Dt. Emissão: " + Data.AmericaToBrasil(Data.getAgora()), getFont(7));
+            //infoRelatorio.setLeading(15);
+            document.add(infoRelatorio);
+            document.add(getLinhaSolida());
+
+            PdfPTable infoProduto = new PdfPTable(6);
+            infoProduto.getDefaultCell().setBorder(PdfPCell.NO_BORDER); // Aqui eu tiro a borda
+            infoProduto.setTotalWidth(new float[]{45, 120, 120, 80, 80, 80});
+            infoProduto.setLockedWidth(true);
+
+            boolean inCab = true;
+            double total = 0.00;
+            String where = "WHERE TO_CHAR($dtAbertura$, 'MM') = '" + Data.AmericaToBrasilMes(data) + "' AND TO_CHAR($dtAbertura$, 'yyyy') = '" + Data.AmericaToBrasilAno(data) + "' ORDER BY $dtAbertura$ ASC";
+            ArrayList<Object> array = dao.getAllWhere(new FechamentoCaixa(), where);
+            for (Object obj : array) {
+                FechamentoCaixa fec = (FechamentoCaixa) obj;
+                PdfPCell cdFechamento;
+                PdfPCell dtAbertura;
+                PdfPCell dtFechamento;
+                PdfPCell vlAbertura;
+                PdfPCell vlFechamento;
+                PdfPCell vlRendimento;
+
+                if (inCab) {
+                    cdFechamento = new PdfPCell(new Paragraph("Cód.Fec.", getFont(8)));
+                    cdFechamento.setPadding(3);
+                    infoProduto.addCell(cdFechamento);
+
+                    dtAbertura = new PdfPCell(new Paragraph("Dt. Abertura", getFont(8)));
+                    dtAbertura.setPadding(3);
+                    infoProduto.addCell(dtAbertura);
+
+                    dtFechamento = new PdfPCell(new Paragraph("Dt. Fechamento", getFont(8)));
+                    dtFechamento.setPadding(3);
+                    infoProduto.addCell(dtFechamento);
+
+                    vlAbertura = new PdfPCell(new Paragraph("Vl. Abertura", getFont(8)));
+                    vlAbertura.setPadding(3);
+                    infoProduto.addCell(vlAbertura);
+
+                    vlFechamento = new PdfPCell(new Paragraph("Vl. Fechamento", getFont(8)));
+                    vlFechamento.setPadding(3);
+                    vlFechamento.setHorizontalAlignment(1);
+                    infoProduto.addCell(vlFechamento);
+
+                    vlRendimento = new PdfPCell(new Paragraph("Vl. Rendimento", getFont(8)));
+                    vlRendimento.setPadding(3);
+                    infoProduto.addCell(vlRendimento);
+
+                    inCab = false;
+                }
+
+                cdFechamento = new PdfPCell(new Paragraph(fec.getCdFechamento().toString(), getFont(8)));
+                cdFechamento.setPadding(1.5f);
+                cdFechamento.setHorizontalAlignment(1);
+                cdFechamento.setBorder(PdfPCell.NO_BORDER);
+                infoProduto.addCell(cdFechamento);
+
+                dtAbertura = new PdfPCell(new Paragraph(Data.AmericaToBrasil(fec.getDtAbertura()), getFont(8)));
+                dtAbertura.setHorizontalAlignment(1);
+                dtAbertura.setPadding(1.5f);
+                dtAbertura.setBorder(PdfPCell.NO_BORDER);
+                infoProduto.addCell(dtAbertura);
+
+                dtFechamento = new PdfPCell(new Paragraph(Data.AmericaToBrasil(fec.getDtFechamento()), getFont(8)));
+                dtFechamento.setPadding(1.5f);
+                dtFechamento.setBorder(PdfPCell.NO_BORDER);
+                dtFechamento.setHorizontalAlignment(1);
+                infoProduto.addCell(dtFechamento);
+
+                vlAbertura = new PdfPCell(new Paragraph(Numero.doubleToR$(fec.getVlInicial()), getFont(8)));
+                vlAbertura.setPadding(1.5f);
+                vlAbertura.setBorder(PdfPCell.NO_BORDER);
+                vlAbertura.setHorizontalAlignment(2);
+                infoProduto.addCell(vlAbertura);
+
+                vlFechamento = new PdfPCell(new Paragraph(Numero.doubleToR$(fec.getVlFinal() == null ? 0.00 : fec.getVlFinal()), getFont(8)));
+                vlFechamento.setPadding(1.5f);
+                vlFechamento.setBorder(PdfPCell.NO_BORDER);
+                vlFechamento.setHorizontalAlignment(2);
+                infoProduto.addCell(vlFechamento);
+
+                vlRendimento = new PdfPCell(new Paragraph(Numero.doubleToR$((fec.getVlFinal() == null ? 0.00 : fec.getVlFinal()) - fec.getVlInicial()), getFont(8)));
+                total += ((fec.getVlFinal() == null ? 0.00 : fec.getVlFinal()) - fec.getVlInicial());
+                vlRendimento.setPadding(1.5f);
+                vlRendimento.setBorder(PdfPCell.NO_BORDER);
+                vlRendimento.setHorizontalAlignment(2);
+                infoProduto.addCell(vlRendimento);
+                if (fec.equals(array.get(array.size() - 1))) {
+                    document.add(new PdfPCell(new Paragraph("")));
+                    document.add(new PdfPCell(new Paragraph("")));
+                    document.add(new PdfPCell(new Paragraph("")));
+                    document.add(new PdfPCell(new Paragraph("")));
+                    document.add(new PdfPCell(new Paragraph("")));
+                    document.add(new PdfPCell(new Paragraph("")));
+                    cdFechamento = new PdfPCell(new Paragraph("", getFont(8)));
+                    cdFechamento.setPadding(1.5f);
+                    cdFechamento.setHorizontalAlignment(1);
+                    cdFechamento.setBorder(PdfPCell.NO_BORDER);
+                    infoProduto.addCell(cdFechamento);
+
+                    dtAbertura = new PdfPCell(new Paragraph("", getFont(8)));
+                    dtAbertura.setHorizontalAlignment(1);
+                    dtAbertura.setPadding(1.5f);
+                    dtAbertura.setBorder(PdfPCell.NO_BORDER);
+                    infoProduto.addCell(dtAbertura);
+
+                    dtFechamento = new PdfPCell(new Paragraph("", getFont(8)));
+                    dtFechamento.setPadding(1.5f);
+                    dtFechamento.setBorder(PdfPCell.NO_BORDER);
+                    dtFechamento.setHorizontalAlignment(1);
+                    infoProduto.addCell(dtFechamento);
+
+                    vlAbertura = new PdfPCell(new Paragraph("", getFont(8)));
+                    vlAbertura.setPadding(1.5f);
+                    vlAbertura.setBorder(PdfPCell.NO_BORDER);
+                    vlAbertura.setHorizontalAlignment(2);
+                    infoProduto.addCell(vlAbertura);
+
+                    vlFechamento = new PdfPCell(new Paragraph("Total: ", getFont(8)));
+                    vlFechamento.setPadding(1.5f);
+                    vlFechamento.setBorder(PdfPCell.NO_BORDER);
+                    vlFechamento.setHorizontalAlignment(2);
+                    infoProduto.addCell(vlFechamento);
+
+                    vlRendimento = new PdfPCell(new Paragraph(Numero.doubleToR$(total), getFont(8)));
+                    vlRendimento.setPadding(1.5f);
+                    vlRendimento.setBorder(PdfPCell.NO_BORDER);
+                    vlRendimento.setHorizontalAlignment(2);
+                    infoProduto.addCell(vlRendimento);
+                }
             }
             document.add(infoProduto);
 
