@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -78,6 +79,7 @@ public class PedidoCompraControl implements Initializable {
     Dao dao = new Dao();
     Pedido pedido;
     Fornecedor fornecedor;
+    ObservableList<ListaEstqMinControl.ClasseGenerica> lista;
     boolean inAntiLoop = true;
     
     @Override
@@ -161,6 +163,39 @@ public class PedidoCompraControl implements Initializable {
         if (valor != null) {
             cdForne.setText(valor);
             validaCodigoForne();
+        }
+    }
+    
+    @FXML
+    public void abrirListaEstoqMin() {
+        if (pedido == null) {
+            Tela tela = new Tela();
+            lista = tela.abrirEstqMin();
+            if (lista.size() > 0) {
+                if (listPedidoProd.size() == 1) {
+                    if (listPedidoProd.get(0).cdProduto.getText().equals("")) {
+                        listPedidoProd.clear();
+                    }
+                }
+            }
+            for (ListaEstqMinControl.ClasseGenerica l : lista) {
+                boolean vInAdd = true;
+                for (PedidoProdHit p : listPedidoProd) {
+                    if (p.cdProduto.getText().equals(l.getCdProduto().toString())) {
+                        vInAdd = false;
+                    }
+                }
+                if (vInAdd) {
+                    PedidoProdHit b = new PedidoProdHit();
+                    b.cdProduto.setText(l.getCdProduto().toString());
+                    b.dsProduto.setText(l.getDsProduto());
+                    b.qtProduto.setText(l.getQtNecessario().toString());
+                    listPedidoProd.add(b);
+                }
+            }
+            atualizaLista();
+        } else {
+            Alerta.AlertaError("Mensagem", "Apenas para novos pedidos.");
         }
     }
     

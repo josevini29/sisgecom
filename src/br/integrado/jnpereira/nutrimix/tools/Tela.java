@@ -6,6 +6,7 @@ import br.integrado.jnpereira.nutrimix.controle.MenuControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaAjustEstoqControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaAjusteCaixaControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaDespesaControl;
+import br.integrado.jnpereira.nutrimix.controle.ListaEstqMinControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaFechCaixaControl;
 import br.integrado.jnpereira.nutrimix.controle.ListaPedidoCompraControl;
 import br.integrado.jnpereira.nutrimix.controle.LoginControl;
@@ -16,6 +17,8 @@ import br.integrado.jnpereira.nutrimix.modelo.Usuario;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -93,7 +96,7 @@ public class Tela {
     @Senha
     final public static String[] EXCLUSAO_DESPESAS = new String[]{"", "Exclusão de Despesas"};
     //@Senha
-    //final public static String[] EXCLUSAO_VENDA_COMPRA = new String[]{"", "Exclusão de Venda/Compra"};
+    //final public static String[] EXCLUSAO_VENDA_COMPRA = new String[]{"", "Exclusão de Venda/Compra"};    
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));
@@ -397,6 +400,30 @@ public class Tela {
             stage.centerOnScreen();
             stage.showAndWait();
             return controler.getDsRetorno();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
+        }
+        return null;
+    }
+
+    public ObservableList<ListaEstqMinControl.ClasseGenerica> abrirEstqMin() {
+        try {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/integrado/jnpereira/nutrimix/visao/FrmListaEstqMinFXML.fxml"));
+            Parent root = (Parent) loader.load();
+            ListaEstqMinControl controler = (ListaEstqMinControl) loader.getController();
+            controler.setStage(stage);
+            controler.iniciaTela();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("/br/integrado/jnpereira/nutrimix/icon/logo.png"));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Lista de Produtos em Estoque Mínimo");
+            stage.resizableProperty().setValue(Boolean.FALSE);
+            stage.centerOnScreen();
+            stage.showAndWait();
+            return controler.dsRetorno;
         } catch (IOException ex) {
             ex.printStackTrace();
             Alerta.AlertaError("Erro!", "Erro ao abrir a tela solicitada, entre em contato com o suporte.\n" + ex.toString());
