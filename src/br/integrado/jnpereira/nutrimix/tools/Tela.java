@@ -17,7 +17,6 @@ import br.integrado.jnpereira.nutrimix.modelo.Usuario;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -97,8 +96,8 @@ public class Tela {
     final public static String[] LISTA_COMPRA_VENDA = new String[]{"/br/integrado/jnpereira/nutrimix/visao/FrmListaVendaCompraFXML.fxml", "Consulta ..."};
     @Senha
     final public static String[] EXCLUSAO_DESPESAS = new String[]{"", "Exclusão de Despesas"};
-    //@Senha
-    //final public static String[] EXCLUSAO_VENDA_COMPRA = new String[]{"", "Exclusão de Venda/Compra"};    
+    @Senha
+    final public static String[] EXCLUSAO_VENDA_COMPRA = new String[]{"", "Exclusão de Venda/Compra"};    
 
     public void abrirLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(LOGIN[0]));

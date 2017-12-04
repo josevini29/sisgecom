@@ -66,13 +66,18 @@ public class CaixaControl {
             throw new Exception(ex.getMessage());
         }
     }
-    
-    private void excluirConta(ContasPagarReceber conta) throws Exception {
-        Tela tela = new Tela();
-        if (!tela.validaAcessoOperacao(Tela.EXCLUSAO_DESPESAS)) {
-            throw new Exception("Usuário sem acesso a está operação.");
-        }
 
+    public void excluirConta(ContasPagarReceber conta) throws Exception {
+        Tela tela = new Tela();
+        if (conta.getCdDespesa() != null) {
+            if (!tela.validaAcessoOperacao(Tela.EXCLUSAO_DESPESAS)) {
+                throw new Exception("Usuário sem acesso a está operação.");
+            }
+        } else {
+            if (!tela.validaAcessoOperacao(Tela.EXCLUSAO_VENDA_COMPRA)) {
+                throw new Exception("Usuário sem acesso a está operação.");
+            }
+        }
         ArrayList<Object> parcelas = dao.getAllWhere(new Parcela(), "WHERE $cdConta$ = " + conta.getCdConta());
         boolean vInAtiva = false;
         for (Object obj : parcelas) {

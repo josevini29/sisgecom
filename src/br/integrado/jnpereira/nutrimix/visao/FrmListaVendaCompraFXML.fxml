@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="842.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.ListaVendaCompraControl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="837.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.integrado.jnpereira.nutrimix.controle.ListaVendaCompraControl">
    <children>
       <TextField fx:id="dtInicio" alignment="CENTER" layoutX="14.0" layoutY="30.0" prefHeight="30.0" prefWidth="105.0">
          <font>
@@ -33,7 +33,7 @@
       <TableView fx:id="gridMovto" layoutX="14.0" layoutY="75.0" prefHeight="420.0" prefWidth="813.0" />
       <Label layoutX="14.0" layoutY="14.0" text="Data Inicial" />
       <Label layoutX="131.0" layoutY="14.0" text="Data Fim" />
-      <Button layoutX="254.0" layoutY="29.0" maxHeight="29.0" maxWidth="105.0" mnemonicParsing="false" onAction="#gerarRelatorio" prefHeight="29.0" prefWidth="105.0" text="Relatório">
+      <Button layoutX="254.0" layoutY="29.0" maxHeight="29.0" maxWidth="105.0" mnemonicParsing="false" onAction="#gerarRelatorio" prefHeight="29.0" prefWidth="105.0" text="Relatório" visible="false">
          <graphic>
             <ImageView fitHeight="19.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                <image>

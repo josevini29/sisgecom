@@ -53,7 +53,6 @@ public class EstoqueControl {
             double vlTotal = ((produto.getQtEstqAtual() * produto.getVlCustoMedio())
                     + (movto.getQtMovto() * movto.getVlItem()));
             produto.setVlCustoMedio(divisao(vlTotal, (produto.getQtEstqAtual() + movto.getQtMovto())));
- 
             produto.setQtEstqAtual(produto.getQtEstqAtual() + movto.getQtMovto());
         } else {
             produto.setQtEstqAtual(produto.getQtEstqAtual() - movto.getQtMovto());
@@ -70,12 +69,12 @@ public class EstoqueControl {
         movto.setDtCancelado(Data.getAgora());
 
         if (movto.getTpMovto().equals(ENTRADA)) {
-            produto.setQtEstqAtual(produto.getQtEstqAtual() - movto.getQtMovto());
             if (movto.getVlItem() != null) { //Calcula o custo médio
                 double vlTotal = ((produto.getQtEstqAtual() * produto.getVlCustoMedio())
                         - (movto.getQtMovto() * movto.getVlItem()));
                 produto.setVlCustoMedio(divisao(vlTotal, (produto.getQtEstqAtual() - movto.getQtMovto())));
             }
+            produto.setQtEstqAtual(produto.getQtEstqAtual() - movto.getQtMovto());
             dao.update(movto);
             //refazerMovtoEstoque(movto); //refaz o movimento de estoque                  
         } else {

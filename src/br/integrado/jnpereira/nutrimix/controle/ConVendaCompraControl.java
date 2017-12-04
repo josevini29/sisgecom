@@ -11,6 +11,9 @@ import br.integrado.jnpereira.nutrimix.modelo.Cliente;
 import br.integrado.jnpereira.nutrimix.modelo.CondicaoPagto;
 import br.integrado.jnpereira.nutrimix.modelo.ContasPagarReceber;
 import br.integrado.jnpereira.nutrimix.modelo.Fornecedor;
+import br.integrado.jnpereira.nutrimix.modelo.MovtoEstoque;
+import br.integrado.jnpereira.nutrimix.modelo.Pedido;
+import br.integrado.jnpereira.nutrimix.modelo.PedidoProduto;
 import br.integrado.jnpereira.nutrimix.modelo.Pessoa;
 import br.integrado.jnpereira.nutrimix.modelo.Produto;
 import br.integrado.jnpereira.nutrimix.modelo.VendaCompra;
@@ -19,7 +22,6 @@ import br.integrado.jnpereira.nutrimix.table.ContruirTableView;
 import br.integrado.jnpereira.nutrimix.table.Style;
 import br.integrado.jnpereira.nutrimix.tools.Alerta;
 import br.integrado.jnpereira.nutrimix.tools.Data;
-import br.integrado.jnpereira.nutrimix.tools.FuncaoCampo;
 import br.integrado.jnpereira.nutrimix.tools.Numero;
 import br.integrado.jnpereira.nutrimix.tools.Tela;
 import java.net.URL;
@@ -71,6 +73,8 @@ public class ConVendaCompraControl implements Initializable {
     TextField cdPedido;
     @FXML
     Label lblCadastro;
+    @FXML
+    Label lblCancelado;
 
     @FXML
     TableView<ClasseGenerica> gridProduto;
@@ -105,7 +109,7 @@ public class ConVendaCompraControl implements Initializable {
 
     public void iniciaTela() {
         if (param == null) {
-            Alerta.AlertaError("Erro!", "Parametro espera está Null");
+            Alerta.AlertaError("Erro!", "Parametro esperado está Null");
             return;
         }
         try {
@@ -115,6 +119,9 @@ public class ConVendaCompraControl implements Initializable {
             lblCadastro.setText(Numero.getCadastroComHora(movto.getCdUserCad(), movto.getDtCadastro()));
             if (movto.getTpMovto().equals("S")) { //Venda
                 stage.setTitle("Consulta de Venda");
+                if (movto.getInCancelado()) {
+                    lblCancelado.setText("Venda Cancelada.");
+                }
                 nrNotaFiscal.setVisible(false);
                 cdSerie.setVisible(false);
                 dtEmissao.setVisible(false);
@@ -140,6 +147,9 @@ public class ConVendaCompraControl implements Initializable {
                 }
             } else { //Compra
                 stage.setTitle("Consulta de Compra");
+                if (movto.getInCancelado()) {
+                    lblCancelado.setText("Compra Cancelada.");
+                }
                 nrNotaFiscal.setText(trataNulo(movto.getNrNota()));
                 cdSerie.setText(trataNulo(movto.getCdSerie()));
                 dtEmissao.setText(Data.AmericaToBrasilSemHora(movto.getDtEmissao()));
@@ -161,13 +171,16 @@ public class ConVendaCompraControl implements Initializable {
                 }
             }
 
-            conta = (ContasPagarReceber) dao.getAllWhere(new ContasPagarReceber(), "WHERE $cdMovto$ = " + movto.getCdMovto()).get(0);
+            try {
+                conta = (ContasPagarReceber) dao.getAllWhere(new ContasPagarReceber(), "WHERE $cdMovto$ = " + movto.getCdMovto()).get(0);
+                cdCondPagto.setText(conta.getCdMovto().toString());
+                CondicaoPagto condicao = new CondicaoPagto();
+                condicao.setCdCondicao(conta.getCdCondicao());
+                dao.get(condicao);
+                dsCondPagto.setText(condicao.getDsCondicao());
+            } catch (Exception ex) {
+            }
 
-            cdCondPagto.setText(conta.getCdMovto().toString());
-            CondicaoPagto condicao = new CondicaoPagto();
-            condicao.setCdCondicao(conta.getCdCondicao());
-            dao.get(condicao);
-            dsCondPagto.setText(condicao.getDsCondicao());
             vlDesconto.setText(Numero.doubleToReal(movto.getVlDesconto(), 2));
             vlAdicional.setText(Numero.doubleToReal(movto.getVlAdicional(), 2));
             vlFrete.setText(Numero.doubleToReal(movto.getVlFrete(), 2));
@@ -201,16 +214,16 @@ public class ConVendaCompraControl implements Initializable {
             Alerta.AlertaError("Erro!", ex.toString());
         }
     }
-    
-    private String trataNulo(String valor){
-        if (valor == null){
+
+    private String trataNulo(String valor) {
+        if (valor == null) {
             return "";
         }
         return valor;
     }
-    
-    private String trataNulo(Integer valor){
-        if (valor == null){
+
+    private String trataNulo(Integer valor) {
+        if (valor == null) {
             return "";
         }
         return valor.toString();
@@ -219,9 +232,69 @@ public class ConVendaCompraControl implements Initializable {
     @FXML
     public void visualizarPagamento() {
         Tela tela = new Tela();
-        tela.abrirTelaModalComParam(stage, Tela.PAG_PARCELA, conta);
+        if (conta != null) {
+            tela.abrirTelaModalComParam(stage, Tela.PAG_PARCELA, conta);
+        } else {
+            Alerta.AlertaError("Erro!", "Conta já excluida!");
+        }
     }
-    
+
+    @FXML
+    public void excluirMovto() {
+        if (movto.getInCancelado() == true) {
+            Alerta.AlertaError("Negado!", "Movimento já cancelado!");
+            return;
+        }
+        if (Alerta.AlertaConfirmation("Confirmação", "Deseja cancelar está operaçao? não podera ser estornada.")) {
+            try {
+                dao.autoCommit(false);
+                movto.setInCancelado(true);
+                dao.update(movto);
+                CaixaControl caixa = new CaixaControl();
+                caixa.excluirConta(conta);
+
+                ArrayList<Object> array = dao.getAllWhere(new MovtoEstoque(), "WHERE $cdMovCompVend$ = " + movto.getCdMovto());
+                for (Object obj : array) {
+                    MovtoEstoque movtoEstoque = (MovtoEstoque) obj;
+                    movtoEstoque.setInCancelado(true);
+                    EstoqueControl estq = new EstoqueControl();
+                    estq.geraMovtoEstoque(movtoEstoque);
+                }
+
+                if (movto.getCdPedido() != null) {
+                    Pedido pedido = new Pedido();
+                    pedido.setCdPedido(movto.getCdPedido());
+                    dao.get(pedido);
+                    for (ClasseGenerica classe : data) {
+                        ArrayList<Object> prod = dao.getAllWhere(new PedidoProduto(), "WHERE $cdPedido$ = " + pedido.getCdPedido() + " AND $cdProduto$ = " + classe.getCdProduto());
+                        if (prod.size() > 0) {
+                            PedidoProduto pedItem = (PedidoProduto) prod.get(0);
+                            Produto produto = new Produto();
+                            produto.setCdProduto(pedItem.getCdProduto());
+                            dao.get(produto);
+                            double vVl = classe.getQtProduto() / produto.getQtConversao();
+                            if (vVl > pedItem.getQtEntregue()) {
+                                vVl = pedItem.getQtEntregue();
+                            }
+                            pedItem.setQtEntregue(pedItem.getQtEntregue() - vVl);
+                            dao.update(pedItem);
+                        }
+                    }
+                    if (pedido.getStPedido().equals("2")) {
+                        pedido.setStPedido("1");
+                        dao.update(pedido);
+                    }
+                }
+                dao.commit();
+                iniciaTela();
+            } catch (Exception ex) {
+                dao.rollback();
+                iniciaTela();
+                Alerta.AlertaError("Erro!", ex.getMessage());
+            }
+        }
+    }
+
     public class ClasseGenerica {
 
         @Coluna(nome = "Cód. Produto")

@@ -904,12 +904,6 @@ public class Relatorio {
                 vlRendimento.setHorizontalAlignment(2);
                 infoProduto.addCell(vlRendimento);
                 if (fec.equals(array.get(array.size() - 1))) {
-                    document.add(new PdfPCell(new Paragraph("")));
-                    document.add(new PdfPCell(new Paragraph("")));
-                    document.add(new PdfPCell(new Paragraph("")));
-                    document.add(new PdfPCell(new Paragraph("")));
-                    document.add(new PdfPCell(new Paragraph("")));
-                    document.add(new PdfPCell(new Paragraph("")));
                     cdFechamento = new PdfPCell(new Paragraph("", getFont(8)));
                     cdFechamento.setPadding(1.5f);
                     cdFechamento.setHorizontalAlignment(1);
