@@ -5,23 +5,23 @@ import br.integrado.jnpereira.nutrimix.dao.Coluna;
 import br.integrado.jnpereira.nutrimix.dao.Id;
 import br.integrado.jnpereira.nutrimix.dao.Tabela;
 
-@Tabela(nome="telefone")
+@Tabela(nome = "telefone")
 public class Telefone {
-    
+
     @Id
     @AutoIncrement
-    @Coluna(nome="cd_telefone")
+    @Coluna(nome = "cd_telefone")
     private Integer cdTelefone;
     @Id
-    @Coluna(nome="cd_pessoa")
+    @Coluna(nome = "cd_pessoa")
     private Integer cdPessoa;
-    @Coluna(nome="tp_telefone")
+    @Coluna(nome = "tp_telefone")
     private String tpTelefone;
-    @Coluna(nome="tp_uso")
+    @Coluna(nome = "tp_uso")
     private String tpUso;
-    @Coluna(nome="nr_ddd")
+    @Coluna(nome = "nr_ddd")
     private String nrDdd;
-    @Coluna(nome="nr_telefone")
+    @Coluna(nome = "nr_telefone")
     private String nrTelefone;
 
     public Integer getCdTelefone() {
@@ -69,9 +69,11 @@ public class Telefone {
     }
 
     public void setNrTelefone(String nrTelefone) {
-        this.nrTelefone = nrTelefone;
+        if (nrTelefone.length() == 8) {
+            this.nrTelefone = "0" + nrTelefone;
+        } else {
+            this.nrTelefone = nrTelefone;
+        }
     }
-    
-    
-    
+
 }

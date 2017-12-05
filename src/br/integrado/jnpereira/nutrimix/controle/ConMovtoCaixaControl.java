@@ -156,10 +156,9 @@ public class ConMovtoCaixaControl implements Initializable {
             Criteria criterio = new Criteria(new MovtoCaixa());
             criterio.AddAndBetweenDate("dtMovto", dtInicio.getText(), dtFim.getText());
             criterio.AddAnd("cdFechamento", cdFechamento.getText(), false);
-            criterio.AddAnd("cdFormaPagto", TrataCombo.getValueComboTpFormaPagto(tpForPagto), false);
+            criterio.AddAnd("cdFormaPagto", TrataCombo.getValueComboTpFormaPagto(tpForPagto), false);            
             criterio.AddOrderByAsc("dtMovto");
             String sql = criterio.getWhereSql();
-
             ArrayList<Object> ajustes = dao.getAllWhere(new MovtoCaixa(), sql);
             for (Object obj : ajustes) {
                 MovtoCaixa movto = (MovtoCaixa) obj;

@@ -137,7 +137,11 @@ public class Numero {
     }
 
     public static String NumeroToTelefone(String cpfNum) {
-        return cpfNum.substring(0, 5) + "-" + cpfNum.substring(5, 9);
+        try {
+            return cpfNum.substring(0, 5) + "-" + cpfNum.substring(5, 9);
+        } catch (Exception ex) {
+            return cpfNum;
+        }
     }
 
     public static String RemoveMascara(String campo) {

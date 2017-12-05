@@ -6,6 +6,8 @@ import java.awt.Toolkit;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -114,11 +116,23 @@ public class Charts extends Thread {
             });
 
             //Grafico(2,2)
-            //Node grafico4 = getGrafPizzaEntradaXSaida();
-            //grafico4.setLayoutY(spaceHeightY);
-            //grafico4.setLayoutX(spaceWidth + chartWidth + spaceWidth);
-            //paneChart.getChildren().add(grafico4);
-            //spaceHeightY += (chartHeight + spaceHeight); //somente no grafico da segundo coluna
+            Node grafico4 = getFormPagtoUsada();
+            grafico4.setLayoutY(spaceHeightY);
+            grafico4.setLayoutX(spaceWidth + chartWidth + spaceWidth);
+            paneChart.getChildren().add(grafico4);
+            spaceHeightY += (chartHeight + spaceHeight); //somente no grafico da segundo coluna
+            grafico4.setOnMouseClicked((MouseEvent mouseEvent) -> {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    if (mouseEvent.getClickCount() == 2) {
+                        try {
+                            abrirGrafico(getFormPagtoUsada());
+                        } catch (Exception ex) {
+                            Alerta.AlertaError("Erro!", "Erro ao gerar gráfico.\n" + ex.toString());
+                        }
+                    }
+                }
+            });
+            
             //Grafico(2,1)
             //Node grafico5 = getTesteBarra();
             //grafico5.setLayoutY(spaceHeightY);
@@ -224,8 +238,8 @@ public class Charts extends Thread {
     }
 
     public Node getGrafPizzaFaturDiaSemana() throws Exception {
-        String sql = "SELECT TO_CHAR($VendaCompra.dtCadastro$, 'D') DIA_SEMANA , SUM($VendaCompra.vlTotal$) TOTAL "
-                + "FROM &VendaCompra& WHERE $VendaCompra.inCancelado$ = 'F' GROUP BY DIA_SEMANA;";
+        String sql = "SELECT TO_CHAR($MovtoCaixa.dtMovto$, 'D') DIA_SEMANA , SUM($MovtoCaixa.vlMovto$) TOTAL "
+                + "FROM &MovtoCaixa& GROUP BY DIA_SEMANA;";
 
         ResultSet rs = dao.execSQL(sql);
         PieChart graficoPizza = new PieChart();
@@ -239,14 +253,14 @@ public class Charts extends Thread {
 
     public Node getReceitaVsDespesa() throws Exception {
 
-        String sqlReceita = "SELECT TO_CHAR(DT_MOVTO, 'MM-YYYY') MES_ANO, SUM(VL_CONTA) TOTAL FROM NUTRIMIX.CONTAS_PAGAR_RECEBER \n"
-                + "WHERE ST_CONTA IN ('1','2') AND TP_MOVTO = 'E' AND TO_CHAR(NOW(), 'YYYY') = TO_CHAR(DT_MOVTO, 'YYYY')\n"
+        String sqlReceita = "SELECT TO_CHAR(DT_MOVTO, 'MM-YYYY') MES_ANO, SUM(VL_MOVTO) TOTAL FROM NUTRIMIX.MOVTO_CAIXA \n"
+                + "WHERE TP_MOVTO_CAIXA = 'E' AND TO_CHAR(NOW(), 'YYYY') = TO_CHAR(DT_MOVTO, 'YYYY')\n"
                 + "GROUP BY MES_ANO;";
 
         ResultSet rsReceita = dao.execSQL(sqlReceita);
 
-        String sqlDespesa = "SELECT TO_CHAR(DT_MOVTO, 'MM-YYYY') MES_ANO, SUM(VL_CONTA) TOTAL FROM NUTRIMIX.CONTAS_PAGAR_RECEBER \n"
-                + "WHERE ST_CONTA IN ('1','2') AND TP_MOVTO = 'S' AND TO_CHAR(NOW(), 'YYYY') = TO_CHAR(DT_MOVTO, 'YYYY')\n"
+        String sqlDespesa = "SELECT TO_CHAR(DT_MOVTO, 'MM-YYYY') MES_ANO, SUM(VL_MOVTO) TOTAL FROM NUTRIMIX.MOVTO_CAIXA \n"
+                + "WHERE TP_MOVTO_CAIXA = 'S' AND TO_CHAR(NOW(), 'YYYY') = TO_CHAR(DT_MOVTO, 'YYYY')\n"
                 + "GROUP BY MES_ANO;";
 
         ResultSet rsDespesa = dao.execSQL(sqlDespesa);
@@ -274,40 +288,19 @@ public class Charts extends Thread {
         return graficoLinha;
     }
 
-    public Node getTesteBarra() {
-        BarChart graficoBarra = new BarChart<>(new CategoryAxis(), new NumberAxis());
-        final String T1 = "T1";
-        final String T2 = "T2";
-        final String T3 = "T3";
-        final String T4 = "T4";
+    public Node getFormPagtoUsada() throws Exception {
+        String SQL = "SELECT A.DS_FORMA FORMA,\n"
+                + "(((SELECT SUM(VL_MOVTO) FROM NUTRIMIX.MOVTO_CAIXA B WHERE B.CD_FORPAGTO = A.CD_FORMA AND B.TP_MOVTO_CAIXA = 'E') / (SELECT SUM(VL_MOVTO) FROM NUTRIMIX.MOVTO_CAIXA B WHERE B.TP_MOVTO_CAIXA = 'E')) * 100) PER\n"
+                + "FROM NUTRIMIX.FORMA_PAGTO A;";
 
-        XYChart.Series prod1 = new XYChart.Series();
-        prod1.setName("Produto 1");
-
-        prod1.getData().add(new XYChart.Data(T1, 5));
-        prod1.getData().add(new XYChart.Data(T2, -2));
-        prod1.getData().add(new XYChart.Data(T3, 3));
-        prod1.getData().add(new XYChart.Data(T4, 15));
-
-        XYChart.Series prod2 = new XYChart.Series();
-        prod2.setName("Produto 2");
-
-        prod2.getData().add(new XYChart.Data(T1, -5));
-        prod2.getData().add(new XYChart.Data(T2, -1));
-        prod2.getData().add(new XYChart.Data(T3, 12));
-        prod2.getData().add(new XYChart.Data(T4, 8));
-
-        XYChart.Series prod3 = new XYChart.Series();
-        prod3.setName("Produto 3");
-
-        prod3.getData().add(new XYChart.Data(T1, 12));
-        prod3.getData().add(new XYChart.Data(T2, 15));
-        prod3.getData().add(new XYChart.Data(T3, 12));
-        prod3.getData().add(new XYChart.Data(T4, 20));
-        graficoBarra.getData().addAll(prod1, prod2, prod3);
-        graficoBarra.setPrefSize(chartWidth, chartHeight);
-        graficoBarra.setTitle("Evolução Mês");
-        return graficoBarra;
+        PieChart graficoPizza = new PieChart();
+        ResultSet rs = dao.execSQL(SQL);
+        while (rs.next()) {
+            graficoPizza.getData().add(new PieChart.Data(rs.getString("FORMA") + ": " + Numero.doubleToReal(rs.getDouble("PER"), 1) + "%", rs.getDouble("PER")));
+        }
+        graficoPizza.setPrefSize(chartWidth, chartHeight);
+        graficoPizza.setTitle("Forma de Pagamento Mais Utilizada");
+        return graficoPizza;
     }
 
     public AnchorPane getPaneChart() {

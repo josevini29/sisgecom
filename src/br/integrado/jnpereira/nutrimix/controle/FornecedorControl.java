@@ -443,7 +443,7 @@ public class FornecedorControl implements Initializable {
             return;
         }
 
-        for (EnderecoHit endAlt : enderecosHit) {
+        /*for (EnderecoHit endAlt : enderecosHit) {
             if (endAlt.getCdCidade() == null) {
                 Alerta.AlertaError("Campo inválido!", "Campo cidade é obrigatório.");
                 return;
@@ -451,6 +451,33 @@ public class FornecedorControl implements Initializable {
             if (endAlt.getCdCidade().equals("")) {
                 Alerta.AlertaError("Campo inválido!", "Campo cidade é obrigatório.");
                 return;
+            }
+        }*/
+        
+         for (EnderecoHit endAlt : enderecosHit) {
+            if (endAlt.getCdCidade() != null) {
+                if (!endAlt.getCdCidade().equals("")) {
+                    if (trataNulo(endAlt.getCdCep()).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo CEP é obrigatório.");
+                        return;
+                    }
+                    if (trataNulo(endAlt.getDsLogradouro()).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo Logradouro é obrigatório.");
+                        return;
+                    }
+                    if (trataNulo(TrataCombo.getValueComboEndereco(tpEndereco)).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo CEP é obrigatório.");
+                        return;
+                    }
+                    if (trataNulo(endAlt.getNrImovel()).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo CEP é obrigatório.");
+                        return;
+                    }
+                    if (trataNulo(endAlt.getDsBairro()).equals("")) {
+                        Alerta.AlertaError("Campo inválido!", "Campo CEP é obrigatório.");
+                        return;
+                    }
+                }
             }
         }
 

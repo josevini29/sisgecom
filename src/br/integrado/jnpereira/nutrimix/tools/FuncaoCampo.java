@@ -47,7 +47,6 @@ public class FuncaoCampo {
 
     }
 
-
     public static void mascaraTexto(TextField textField, int qtCaracteres) {
         textField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (newValue.contains("'")) {
@@ -119,43 +118,45 @@ public class FuncaoCampo {
     }
 
     public static void mascaraTelefone(TextField textField) {
+        try {
+            String val = "";
 
-        String val = "";
-
-        textField.setOnKeyTyped((KeyEvent event) -> {
-            if ("0123456789".contains(event.getCharacter()) == false) {
-                event.consume();
-            }
-
-            if (event.getCharacter().trim().length() == 0) { // apagando
-
-                if (textField.getText().length() == 6) {
-                    textField.setText(textField.getText().substring(0, 5));
-                    textField.positionCaret(textField.getText().length());
-                }
-
-            } else { // escrevendo
-
-                if (textField.getText().length() == 10) {
+            textField.setOnKeyTyped((KeyEvent event) -> {
+                if ("0123456789".contains(event.getCharacter()) == false) {
                     event.consume();
                 }
 
-                if (textField.getText().length() == 5) {
-                    textField.setText(textField.getText() + "-");
+                if (event.getCharacter().trim().length() == 0) { // apagando
+
+                    if (textField.getText().length() == 6) {
+                        textField.setText(textField.getText().substring(0, 5));
+                        textField.positionCaret(textField.getText().length());
+                    }
+
+                } else { // escrevendo
+
+                    if (textField.getText().length() == 10) {
+                        event.consume();
+                    }
+
+                    if (textField.getText().length() == 5) {
+                        textField.setText(textField.getText() + "-");
+                        textField.positionCaret(textField.getText().length());
+                    }
+
+                }
+            });
+
+            textField.setOnKeyReleased((KeyEvent evt) -> {
+
+                if (!textField.getText().matches("\\d-*")) {
+                    textField.setText(textField.getText().replaceAll("[^\\d-]", ""));
                     textField.positionCaret(textField.getText().length());
                 }
+            });
+        } catch (Exception ex) {
 
-            }
-        });
-
-        textField.setOnKeyReleased((KeyEvent evt) -> {
-
-            if (!textField.getText().matches("\\d-*")) {
-                textField.setText(textField.getText().replaceAll("[^\\d-]", ""));
-                textField.positionCaret(textField.getText().length());
-            }
-        });
-
+        }
     }
 
     public static void mascaraData(TextField textField) {
